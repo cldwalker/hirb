@@ -17,8 +17,8 @@ module Hirb
         end
       end
       
-      def output_value(output)
-        if (formatted_output = format_output(output))
+      def output_value(output, options={})
+        if (formatted_output = format_output(output, options))
           display_output(formatted_output)
           true
         else
@@ -30,19 +30,26 @@ module Hirb
         puts formatted_output
       end
       
-      def format_output(output)
+      def format_output(output, options={})
         output_class = determine_output_class(output)
-        if (display_method = output_class_config(output_class)[:method])
-          new_output = send(display_method, output)
-        elsif (display_class = output_class_config(output_class)[:class]) && (display_class = Util.any_const_get(display_class))
-          args = output_class_config(output_class)[:args] || []
+        options = output_class_config(output_class).merge(options)
+        if options[:method]
+          new_output = send(options[:method], output)
+        elsif options[:class] && (display_class = Util.any_const_get(options[:class]))
+          args = options[:args] || []
           new_output = display_class.run(output, *args)
         end
         new_output
       end
       
-      def config=(value); @config = value; @output_class_config = nil; end
+      # Stores user-defined display options, mapping stringfied classes to their display options.
+      def config=(value)
+        @output_class_config = nil #reset internal config
+        @config = value
+      end
 
+      # Internal display options built from user-defined ones. Options are built by recursively merging options from oldest
+      # ancestors to the most recent ones.
       def output_class_config(output_class)
         @output_class_config ||= {}
         @output_class_config[output_class] ||= 
