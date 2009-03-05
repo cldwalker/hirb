@@ -32,11 +32,11 @@ module Hirb
       
       def format_output(output, options={})
         output_class = determine_output_class(output)
-        options = output_class_config(output_class).merge(options)
+        options = output_class_options(output_class).merge(options)
+        args = options[:options] ? [options[:options]] : []
         if options[:method]
-          new_output = send(options[:method], output)
+          new_output = send(options[:method], output, *args)
         elsif options[:class] && (display_class = Util.any_const_get(options[:class]))
-          args = options[:args] || []
           new_output = display_class.run(output, *args)
         end
         new_output
@@ -50,7 +50,7 @@ module Hirb
 
       # Internal display options built from user-defined ones. Options are built by recursively merging options from oldest
       # ancestors to the most recent ones.
-      def output_class_config(output_class)
+      def output_class_options(output_class)
         @output_class_config ||= {}
         @output_class_config[output_class] ||= 
           begin
@@ -61,6 +61,8 @@ module Hirb
           end
         @output_class_config[output_class]
       end
+      
+      def output_class_config; @output_class_config; end
       
       def determine_output_class(output)
         if output.is_a?(Array)

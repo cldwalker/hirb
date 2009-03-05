@@ -3,9 +3,9 @@
 module Hirb
   class Table
     class << self
+      attr_accessor :max_width
       # item_hashes an array of hashes
       def run(item_hashes, options={})
-        options[:max_total_length] ||= 190
         fields = options[:fields] || item_hashes[0].keys
         return "0 rows in set" if item_hashes.size == 0
         stringify_values(item_hashes)
@@ -14,7 +14,8 @@ module Hirb
           field_lengths = options[:field_lengths]
         else
           field_lengths = calculate_field_lengths(item_hashes, fields)
-          ensure_safe_field_lengths(field_lengths, options[:max_total_length])
+          local_width = options[:max_width] || Hirb::Table.max_width || 150
+          ensure_safe_field_lengths(field_lengths, local_width)
         end
   
         border = '+-' + fields.map {|f| '-' * field_lengths[f] }.join('-+-') + '-+'
