@@ -3,7 +3,7 @@ module Hirb
     class<<self
       attr_accessor :config
       def enable
-        @config = Hirb.config[:view] || {}
+        @config = default_config.merge(Hirb.config[:view] || {})
 
         ::IRB::Irb.class_eval do
           alias :non_hirb_output_value  :output_value
@@ -39,7 +39,7 @@ module Hirb
         if options[:method]
           new_output = send(options[:method], output, *args)
         elsif options[:class] && (view_class = Util.any_const_get(options[:class]))
-          new_output = view_class.run(output, *args)
+          new_output = view_class.render(output, *args)
         end
         new_output
       end
@@ -66,6 +66,14 @@ module Hirb
       
       def output_class_config; @output_class_config; end
       
+      def default_config
+        Hirb::View.constants.inject({}) {|h,e|
+          output_class = e.to_s.gsub("_", "::")
+          h[output_class] = {:class=>"Hirb::View::#{e}"}
+          h
+        }
+      end
+
       def determine_output_class(output)
         if output.is_a?(Array)
     			output[0].class

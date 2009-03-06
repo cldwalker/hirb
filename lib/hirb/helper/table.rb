@@ -1,11 +1,12 @@
 # modified from http://gist.github.com/72234
 
 module Hirb
+  class Helper
   class Table
     class << self
       attr_accessor :max_width
       # item_hashes an array of hashes
-      def run(item_hashes, options={})
+      def render(item_hashes, options={})
         fields = options[:fields] || item_hashes[0].keys
         return "0 rows in set" if item_hashes.size == 0
         stringify_values(item_hashes)
@@ -14,7 +15,7 @@ module Hirb
           field_lengths = options[:field_lengths]
         else
           field_lengths = calculate_field_lengths(item_hashes, fields)
-          local_width = options[:max_width] || Hirb::Table.max_width || 150
+          local_width = options[:max_width] || Hirb::Helper::Table.max_width || 150
           ensure_safe_field_lengths(field_lengths, local_width)
         end
   
@@ -66,7 +67,5 @@ module Hirb
       end
     end
   end
+  end
 end
-
-
-

@@ -51,16 +51,16 @@ class Hirb::ViewTest < Test::Unit::TestCase
     end
     
     test "formats with class option" do
-      eval "module ::Commify; def self.run(string); string.split('').join(','); end; end"
+      eval "module ::Commify; def self.render(string); string.split('').join(','); end; end"
       Hirb::View.config = {"String"=>{:class=>"Commify"}}
       Hirb::View.expects(:view_output).with('d,u,d,e')
       Hirb::View.output_value('dude')
     end
     
     test "formats with option options" do
-      eval "module ::Blahify; def self.run(*args); end; end"
+      eval "module ::Blahify; def self.render(*args); end; end"
       Hirb::View.config = {"String"=>{:class=>"Blahify", :options=>{:fields=>%w{a b}}}}
-      Blahify.expects(:run).with('dude', :fields=>%w{a b})
+      Blahify.expects(:render).with('dude', :fields=>%w{a b})
       Hirb::View.output_value('dude')
     end
   end

@@ -1,6 +1,6 @@
-class Hirb::Table::ActiveRecord < Hirb::Table::Object
+class Hirb::View::ActiveRecord_Base
   # items are activerecord objects, fields are any record attributes
-  def self.run(items, options={})
+  def self.render(items, options={})
     items = [items] unless items.is_a?(Array)
     options[:fields] ||= 
       begin
@@ -8,6 +8,6 @@ class Hirb::Table::ActiveRecord < Hirb::Table::Object
         fields.unshift(fields.delete('id')) if fields.include?('id')
         fields
       end
-    super(items, options)
+    Hirb::Helper::ObjectTable.render(items, options)
   end
 end
