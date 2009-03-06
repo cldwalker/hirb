@@ -1,4 +1,4 @@
-class Hirb::Helper::ObjectTable < Hirb::Helper::Table
+class Hirb::Helpers::ObjectTable < Hirb::Helpers::Table
   # items is an array of ruby objects, fields are attributes of the given objects
   def self.render(items, options ={})
     raise(ArgumentError, "Option 'fields' is required.") unless options[:fields]

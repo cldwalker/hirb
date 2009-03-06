@@ -1,7 +1,7 @@
 module Hirb
   module Console
     def table(output, options={})
-      Hirb::View.output_value(output, options.merge(:class=>"Hirb::Helper::AutoTable"))
+      Hirb::View.output_value(output, options.merge(:class=>"Hirb::Helpers::AutoTable"))
     end
 
     def view(*args)

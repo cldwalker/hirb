@@ -1,4 +1,4 @@
-class Hirb::Helper::ActiveRecordTable < Hirb::Helper::ObjectTable
+class Hirb::Helpers::ActiveRecordTable < Hirb::Helpers::ObjectTable
   # items are activerecord objects, fields are any record attributes
   def self.render(items, options={})
     items = [items] unless items.is_a?(Array)
