@@ -1,14 +1,14 @@
 module Hirb
-  module Display
+  module View
     class<<self
       attr_accessor :config
       def enable
-        @config = Hirb.config[:display] || {}
+        @config = Hirb.config[:view] || {}
 
         ::IRB::Irb.class_eval do
           alias :non_hirb_output_value  :output_value
           def output_value
-            Hirb::Display.output_value(@context.last_value) || non_hirb_output_value
+            Hirb::View.output_value(@context.last_value) || non_hirb_output_value
           end
         end
       end
@@ -21,14 +21,14 @@ module Hirb
       
       def output_value(output, options={})
         if (formatted_output = format_output(output, options))
-          display_output(formatted_output)
+          view_output(formatted_output)
           true
         else
           false
         end
       end
       
-      def display_output(formatted_output)
+      def view_output(formatted_output)
         puts formatted_output
       end
       
@@ -38,19 +38,19 @@ module Hirb
         args = options[:options] ? [options[:options]] : []
         if options[:method]
           new_output = send(options[:method], output, *args)
-        elsif options[:class] && (display_class = Util.any_const_get(options[:class]))
-          new_output = display_class.run(output, *args)
+        elsif options[:class] && (view_class = Util.any_const_get(options[:class]))
+          new_output = view_class.run(output, *args)
         end
         new_output
       end
       
-      # Stores user-defined display options, mapping stringfied classes to their display options.
+      # Stores user-defined view options, mapping stringfied classes to their view options.
       def config=(value)
         @output_class_config = nil #reset internal config
         @config = value
       end
 
-      # Internal display options built from user-defined ones. Options are built by recursively merging options from oldest
+      # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
       # ancestors to the most recent ones.
       def output_class_options(output_class)
         @output_class_config ||= {}
