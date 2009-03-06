@@ -4,6 +4,7 @@ require 'hirb/util'
 require 'hirb/helpers'
 require 'hirb/view'
 require 'hirb/views/activerecord_base'
+require 'hirb/console'
 
 module Hirb
   class <<self

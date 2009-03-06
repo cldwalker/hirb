@@ -28,6 +28,15 @@ module Hirb
         end
       end
       
+      def console_output_value(output, options={})
+        # iterates over format_output options that aren't :options
+        real_options = [:method, :class].inject({}) do |h, e|
+          h[e] = options.delete(e) if options[e]
+          h
+        end
+        output_value(output, real_options.merge(:options=>options))
+      end
+
       def view_output(formatted_output)
         puts formatted_output
       end

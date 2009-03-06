@@ -1,7 +1,7 @@
 module Hirb
   module ObjectMethods
     def view(*args)
-      Hirb::View.output_value(*(args.unshift(self)))
+      Hirb::View.console_output_value(*(args.unshift(self)))
     end
   end
 end
