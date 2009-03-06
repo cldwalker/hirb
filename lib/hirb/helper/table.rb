@@ -1,7 +1,7 @@
 # modified from http://gist.github.com/72234
 
 module Hirb
-  class Helper
+  module Helper
   class Table
     class << self
       attr_accessor :max_width

@@ -29,6 +29,12 @@ class Hirb::ViewTest < Test::Unit::TestCase
     ::IRB::Irb.new(context_stub).output_value
   end
   
+  test "enable sets default config" do
+    eval "module ::Hirb::Views::Something; def self.render; end; end"
+    Hirb::View.enable
+    Hirb::View.config["Something"].should == {:class=>"Hirb::Views::Something"}
+  end
+  
   test "disable points output_value back to original output_value" do
     Hirb::View.expects(:output_value).never
     Hirb::View.enable

@@ -1,10 +1,9 @@
 current_dir = File.dirname(__FILE__)
 $:.unshift(current_dir) unless $:.include?(current_dir) || $:.include?(File.expand_path(current_dir))
-require 'hirb/view'
-require 'hirb/view/activerecord_base'
-require 'hirb/helper/table'
-require 'hirb/helper/object_table'
 require 'hirb/util'
+require 'hirb/helpers'
+require 'hirb/view'
+require 'hirb/views/activerecord_base'
 
 module Hirb
   class <<self

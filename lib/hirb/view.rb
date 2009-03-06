@@ -67,9 +67,11 @@ module Hirb
       def output_class_config; @output_class_config; end
       
       def default_config
-        Hirb::View.constants.inject({}) {|h,e|
+        Hirb::Views.constants.inject({}) {|h,e|
           output_class = e.to_s.gsub("_", "::")
-          h[output_class] = {:class=>"Hirb::View::#{e}"}
+          if Hirb::Views.const_get(e).respond_to?(:render)
+            h[output_class] = {:class=>"Hirb::Views::#{e}"}
+          end
           h
         }
       end
@@ -82,5 +84,9 @@ module Hirb
     		end
     	end      
   	end	
+  end
+  
+  # Namespace for autoloaded views
+  module Views
   end
 end
