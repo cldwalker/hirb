@@ -8,10 +8,3 @@ require 'hirb'
 
 class Test::Unit::TestCase
 end
-
-#from ActiveSupport
-class Hash
-  def slice(*keys)
-    reject { |key| !keys.include?(key) }
-  end
-end

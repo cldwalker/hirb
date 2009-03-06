@@ -3,6 +3,8 @@ module Hirb
     class<<self
       attr_accessor :config
       def enable
+        @config = Hirb.config[:display] || {}
+
         ::IRB::Irb.class_eval do
           alias :non_hirb_output_value  :output_value
           def output_value

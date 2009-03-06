@@ -1,0 +1,17 @@
+require File.join(File.dirname(__FILE__), 'test_helper')
+
+class HirbTest < Test::Unit::TestCase
+  before(:each) {Hirb.instance_eval "@config = nil"}
+  
+  test "config converts yaml when config file exists" do
+    yaml_data = {:blah=>'blah'}
+    File.stubs('exists?').returns(true)
+    YAML::expects(:load_file).returns(yaml_data)
+    Hirb.config.should == yaml_data
+  end
+  
+  test "config defaults to hash when no config file" do
+    File.stubs('exists?').returns(false)
+    Hirb.config.should == {}
+  end
+end
