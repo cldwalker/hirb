@@ -30,25 +30,25 @@ TABLE
     table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>10,:b=>10}).should == expected_table
   end
   
-  test "table with max_with option renders" do
+  test "table with max_width option renders" do
     expected_table = <<TABLE.gsub(/^\s*/, '').chomp
-    +------------+---------------------+---+
-    | c          | a                   | b |
-    +------------+---------------------+---+
-    | CCCCCCCCCC | AAAAAAAAAAAAAAAA... | 2 |
-    +------------+---------------------+---+
+    +---------------------+---+------------+
+    | a                   | b | c          |
+    +---------------------+---+------------+
+    | AAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
+    +---------------------+---+------------+
     1 row in set
 TABLE
     table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>30).should == expected_table
   end
   
-  test "table with global max_with renders" do
+  test "table with global max_width renders" do
     expected_table = <<TABLE.gsub(/^\s*/, '').chomp
-    +------------+---------------------+---+
-    | c          | a                   | b |
-    +------------+---------------------+---+
-    | CCCCCCCCCC | AAAAAAAAAAAAAAAA... | 2 |
-    +------------+---------------------+---+
+    +---------------------+---+------------+
+    | a                   | b | c          |
+    +---------------------+---+------------+
+    | AAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
+    +---------------------+---+------------+
     1 row in set
 TABLE
     Hirb::Helpers::Table.max_width = 30

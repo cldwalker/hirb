@@ -7,7 +7,7 @@ class Hirb::Helpers::Table
     def render(item_hashes, options={})
       return "0 rows in set" if item_hashes.empty?
       item_hashes = [item_hashes] unless item_hashes.is_a?(Array)
-      fields = options[:fields] || item_hashes[0].keys
+      fields = options[:fields] || item_hashes[0].keys.sort {|a,b| a.to_s <=> b.to_s}
       stringify_values(item_hashes)
 
       if options[:field_lengths]
