@@ -5,8 +5,9 @@ class Hirb::Helpers::Table
     attr_accessor :max_width
     # item_hashes an array of hashes
     def render(item_hashes, options={})
+      return "0 rows in set" if item_hashes.empty?
+      item_hashes = [item_hashes] unless item_hashes.is_a?(Array)
       fields = options[:fields] || item_hashes[0].keys
-      return "0 rows in set" if item_hashes.size == 0
       stringify_values(item_hashes)
 
       if options[:field_lengths]
@@ -22,12 +23,15 @@ class Hirb::Helpers::Table
       body = [border, title_row, border]
 
       item_hashes.each do |item|
-        row = '| ' + fields.map {|f| sprintf("%-#{field_lengths[f]}s", item[f].slice(0, field_lengths[f])) }.join(' | ') + ' |'
+        row = '| ' + fields.map {|f|
+          text = item[f].length > field_lengths[f] ? item[f].slice(0,field_lengths[f] - 3) + '...' : item[f]
+          sprintf("%-#{field_lengths[f]}s", text)
+        }.join(' | ') + ' |'
         body << row
       end
 
       body << border
-      body << "#{item_hashes.length} rows in set"
+      body << "#{item_hashes.length} #{item_hashes.length == 1 ? 'row' : 'rows'} in set"
       body.join("\n")
     end
 
