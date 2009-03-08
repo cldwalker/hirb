@@ -18,6 +18,16 @@ TABLE
     table([{:a=>1, :b=>2}, {:a=>3, :b=>4}]).should == expected_table
   end
   
+  test "basic table with no headers renders" do
+    expected_table = <<TABLE.gsub(/^\s*/, '').chomp
+    +---+---+
+    | 1 | 2 |
+    +---+---+
+    1 row in set
+TABLE
+    table([{:a=>1, :b=>2}], :headers=>nil).should == expected_table
+  end
+
   test "basic table with string keys renders" do
     expected_table = <<TABLE.gsub(/^\s*/, '').chomp
     +---+---+
@@ -30,7 +40,20 @@ TABLE
 TABLE
     table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
   end
-    
+  
+  test "basic table with array rows renders" do
+    expected_table = <<TABLE.gsub(/^\s*/, '').chomp
+    +---+---+
+    | 0 | 1 |
+    +---+---+
+    | 1 | 2 |
+    | 3 | 4 |
+    +---+---+
+    2 rows in set
+TABLE
+    table([[1,2], [3,4]]).should == expected_table
+  end
+ 
   test "table with fields option renders" do
     expected_table = <<TABLE.gsub(/^\s*/, '').chomp
     +---+---+

@@ -1,4 +1,4 @@
-# modified from http://gist.github.com/72234
+# derived from http://gist.github.com/72234
 
 class Hirb::Helpers::Table
   DEFAULT_MAX_WIDTH = 150
@@ -13,15 +13,25 @@ class Hirb::Helpers::Table
   # rows can be an array of hashes
   def initialize(rows, options={})
     @options = options
-    @fields = options[:fields] || ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} : [])
+    @fields = options[:fields] || ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} : 
+      rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : [])
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
-    @headers.merge!(options[:headers]) if options[:headers]
+    @headers = options[:headers].is_a?(Hash) ? @headers.merge(options[:headers]) : options[:headers] if options.has_key?(:headers)
   end
   
   def setup_rows(rows)
     rows ||= []
     rows = [rows] unless rows.is_a?(Array)
+    if rows[0].is_a?(Array)
+      new_rows = []
+      rows.each { |row|
+        new_row = {}
+        row.each_with_index {|e,i| new_row[i] = e }
+        new_rows << new_row
+      }
+      rows = new_rows
+    end
     validate_values(rows)
     rows
   end
@@ -30,7 +40,7 @@ class Hirb::Helpers::Table
     body = []
     unless @rows.length == 0
       setup_field_lengths
-      body += render_header
+      body += @headers ? render_header : [render_border]
       body += render_rows
       body << render_border
     end
@@ -94,11 +104,11 @@ class Hirb::Helpers::Table
 
   # find max length for each field; start with the headers
   def default_field_lengths
-    field_lengths = @headers.inject({}) {|h,(k,v)| h[k] = v.length; h}
+    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = v.length; h} : {}
     @rows.each do |row|
       @fields.each do |field|
         len = row[field].length
-        field_lengths[field] = len if len > field_lengths[field]
+        field_lengths[field] = len if len > field_lengths[field].to_i
       end
     end
     field_lengths
