@@ -4,8 +4,8 @@ module Hirb
       attr_accessor :config, :render_method
 
       # Overrides irb's output method with Hirb's.
-      def enable
-        load_config
+      def enable(&block)
+        load_config(Hirb::HashStruct.block_to_hash(block))
         ::IRB::Irb.class_eval do
           alias :non_hirb_render_output  :output_value
           def output_value
@@ -55,33 +55,55 @@ module Hirb
         new_output
       end
 
-      def load_config
-        self.config = default_config.merge(Hirb.config[:view] || {})
+      def determine_output_class(output)
+        if output.is_a?(Array)
+          output[0].class
+        else
+          output.class
+        end
       end
-      
+
+      # Loads latest Hirb::Views classes and latest Hirb.config into config.
+      def load_config(additional_config={})
+        self.config = default_config.merge(additional_config)
+      end
+
       # Stores user-defined view options, mapping stringfied classes to their view options.
       def config=(value)
-        @output_class_config = nil #reset internal config
+        @cached_output_config = nil
         @config = value
       end
+      
+      def output_config=(value)
+        @cached_output_config = nil
+        @config[:output] = value
+      end
+
+      def output_config; @config[:output]; end
 
       # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
       # ancestors to the most recent ones.
       def output_class_options(output_class)
-        @output_class_config ||= {}
-        @output_class_config[output_class] ||= 
+        @cached_output_config ||= {}
+        @cached_output_config[output_class] ||= 
           begin
-            output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| config.has_key?(e)}
-            @output_class_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
-              h.update(config[klass])
+            output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| output_config.has_key?(e)}
+            @cached_output_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
+              h.update(output_config[klass])
             }
           end
-        @output_class_config[output_class]
+        @cached_output_config[output_class]
       end
       
-      def output_class_config; @output_class_config; end
-      
+      def cached_output_config; @cached_output_config; end
+
       def default_config
+        conf = Hirb.config[:view] || {}
+        conf[:output] = default_output_config.merge(conf[:output] || {})
+        conf
+      end
+
+      def default_output_config
         Hirb::Views.constants.inject({}) {|h,e|
           output_class = e.to_s.gsub("_", "::")
           if Hirb::Views.const_get(e).respond_to?(:render)
@@ -89,14 +111,6 @@ module Hirb
           end
           h
         }
-      end
-
-      def determine_output_class(output)
-        if output.is_a?(Array)
-          output[0].class
-        else
-          output.class
-        end
       end
     end
   end

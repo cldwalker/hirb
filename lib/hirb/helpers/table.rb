@@ -123,6 +123,6 @@ class Hirb::Helpers::Table
   
   # Converts an array to a hash mapping a numerical index to its array value.
   def array_to_indices_hash(array)
-    Hash[*(0..array.length - 1).to_a.zip(array).flatten]
+    array.inject({}) {|hash,e|  hash[hash.size] = e; hash }
   end
 end
