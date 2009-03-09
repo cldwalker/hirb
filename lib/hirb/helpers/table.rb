@@ -17,20 +17,19 @@ class Hirb::Helpers::Table
       rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : [])
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
-    @headers = options[:headers].is_a?(Hash) ? @headers.merge(options[:headers]) : options[:headers] if options.has_key?(:headers)
+    if options.has_key?(:headers)
+      @headers = options[:headers].is_a?(Hash) ? @headers.merge(options[:headers]) : 
+        (options[:headers].is_a?(Array) ? array_to_indices_hash(options[:headers]) : options[:headers])
+    end
   end
   
   def setup_rows(rows)
     rows ||= []
     rows = [rows] unless rows.is_a?(Array)
     if rows[0].is_a?(Array)
-      new_rows = []
-      rows.each { |row|
-        new_row = {}
-        row.each_with_index {|e,i| new_row[i] = e }
-        new_rows << new_row
+      rows = rows.inject([]) {|new_rows, row|
+        new_rows << array_to_indices_hash(row)
       }
-      rows = new_rows
     end
     validate_values(rows)
     rows
@@ -120,5 +119,10 @@ class Hirb::Helpers::Table
         row[f] = row[f].to_s || ''
       }
     }
+  end
+  
+  # Converts an array to a hash mapping a numerical index to its array value.
+  def array_to_indices_hash(array)
+    Hash[*(0..array.length - 1).to_a.zip(array).flatten]
   end
 end

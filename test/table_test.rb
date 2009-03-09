@@ -42,7 +42,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
     end
     
-    test "with array rows renders" do
+    test "with array only rows renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
       | 0 | 1 |
@@ -70,8 +70,20 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | 4 | 3 |
       +---+---+
       2 rows in set
-  TABLE
+      TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :a]).should == expected_table
+    end
+    
+    test "fields option and array only rows" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | 0 | 2 |
+      +---+---+
+      | 1 | 3 |
+      +---+---+
+      1 row in set
+      TABLE
+      table([[1,2,3]], :fields=>[0,2]).should == expected_table
     end
   
     test "invalid fields option renders empty columns" do
@@ -172,6 +184,20 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   TABLE
       table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :field_lengths=>{:a=>5}).should == expected_table
     end
+    
+    test "with headers option as an array renders" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | A | B |
+      +---+---+
+      | 1 | 2 |
+      | 3 | 4 |
+      +---+---+
+      2 rows in set
+      TABLE
+      table([[1,2], [3,4]], :headers=>['A', 'B']).should == expected_table
+    end
+    
   end
   
   context "object table" do
@@ -193,6 +219,24 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     
     test "with no options fields raises ArgumentError" do
       assert_raises(ArgumentError) { Hirb::Helpers::ObjectTable.render(@pets) }
+    end
+  end
+  
+  context "activerecord table" do
+    before(:all) {
+      @pets = [stub(:name=>'rufus', :age=>7, :attribute_names=>['age', 'name']), stub(:name=>'alf', :age=>101)]
+    }
+    test "renders" do
+      expected_table = <<-TABLE.unindent
+      +-----+-------+
+      | age | name  |
+      +-----+-------+
+      | 7   | rufus |
+      | 101 | alf   |
+      +-----+-------+
+      2 rows in set
+      TABLE
+      Hirb::Helpers::ActiveRecordTable.render(@pets).should == expected_table
     end
   end
 end
