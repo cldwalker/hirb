@@ -8,3 +8,9 @@ require 'hirb'
 
 class Test::Unit::TestCase
 end
+
+class String
+  def unindent
+    gsub(/^\s*/, '').chomp
+  end
+end

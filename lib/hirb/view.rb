@@ -87,12 +87,12 @@ module Hirb
 
       def determine_output_class(output)
         if output.is_a?(Array)
-    			output[0].class
-    		else
-    			output.class
-    		end
-    	end      
-  	end	
+          output[0].class
+        else
+          output.class
+        end
+      end
+    end
   end
   
   # Namespace for autoloaded views
