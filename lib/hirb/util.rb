@@ -2,6 +2,7 @@ module Hirb
   module Util
     extend self
     def any_const_get(name)
+      return name if name.is_a?(Module)
       begin
         klass = Object
         name.split('::').each {|e|
