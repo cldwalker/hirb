@@ -1,16 +1,54 @@
+# Base Table class from which other table classes inherit.
+# By default, a table is constrained to a default width but this can be adjusted
+# via options as well as Hirb:Helpers::Table.max_width.
+# Rows can be an array of arrays or an array of hashes.
+#
+# An array of arrays ie [[1,2], [2,3]], would render:
+#   +---+---+
+#   | 0 | 1 |
+#   +---+---+
+#   | 1 | 2 |
+#   | 2 | 3 |
+#   +---+---+
+#
+# By default, the fields/columns are the numerical indices of the array.
+# 
+# An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], would render:
+#   +-----+--------+
+#   | age | weight |
+#   +-----+--------+
+#   | 10  | 100    |
+#   | 80  | 500    |
+#   +-----+--------+
+#
+# By default, the fields/columns are the keys of the first hash.
+#--
 # derived from http://gist.github.com/72234
-
 class Hirb::Helpers::Table
   DEFAULT_MAX_WIDTH = 150
   class << self
     attr_accessor :max_width
     
-    def render(*args)
-      new(*args).render
+    # Main method which returns a formatted table.
+    # ==== Options:
+    # [:fields] An array which overrides the default fields and can be used to indicate field order.
+    # [:headers] A hash of fields and their header names. Fields that aren't specified here default to their name.
+    #            This option can also be an array but only for array rows.
+    # [:field_lengths] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum
+    #                  length than it's truncated and has a ... appended to it. Fields that aren't specified here have no maximum allowed
+    #                  length.
+    # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
+    # Examples:
+    #    Hirb::Helpers::Table.render [[1,2], [2,3]]
+    #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
+    #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
+    #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
+    def render(rows, options={})
+      new(rows,options).render
     end
   end
   
-  # rows can be an array of hashes
+  #:stopdoc:
   def initialize(rows, options={})
     @options = options
     @fields = options[:fields] || ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} : 
@@ -89,6 +127,8 @@ class Hirb::Helpers::Table
     end
   end
   
+  # Simple algorithm which given a max width, allows smaller fields to be displayed while
+  # restricting longer fields at a new_long_field_length.
   def restrict_field_lengths(field_lengths, max_width)
     total_length = field_lengths.values.inject {|t,n| t += n}
     if total_length > max_width
@@ -125,4 +165,5 @@ class Hirb::Helpers::Table
   def array_to_indices_hash(array)
     array.inject({}) {|hash,e|  hash[hash.size] = e; hash }
   end
+  #:startdoc:
 end

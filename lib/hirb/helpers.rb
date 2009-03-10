@@ -1,5 +1,5 @@
 module Hirb
-  module Helpers
+  module Helpers #:nodoc:
   end
 end
 %w{table object_table active_record_table auto_table}.each do |e|

@@ -1,5 +1,9 @@
 class Hirb::Helpers::ObjectTable < Hirb::Helpers::Table
-  # rows is an array of ruby objects, fields are attributes of the given objects
+  # Rows are any ruby objects. Takes same options as Hirb::Helpers::Table.render except as noted below.
+  #
+  # Options:
+  #   :fields- Methods of the object which are represented as columns in the table. Required option.
+  #     All method values are converted to strings via to_s.
   def self.render(rows, options ={})
     raise(ArgumentError, "Option 'fields' is required.") unless options[:fields]
     rows = [rows] unless rows.is_a?(Array)

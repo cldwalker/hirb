@@ -1,0 +1,35 @@
+== Description
+
+Hirb is a mini view framework for irb that let's you create views and associate them with any number
+of classes. Instead of of having irb print an inspected version of an object, you can see more
+useful views of your objects ie tables, lists and trees. Hirb comes with a table view which works out of box with
+any Ruby classes, especially Rails' model classes. Although Hirb is built with irb in mind, any Ruby
+console application can use it.
+
+== Install
+
+Install the gem with:
+
+    sudo gem install cldwalker-hirb -s http://gems.github.com
+
+== Examples
+
+Hirb's views can be used and configured in multiple ways.
+Let's start with the common case of beefing up irb's echo.
+
+  irb>> require 'hirb'
+  => true
+
+  # Let's enable the view framework.
+  irb>> Hirb::View.enable
+  => nil
+
+== Hirb::Views
+   Let's create a view for Array which simply displays it as yaml.
+  irb>> class Hirb::Views::Array
+  irb>>   def self.render(output)
+  irb>>     output.to_yaml
+  irb>>   end
+  irb>> end 
+  => nil
+

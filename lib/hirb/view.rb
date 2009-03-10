@@ -12,7 +12,7 @@ module Hirb
         load_config(Hirb::HashStruct.block_to_hash(block))
         ::IRB::Irb.class_eval do
           alias :non_hirb_render_output  :output_value
-          def output_value
+          def output_value #:nodoc:
             Hirb::View.render_output(@context.last_value) || non_hirb_render_output
           end
         end
@@ -25,10 +25,13 @@ module Hirb
         end
       end
       
-      # This is the main method of this class. It applies a formatter method or class
-      # to the given object and then renders it (puts by default).
+      # This is the main method of this class. This method searches for the first formatter it can apply
+      # to the object in this order: local block, method option, class option. If a formatter is found it applies it to the object
+      # and returns true. Returns false if no formatter found.
       # ==== Options:
-      # [:]
+      # [:method] Specifies a global (Kernel) method to do the formatting.
+      # [:class] Specifies a class to do the formatting, using its render() class method.
+      # [:options] Options to pass the formatter method or class.
       def render_output(output, options={}, &block)
         if block && block.arity > 0
           formatted_output = block.call(output)
