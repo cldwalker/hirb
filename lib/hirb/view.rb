@@ -3,7 +3,11 @@ module Hirb
     class<<self
       attr_accessor :config, :render_method
 
-      # Overrides irb's output method with Hirb's.
+      # Overrides irb's output method with Hirb::View.render_output. Takes an optional
+      # block which sets the view config.
+      # Examples:
+      #   Hirb.enable
+      #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(&block)
         load_config(Hirb::HashStruct.block_to_hash(block))
         ::IRB::Irb.class_eval do
@@ -14,33 +18,50 @@ module Hirb
         end
       end
       
-      # Disable's Hirb's output method by reverting back to irb's.
+      # Disable's Hirb's output by reverting back to irb's.
       def disable
         ::IRB::Irb.class_eval do
           alias :output_value :non_hirb_render_output
         end
       end
       
-      def render_output(output, options={})
-        if (formatted_output = format_output(output, options))
+      # This is the main method of this class. It applies a formatter method or class
+      # to the given object and then renders it (puts by default).
+      # ==== Options:
+      # [:]
+      def render_output(output, options={}, &block)
+        if block && block.arity > 0
+          formatted_output = block.call(output)
+          render_method.call(formatted_output)
+          true
+        elsif (formatted_output = format_output(output, options))
           render_method.call(formatted_output)
           true
         else
           false
         end
       end
-      
+
+      # A lambda or proc which handles the final formatted object.
+      # Although this puts the object by default, it could be set to do other things
+      # ie write the formatted object to a file.
       def render_method
         @render_method ||= lambda {|output| puts output}
       end
-      
-      def console_render_output(output, options={})
+
+      # Loads latest Hirb::Views classes and latest Hirb.config into config.
+      def load_config(additional_config={})
+        self.config = default_config.merge(additional_config)
+      end
+
+      #:stopdoc:
+      def console_render_output(output, options={}, &block)
         # iterates over format_output options that aren't :options
         real_options = [:method, :class].inject({}) do |h, e|
           h[e] = options.delete(e) if options[e]
           h
         end
-        render_output(output, real_options.merge(:options=>options))
+        render_output(output, real_options.merge(:options=>options), &block)
       end
 
       def format_output(output, options={})
@@ -61,11 +82,6 @@ module Hirb
         else
           output.class
         end
-      end
-
-      # Loads latest Hirb::Views classes and latest Hirb.config into config.
-      def load_config(additional_config={})
-        self.config = default_config.merge(additional_config)
       end
 
       # Stores user-defined view options, mapping stringfied classes to their view options.
@@ -89,7 +105,7 @@ module Hirb
           begin
             output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| output_config.has_key?(e)}
             @cached_output_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
-              h.update(output_config[klass])
+              (klass == output_class.to_s || output_config[klass][:ancestor]) ? h.update(output_config[klass]) : h
             }
           end
         @cached_output_config[output_class]
@@ -112,6 +128,7 @@ module Hirb
           h
         }
       end
+      #:startdoc:
     end
   end
   

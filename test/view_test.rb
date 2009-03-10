@@ -19,9 +19,15 @@ class Hirb::ViewTest < Test::Unit::TestCase
     Hirb::View.config[:output]
   end
   
-  test "output_class_options recursively merges" do
+  test "output_class_options merges ancestor options" do
+    set_config "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output, :ancestor=>true}, "Kernel"=>{:method=>:default_output}
+    expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true}
+    Hirb::View.output_class_options(String).should == expected_result
+  end
+  
+  test "output_class_options doesn't ancestor options" do
     set_config "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}
-    expected_result = {:method=>:object_output, :args=>[1, 2]}
+    expected_result = {:args=>[1, 2]}
     Hirb::View.output_class_options(String).should == expected_result
   end
   
@@ -113,6 +119,14 @@ class Hirb::ViewTest < Test::Unit::TestCase
       set_config 'String'=>{:class=>"Blahify"}
       Hirb::View.render_method.expects(:call).with('d,u,d,e')
       Hirb::View.render_output('dude', :class=>"Commify")
+    end
+    
+    test "formats with block" do
+      Hirb::View.load_config
+      Hirb::View.render_method.expects(:call).with('=dude=')
+      Hirb::View.render_output('dude') {|output|
+        "=#{output}="
+      }
     end
   end
 end
