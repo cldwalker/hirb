@@ -9,6 +9,8 @@ module Hirb
       #   Hirb.enable
       #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(&block)
+        return puts("Already enabled.") if @enabled
+        @enabled = true
         load_config(Hirb::HashStruct.block_to_hash(block))
         ::IRB::Irb.class_eval do
           alias :non_hirb_render_output  :output_value
@@ -20,6 +22,7 @@ module Hirb
       
       # Disable's Hirb's output by reverting back to irb's.
       def disable
+        @enabled = false
         ::IRB::Irb.class_eval do
           alias :output_value :non_hirb_render_output
         end
@@ -125,8 +128,9 @@ module Hirb
       def default_output_config
         Hirb::Views.constants.inject({}) {|h,e|
           output_class = e.to_s.gsub("_", "::")
-          if Hirb::Views.const_get(e).respond_to?(:render)
-            h[output_class] = {:class=>"Hirb::Views::#{e}"}
+          if (views_class = Hirb::Views.const_get(e)) && views_class.respond_to?(:render)
+            default_options = views_class.respond_to?(:default_options) ? views_class.default_options : {}
+            h[output_class] = default_options.merge({:class=>"Hirb::Views::#{e}"})
           end
           h
         }

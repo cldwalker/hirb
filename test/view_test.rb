@@ -35,26 +35,35 @@ class Hirb::ViewTest < Test::Unit::TestCase
     Hirb::View.load_config
     Hirb::View.output_class_options(String).should == {}
   end
+
+  context "enable" do
+    after(:each) { Hirb::View.disable }
+    test "redefines irb output_value" do
+      Hirb::View.expects(:render_output).once
+      Hirb::View.enable
+      context_stub = stub(:last_value=>'')
+      ::IRB::Irb.new(context_stub).output_value
+    end
   
-  test "enable redefines irb output_value" do
-    Hirb::View.expects(:render_output).once
-    Hirb::View.enable
-    context_stub = stub(:last_value=>'')
-    ::IRB::Irb.new(context_stub).output_value
+    test "sets default config" do
+      eval "module ::Hirb::Views::Something_Base; def self.render; end; end"
+      Hirb::View.enable
+      output_config["Something::Base"].should == {:class=>"Hirb::Views::Something_Base"}
+    end
+  
+    test "sets default config with default_options" do
+      eval "module ::Hirb::Views::Blah; def self.render; end; def self.default_options; {:ancestor=>true}; end; end"
+      Hirb::View.enable
+      output_config["Blah"].should == {:class=>"Hirb::Views::Blah", :ancestor=>true}
+    end
+  
+    test "with block sets config" do
+      class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
+      Hirb::View.enable {|c| c.output = class_hash }
+      output_config.should == class_hash
+    end
   end
-  
-  test "enable sets default config" do
-    eval "module ::Hirb::Views::Something_Base; def self.render; end; end"
-    Hirb::View.enable
-    output_config["Something::Base"].should == {:class=>"Hirb::Views::Something_Base"}
-  end
-  
-  test "enable with block sets config" do
-    class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
-    Hirb::View.enable {|c| c.output = class_hash }
-    output_config.should == class_hash
-  end
-  
+
   test "load_config resets config to detect new Hirb::Views" do
     Hirb::View.load_config
     output_config.keys.include?('Zzz').should be(false)
