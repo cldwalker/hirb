@@ -1,4 +1,12 @@
 module Hirb
+  # This class contains one method, render_output, which formats and renders the output its given from a console application.
+  # However, this only happens for output classes that are configured to do so or if render_output is explicitly given
+  # a view formatter. The hash with the following keys are valid for Hirb::View.config as well as the :view key mentioned in Hirb:
+  # [:output] This hash is saved to output_config. It maps output classes to hashes that are passed to render_output. Thus these hashes
+  #           take the same options as render_output. In addition it takes the following keys:
+  #           * :ancestor- Boolean which if true allows all subclasses of the configured output class to inherit this config.
+  # 
+  #           Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
   module View
     class<<self
       attr_accessor :config, :render_method
@@ -52,12 +60,20 @@ module Hirb
       # Although this puts the object by default, it could be set to do other things
       # ie write the formatted object to a file.
       def render_method
-        @render_method ||= lambda {|output| puts output}
+        @render_method ||= default_render_method
+      end
+
+      def reset_render_method
+        @render_method = default_render_method
       end
 
       # Config hash which maps classes to view hashes. View hashes are the same as the options hash of render_output().
       def output_config
         @config[:output]
+      end
+
+      def output_config=(value)
+        @config[:output] = value
       end
       
       # Needs to be called for config changes to take effect. Reloads Hirb::Views classes and registers
@@ -117,10 +133,6 @@ module Hirb
         @cached_output_config = nil
       end
       
-      def output_config=(value)
-        @config[:output] = value
-      end
-
       # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
       # ancestors to the most recent ones.
       def output_class_options(output_class)
@@ -136,6 +148,10 @@ module Hirb
       end
       
       def cached_output_config; @cached_output_config; end
+
+      def default_render_method
+        lambda {|output| puts output}
+      end
 
       def default_config
         conf = Hirb.config[:view] || {}
