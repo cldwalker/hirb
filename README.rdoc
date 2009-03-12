@@ -1,10 +1,11 @@
 == Description
 
-Hirb currently provides a mini view framework for console applications, designed with irb in mind. 
-It provides one method which enhances irb's echo mode by overriding the echo of configured output
-classes with custom views. It encourages reusing views by letting you package them in classes and associate them with
-any number of output classes. Hirb comes with table views, their main class being Hirb::Helpers::Table, which work
-out of the box with any output class, especially Rails' model classes.
+Hirb currently provides a mini view framework for console applications, designed with irb in mind.
+This framework is activated by one method, which given the output of a console application, renders
+a configured view based on the output's class. The framework encourages reusing views by letting you
+package them in classes and associate them with any number of output classes.  Hirb comes with table
+views (see Hirb::Helpers::Table) which work out of the box with any output class, especially Rails'
+model classes.
 
 == Install
 
@@ -179,7 +180,7 @@ use the Hirb::Helpers namespace.
   # Hashes now appear as yaml ...
 
 === Configure At Startup
-Once you know what views are associated with what classes, you can configure
+Once you know what views are associated with what output classes, you can configure
 them at startup by passing Hirb::View.enable a block:
   # In .irbrc
   require 'hirb'

@@ -18,7 +18,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "hirb"
-    s.description = "A mini view framework for irb that's easy to use, even while under its influence."
+    s.description = "A mini view framework for console/irb that's easy to use, even while under its influence."
     s.summary = s.description
     s.email = "gabriel.horner@gmail.com"
     s.homepage = "http://github.com/cldwalker/hirb"
