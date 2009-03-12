@@ -210,5 +210,6 @@ and colors to work nicely, please fork. To colorize your Hirb output:
 == Todo
 * Create tree views.
 * Possibly add non-view irb goodies ie command manager.
+* Configurable max height, which if exceeded activates a pager.
 * Provides helper methods to all view classes.
 * Consider adding a template system as needed.
