@@ -5,11 +5,11 @@ module Hirb
   #    irb>> view 'some string', :class=>Some::String::Formatter
   #    irb>> table [[:row1], [:row2]]
   module Console
-    # Renders a table for the given object.
+    # Renders a table for the given object. Takes same options as Hirb::Helpers::Table.render.
     def table(output, options={})
       Hirb::View.console_render_output(output, options.merge(:class=>"Hirb::Helpers::AutoTable"))
     end
-    # Renders any specified view for the given object.
+    # Renders any specified view for the given object. Takes same options as Hirb::View.render_output.
     def view(*args)
       Hirb::View.console_render_output(*args)
     end

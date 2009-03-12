@@ -14,4 +14,10 @@ class HirbTest < Test::Unit::TestCase
     File.stubs('exists?').returns(false)
     Hirb.config.should == {}
   end
+  
+  test "config reloads if given explicit reload" do
+    Hirb.config
+    Hirb.expects(:read_config_file)
+    Hirb.config(true)
+  end
 end

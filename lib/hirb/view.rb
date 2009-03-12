@@ -55,9 +55,16 @@ module Hirb
         @render_method ||= lambda {|output| puts output}
       end
 
-      # Loads latest Hirb::Views classes and latest Hirb.config into config.
-      def load_config(additional_config={})
-        self.config = default_config.merge(additional_config)
+      # Config hash which maps classes to view hashes. View hashes are the same as the options hash of render_output().
+      def output_config
+        @config[:output]
+      end
+      
+      # Needs to be called for config changes to take effect. Reloads Hirb::Views classes and registers
+      # most recent config changes.
+      def reload_config
+        current_config = self.config.dup.merge(:output=>output_config)
+        load_config(current_config)
       end
 
       #:stopdoc:
@@ -73,11 +80,12 @@ module Hirb
       def format_output(output, options={})
         output_class = determine_output_class(output)
         options = output_class_options(output_class).merge(options)
-        args = options[:options] ? [options[:options]] : []
+        args = [output]
+        args << options[:options] if options[:options] && !options[:options].empty?
         if options[:method]
-          new_output = send(options[:method], output, *args)
+          new_output = send(options[:method],*args)
         elsif options[:class] && (view_class = Util.any_const_get(options[:class]))
-          new_output = view_class.render(output, *args)
+          new_output = view_class.render(*args)
         end
         new_output
       end
@@ -90,18 +98,28 @@ module Hirb
         end
       end
 
-      # Stores user-defined view options, mapping stringfied classes to their view options.
+      # Loads config
+      def load_config(additional_config={})
+        new_config = default_config
+        new_config[:output].merge!(additional_config.delete(:output) || {})
+        self.config = new_config.merge(additional_config)
+        true
+      end
+
+      # Stores all view config. Current valid keys:
+      #   :output- contains value of output_config
       def config=(value)
-        @cached_output_config = nil
+        reset_cached_output_config
         @config = value
       end
       
-      def output_config=(value)
+      def reset_cached_output_config
         @cached_output_config = nil
+      end
+      
+      def output_config=(value)
         @config[:output] = value
       end
-
-      def output_config; @config[:output]; end
 
       # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
       # ancestors to the most recent ones.

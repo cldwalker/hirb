@@ -19,8 +19,8 @@ module Hirb
       File.exists?(file) ? YAML::load_file(file) : {}
     end
 
-    def config
-      @config ||= read_config_file
+    def config(reload=false)
+      @config = (@config.nil? || reload) ? read_config_file : @config
     end
   end
 end

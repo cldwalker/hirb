@@ -13,6 +13,7 @@ end
 class Hirb::ViewTest < Test::Unit::TestCase
   def set_config(value)
     Hirb::View.output_config = value
+    Hirb::View.reset_cached_output_config
   end
   
   def output_config
@@ -37,6 +38,7 @@ class Hirb::ViewTest < Test::Unit::TestCase
   end
 
   context "enable" do
+    before(:each) {Hirb::View.config = {}}
     after(:each) { Hirb::View.disable }
     test "redefines irb output_value" do
       Hirb::View.expects(:render_output).once
@@ -60,16 +62,24 @@ class Hirb::ViewTest < Test::Unit::TestCase
     test "with block sets config" do
       class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
       Hirb::View.enable {|c| c.output = class_hash }
-      output_config.should == class_hash
+      output_config['Something::Base'].should == class_hash['Something::Base']
     end
   end
 
-  test "load_config resets config to detect new Hirb::Views" do
+  test "reload_config resets config to detect new Hirb::Views" do
     Hirb::View.load_config
     output_config.keys.include?('Zzz').should be(false)
     eval "module ::Hirb::Views::Zzz; def self.render; end; end"
-    Hirb::View.load_config
+    Hirb::View.reload_config
     output_config.keys.include?('Zzz').should be(true)
+  end
+  
+  test "reload_config picks up local changes" do
+    Hirb::View.load_config
+    output_config.keys.include?('Dooda').should be(false)
+    Hirb::View.output_config.merge!('Dooda'=>{:class=>"DoodaView"})
+    Hirb::View.reload_config
+    output_config['Dooda'].should == {:class=>"DoodaView"}
   end
   
   test "disable points output_value back to original output_value" do
