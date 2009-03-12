@@ -208,6 +208,10 @@ This is mainly because colorizing caused table classes to render incorrectly. If
 and colors to work nicely, please fork. To colorize your Hirb output:
   Hirb::View.render_method = lambda {|output| puts Wirble::Colorize.colorize(output) }
 
+== Motivation
+Table code from http://gist.github.com/72234 and {my console
+app}[http://github.com/cldwalker/tag-tree].
+
 == Todo
 * Create tree views.
 * Possibly add non-view irb goodies ie command manager.
