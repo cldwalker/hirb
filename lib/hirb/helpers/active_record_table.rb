@@ -10,7 +10,7 @@ class Hirb::Helpers::ActiveRecordTable < Hirb::Helpers::ObjectTable
       begin
         fields = rows.first.attribute_names
         fields.unshift(fields.delete('id')) if fields.include?('id')
-        fields
+        fields.map {|e| e.to_sym }
       end
     super(rows, options)
   end

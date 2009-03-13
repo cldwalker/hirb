@@ -157,7 +157,7 @@ it will be automatically loaded with no configuration. Something to think about 
 sharing views with others.
 
   # Create yaml view class
-  irb>> class Hirb::Views::Hash; def self.render(output); output.to_yaml; end ;end
+  irb>> class Hirb::Views::Hash; def self.render(output, options={}); output.to_yaml; end ;end
   =>nil
   # Just reload since no configuration is necessary
   irb>>Hirb::View.reload_config
@@ -169,7 +169,7 @@ often want view classes that can be reused with multiple outputs. For this case,
 use the Hirb::Helpers namespace.
   
   # Create yaml view class
-  irb>> class Hirb::Helpers::Yaml; def self.render(output); output.to_yaml; end ;end
+  irb>> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
   =>nil
 
   # Configure view and reload it
@@ -185,7 +185,7 @@ them at startup by passing Hirb::View.enable a block:
   # In .irbrc
   require 'hirb'
   # View class needs to come before enable()
-  class Hirb::Helpers::Yaml; def self.render(output); output.to_yaml; end ;end
+  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
   Hirb::View.enable {|conf| conf.output = {"Hash"=>{:class=>"Hirb::Helpers::Yaml"}} }
   
 Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
@@ -199,8 +199,12 @@ Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
   # In .irbrc
   require 'hirb'
   # View class needs to come before enable()
-  class Hirb::Helpers::Yaml; def self.render(output); output.to_yaml; end ;end
+  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
   Hirb::View.enable
+
+== Contributing Views
+If you have views of your own you'd like to share, fork Hirb and put your views under
+the Hirb::Helpers namespace and the view files under lib/hirb/helpers/.
 
 == Limitations
 Although Hirb preserves Wirble colorizing irb's default echo mode, it doesn't colorize its own views.
