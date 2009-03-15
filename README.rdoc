@@ -1,11 +1,11 @@
 == Description
 
 Hirb currently provides a mini view framework for console applications, designed with irb in mind.
-This framework is activated by one method, which given the output of a console application, renders
-a configured view based on the output's class. The framework encourages reusing views by letting you
-package them in classes and associate them with any number of output classes.  Hirb comes with table
-views (see Hirb::Helpers::Table) which work out of the box with any output class, especially Rails'
-model classes.
+Given the output of a console application, it renders a view if there is one configured, based on
+the output's class. The framework encourages reusing views by letting you package them in classes
+and associate them with any number of output classes.  Hirb comes with table views (see
+Hirb::Helpers::Table) which work out of the box with any output class, especially Rails' model
+classes.
 
 == Install
 
@@ -215,6 +215,9 @@ and colors to work nicely, please fork. To colorize your Hirb output:
 == Motivation
 Table code from http://gist.github.com/72234 and {my console
 app}[http://github.com/cldwalker/tag-tree].
+
+== Links
+* http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html
 
 == Todo
 * Create tree views.
