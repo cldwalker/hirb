@@ -26,6 +26,7 @@
 # derived from http://gist.github.com/72234
 class Hirb::Helpers::Table
   DEFAULT_MAX_WIDTH = 150
+  class TooManyFieldsForWidthError < StandardError; end
   class << self
     attr_accessor :max_width
     
@@ -38,6 +39,7 @@ class Hirb::Helpers::Table
     #                  length than it's truncated and has a ... appended to it. Fields that aren't specified here have no maximum allowed
     #                  length.
     # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
+    #              This doesn't count field borders as part of the total.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -99,7 +101,7 @@ class Hirb::Helpers::Table
   def format_cell(value, cell_width)
     text = value.length > cell_width ? 
       (
-      (cell_width < 3) ? value.slice(0,cell_width) : value.slice(0, cell_width - 3) + '...'
+      (cell_width < 5) ? value.slice(0,cell_width) : value.slice(0, cell_width - 3) + '...'
       ) : value
     sprintf("%-#{cell_width}s", text)
   end
@@ -122,21 +124,25 @@ class Hirb::Helpers::Table
     if @options[:field_lengths]
       @field_lengths.merge!(@options[:field_lengths])
     else
-      max_width = @options[:max_width] || Hirb::Helpers::Table.max_width || DEFAULT_MAX_WIDTH
-      restrict_field_lengths(@field_lengths, max_width)
+      table_max_width = Hirb::Helpers::Table.max_width || DEFAULT_MAX_WIDTH
+      table_max_width = @options[:max_width] if @options.has_key?(:max_width)
+      restrict_field_lengths(@field_lengths, table_max_width)
     end
   end
   
   # Simple algorithm which given a max width, allows smaller fields to be displayed while
-  # restricting longer fields at a new_long_field_length.
+  # restricting longer fields at an average_long_field_length.
   def restrict_field_lengths(field_lengths, max_width)
     total_length = field_lengths.values.inject {|t,n| t += n}
-    if total_length > max_width
+    if max_width && total_length > max_width
+      min_field_length = 3
+      raise TooManyFieldsForWidthError if @fields.size > max_width.to_f / min_field_length
       average_field_length = total_length / @fields.size.to_f
-      long_lengths, short_lengths = field_lengths.values.partition {|e| e > average_field_length}
-      new_long_field_length = (max_width - short_lengths.inject {|t,n| t += n}) / long_lengths.size
+      long_lengths = field_lengths.values.select {|e| e > average_field_length}
+      total_long_field_length = (long_lengths.inject {|t,n| t += n}) * max_width/total_length
+      average_long_field_length = total_long_field_length / long_lengths.size
       field_lengths.each {|f,length|
-        field_lengths[f] = new_long_field_length if length > new_long_field_length
+        field_lengths[f] = average_long_field_length if length > average_long_field_length
       }
     end
   end

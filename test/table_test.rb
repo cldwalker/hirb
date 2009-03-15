@@ -55,6 +55,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2], [3,4]]).should == expected_table
     end
     
+    test "with too many fields raises error" do
+      assert_raises(Hirb::Helpers::Table::TooManyFieldsForWidthError) { table([Array.new(70, 'AAA')]) }
+    end
+    
     test "with no rows renders" do
       table([]).should == "0 rows in set"
     end
@@ -137,27 +141,39 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   
     test "max_width option renders" do
       expected_table = <<-TABLE.unindent
-      +---------------------+---+------------+
-      | a                   | b | c          |
-      +---------------------+---+------------+
-      | AAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
-      +---------------------+---+------------+
+      +--------------------------+---+------------+
+      | a                        | b | c          |
+      +--------------------------+---+------------+
+      | AAAAAAAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
+      +--------------------------+---+------------+
       1 row in set
   TABLE
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>30).should == expected_table
     end
-  
+
+    test "max_width option nil renders full table" do
+      expected_table = <<-TABLE.unindent
+      +----------------------------------------------------+---+------------+
+      | a                                                  | b | c          |
+      +----------------------------------------------------+---+------------+
+      | AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA | 2 | CCCCCCCCCC |
+      +----------------------------------------------------+---+------------+
+      1 row in set
+  TABLE
+      table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>nil).should == expected_table
+    end
+    
     test "global max_width renders" do
       expected_table = <<-TABLE.unindent
-      +---------------------+---+------------+
-      | a                   | b | c          |
-      +---------------------+---+------------+
-      | AAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
-      +---------------------+---+------------+
+      +--------------------------+---+------------+
+      | a                        | b | c          |
+      +--------------------------+---+------------+
+      | AAAAAAAAAAAAAAAAAAAAA... | 2 | CCCCCCCCCC |
+      +--------------------------+---+------------+
       1 row in set
   TABLE
       Hirb::Helpers::Table.max_width = 30
-      table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table    
+      table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
       Hirb::Helpers::Table.max_width = Hirb::Helpers::Table::DEFAULT_MAX_WIDTH
     end
 
@@ -238,5 +254,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       Hirb::Helpers::ActiveRecordTable.render(@pets).should == expected_table
     end
+  end
+  
+  test "restrict_field_lengths handles many fields" do
+    @table = Hirb::Helpers::Table.new([{:field1=>'f1', :field2=>'f2', :field3=>'f3'}])
+    @table.restrict_field_lengths({:field1=>10, :field2=>15, :field3=>100}, 10)
   end
 end
