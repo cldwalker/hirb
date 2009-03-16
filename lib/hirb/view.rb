@@ -96,7 +96,7 @@ module Hirb
 
       def format_output(output, options={})
         output_class = determine_output_class(output)
-        options = output_class_options(output_class).merge(options)
+        options = Util.recursive_hash_merge(output_class_options(output_class), options)
         args = [output]
         args << options[:options] if options[:options] && !options[:options].empty?
         if options[:method]
@@ -115,11 +115,8 @@ module Hirb
         end
       end
 
-      # Loads config
       def load_config(additional_config={})
-        new_config = default_config
-        new_config[:output].merge!(additional_config.delete(:output) || {})
-        self.config = new_config.merge(additional_config)
+        self.config = Util.recursive_hash_merge default_config, additional_config
         true
       end
 
@@ -155,9 +152,7 @@ module Hirb
       end
 
       def default_config
-        conf = Hirb.config[:view] || {}
-        conf[:output] = default_output_config.merge(conf[:output] || {})
-        conf
+        Hirb::Util.recursive_hash_merge({:output=>default_output_config}, Hirb.config[:view] || {} )
       end
 
       def default_output_config

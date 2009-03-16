@@ -147,5 +147,11 @@ class Hirb::ViewTest < Test::Unit::TestCase
         "=#{output}="
       }
     end
+    
+    test "console_render_output merge options option" do
+      set_config "String"=>{:class=>"Commify", :options=>{:fields=>%w{f1 f2}}}
+      Commify.expects(:render).with('dude', :max_width=>10, :fields=>%w{f1 f2})
+      Hirb::View.render_output('dude', :options=>{:max_width=>10})
+    end
   end
 end
