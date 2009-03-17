@@ -98,7 +98,9 @@ module Hirb
       def format_output(output, options={})
         output_class = determine_output_class(output)
         options = Util.recursive_hash_merge(output_class_options(output_class), options)
-        args = options[:output_method] ? [output.send(options[:output_method])] : [output]
+        output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| e.send(options[:output_method])} : 
+          output.send(options[:output_method]) ) : output
+        args = [output]
         args << options[:options] if options[:options] && !options[:options].empty?
         if options[:method]
           new_output = send(options[:method],*args)
