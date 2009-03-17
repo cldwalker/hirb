@@ -63,4 +63,48 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
   test "tree with hash nodes missing level raises MissingValueError" do
     assert_raises(Hirb::Helpers::Tree::Node::MissingValueError) { tree([{:level=>0}]) }
   end
+
+  def mock_node(value, value_method)
+    children = []
+    value,children = *value if value.is_a?(Array)
+    mock(value_method=>value, :children=>children.map {|e| mock_node(e, value_method)})
+  end
+
+  context "parent_child_tree" do
+    test "with name value renders" do
+      expected_tree = <<-TREE.unindent
+      0.0
+      |-- 1.1
+      |-- 2.1
+      |   `-- 3.2
+      `-- 4.1
+      TREE
+      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :name)
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem).should == expected_tree
+    end
+    
+    test "with object_id value renders" do
+      expected_tree = <<-TREE.unindent
+      0.0
+      |-- 1.1
+      |-- 2.1
+      |   `-- 3.2
+      `-- 4.1
+      TREE
+      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :object_id)
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem).should == expected_tree
+    end
+
+    test "with value_method option renders" do
+      expected_tree = <<-TREE.unindent
+      0.0
+      |-- 1.1
+      |-- 2.1
+      |   `-- 3.2
+      `-- 4.1
+      TREE
+      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :blah)
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem, :value_method=>:blah).should == expected_tree
+    end
+  end
 end
