@@ -51,5 +51,16 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
     TREE
     tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]]).should == expected_tree
   end
+
+  test "tree with parentless nodes renders ParentlessNodeError" do
+    assert_raises(Hirb::Helpers::Tree::ParentlessNodeError) { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }
+  end
   
+  test "tree with hash nodes missing level raises MissingLevelError" do
+    assert_raises(Hirb::Helpers::Tree::Node::MissingLevelError) { tree([{:value=>'ok'}]) }
+  end
+
+  test "tree with hash nodes missing level raises MissingValueError" do
+    assert_raises(Hirb::Helpers::Tree::Node::MissingValueError) { tree([{:level=>0}]) }
+  end
 end

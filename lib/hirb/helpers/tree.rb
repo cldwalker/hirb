@@ -1,4 +1,6 @@
 class Hirb::Helpers::Tree
+  class ParentlessNodeError < StandardError; end
+
   class <<self
     def render(nodes, options={})
       new(nodes, options).render
@@ -13,9 +15,10 @@ class Hirb::Helpers::Tree
     if input_nodes[0].is_a?(Array)
       @nodes = input_nodes.map {|e| Node.new(:level=>e[0], :value=>e[1]) }
     else
-      @nodes = input_nodes
+      @nodes = input_nodes.map {|e| Node.new(e)}
     end
     @nodes.each_with_index {|e,i| e.merge!(:tree=>self, :index=>i)}
+    validate_nodes if options[:validate]
     self
   end
 
@@ -48,6 +51,12 @@ class Hirb::Helpers::Tree
     @nodes.map {|e| @indent_char * e[:level] + e[:value]}.join("\n")
   end
   
+  def validate_nodes
+    @nodes.each do |e|
+      raise ParentlessNodeError if (e[:level] > e.previous[:level]) && (e[:level] - e.previous[:level]).abs > 1
+    end
+  end
+  
   def mark_last_nodes_per_level
     @nodes.each {|e| e.delete(:last_node)}
     saved_last_nodes = []
@@ -60,8 +69,13 @@ class Hirb::Helpers::Tree
   end
 
   class Node < ::Hash #:nodoc:
+    class MissingLevelError < StandardError; end
+    class MissingValueError < StandardError; end
+    
     def initialize(hash)
       super
+      raise MissingLevelError unless hash.has_key?(:level)
+      raise MissingValueError unless hash.has_key?(:value)
       replace(hash)
     end
 
