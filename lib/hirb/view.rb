@@ -86,13 +86,29 @@ module Hirb
       end
 
       #:stopdoc:
-      def console_render_output(output, options={}, &block)
+      def console_render_output(*args, &block)
+        output = args.shift
+        if args[0].is_a?(Symbol) && (view = args.shift)
+          symbol_options = find_view(view)
+        end
+        options = args[-1].is_a?(Hash) ? args[-1] : {}
+        options.merge!(symbol_options) if symbol_options
         # iterates over format_output options that aren't :options
         real_options = [:method, :class, :output_method].inject({}) do |h, e|
-          h[e] = options.delete(e) if options[e]
-          h
+          h[e] = options.delete(e) if options[e]; h
         end
         render_output(output, real_options.merge(:options=>options), &block)
+      end
+
+      def find_view(name)
+        name = name.to_s
+        if (view_method = output_config.values.find {|e| e[:method] == name })
+          {:method=>view_method[:method]}
+        elsif (view_class = Hirb::Helpers.constants.find {|e| e == Util.camelize(name)})
+          {:class=>"Hirb::Helpers::#{view_class}"}
+        else
+          {}
+        end
       end
 
       def format_output(output, options={})

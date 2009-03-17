@@ -20,5 +20,10 @@ module Hirb
     def recursive_hash_merge(hash1, hash2)
       hash1.merge(hash2) {|k,o,n| (o.is_a?(Hash)) ? recursive_hash_merge(o,n) : n}
     end
+
+    # from Rails ActiveSupport
+    def camelize(string)
+      string.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
+    end
   end
 end
