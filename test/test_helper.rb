@@ -10,7 +10,8 @@ class Test::Unit::TestCase
 end
 
 class String
-  def unindent
-    gsub(/^\s*/, '').chomp
+  def unindent(num=nil)
+    regex = num ? /^\s{#{num}}/ : /^\s*/
+    gsub(regex, '').chomp
   end
 end

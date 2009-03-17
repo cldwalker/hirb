@@ -5,63 +5,86 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
     Hirb::Helpers::Tree.render(*args)
   end
   
-  test "directory tree renders" do
-    expected_tree = <<-TREE.unindent
-    0.0
-    |-- 1.1
-    |   |-- 2.2
-    |   `-- 3.2
-    `-- 4.1
-    TREE
-    tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :type=>:directory).should == expected_tree
-  end
+  context "basic tree" do
+    test "with hash nodes renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+          1.1
+              2.2
+              3.2
+          4.1
+      TREE
+      tree([{:level=>0, :value=>'0.0'}, {:level=>1, :value=>'1.1'}, {:level=>2, :value=>'2.2'},{:level=>2, :value=>'3.2'},
+         {:level=>1, :value=>'4.1'}]).should == expected_tree
+    end
   
-  test "directory tree with multiple children per level renders" do
-    expected_tree = <<-TREE.unindent
-    0.0
-    |-- 1.1
-    |   |-- 2.2
-    |   |   `-- 3.3
-    |   `-- 4.2
-    |       `-- 5.3
-    `-- 6.1
-    TREE
-    tree([[0,'0.0'], [1,'1.1'], [2,'2.2'],[3,'3.3'],[2,'4.2'],[3,'5.3'],[1,'6.1']], :type=>:directory).should == expected_tree
-  end
-  
-  test "basic tree with hash nodes renders" do
-    expected_tree = <<-TREE.gsub(/^    /, '').chomp
-    0.0
-        1.1
-            2.2
-            3.2
-        4.1
-    TREE
-    tree([{:level=>0, :value=>'0.0'}, {:level=>1, :value=>'1.1'}, {:level=>2, :value=>'2.2'},{:level=>2, :value=>'3.2'},
-       {:level=>1, :value=>'4.1'}]).should == expected_tree
-  end
-  
-  test "basic tree renders" do
-    expected_tree = <<-TREE.gsub(/^    /, '').chomp
-    0.0
-        1.1
-            2.2
-            3.2
-        4.1
-    TREE
-    tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]]).should == expected_tree
-  end
+    test "with array nodes renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+          1.1
+              2.2
+              3.2
+          4.1
+      TREE
+      tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]]).should == expected_tree
+    end
+    
+    test "with non-string values renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+          1.1
+              2.2
+              3.2
+          4.1
+      TREE
+      tree([[0,0.0],[1,1.1],[2,2.2],[2,3.2],[1,4.1]]).should == expected_tree
+    end
 
-  test "tree with parentless nodes renders ParentlessNodeError" do
-    assert_raises(Hirb::Helpers::Tree::ParentlessNodeError) { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }
-  end
-  
-  test "tree with hash nodes missing level raises MissingLevelError" do
-    assert_raises(Hirb::Helpers::Tree::Node::MissingLevelError) { tree([{:value=>'ok'}]) }
-  end
+    test "with indent option renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+        1.1
+          2.2
+          3.2
+        4.1
+      TREE
+      tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :indent=>2).should == expected_tree
+    end
 
-  test "tree with hash nodes missing level raises MissingValueError" do
-    assert_raises(Hirb::Helpers::Tree::Node::MissingValueError) { tree([{:level=>0}]) }
+    test "with type directory renders" do
+      expected_tree = <<-TREE.unindent
+      0.0
+      |-- 1.1
+      |   |-- 2.2
+      |   `-- 3.2
+      `-- 4.1
+      TREE
+      tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :type=>:directory).should == expected_tree
+    end
+
+    test "with type directory and multiple children per level renders" do
+      expected_tree = <<-TREE.unindent
+      0.0
+      |-- 1.1
+      |   |-- 2.2
+      |   |   `-- 3.3
+      |   `-- 4.2
+      |       `-- 5.3
+      `-- 6.1
+      TREE
+      tree([[0,'0.0'], [1,'1.1'], [2,'2.2'],[3,'3.3'],[2,'4.2'],[3,'5.3'],[1,'6.1']], :type=>:directory).should == expected_tree
+    end
+
+    test "with type number renders" do
+      expected_tree = <<-TREE.unindent(6)
+      1. 0
+          1. 1
+              1. 2
+              2. 3
+          2. 4 
+      TREE
+      tree([[0,'0'],[1,'1'],[2,'2'],[2,'3'],[1,'4']], :type=>:number)
+    end
   end
 
   def mock_node(value, value_method)
@@ -106,5 +129,17 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :blah)
       Hirb::Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
+  end
+
+  test "tree with parentless nodes renders ParentlessNodeError" do
+    assert_raises(Hirb::Helpers::Tree::ParentlessNodeError) { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }
+  end
+  
+  test "tree with hash nodes missing level raises MissingLevelError" do
+    assert_raises(Hirb::Helpers::Tree::Node::MissingLevelError) { tree([{:value=>'ok'}]) }
+  end
+
+  test "tree with hash nodes missing level raises MissingValueError" do
+    assert_raises(Hirb::Helpers::Tree::Node::MissingValueError) { tree([{:level=>0}]) }
   end
 end

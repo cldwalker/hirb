@@ -14,6 +14,13 @@
 #    |   `-- 3
 #    `-- 4
 # 
+#  * number:
+#    1. 0
+#      1. 1
+#        1. 2
+#        2. 3
+#      2. 4 
+# 
 # Tree nodes can be given as an array of arrays or an array of hashes.
 # To render the above basic tree with an array of arrays:
 #   Hirb::Helpers::Tree.render([[0,0], [1,1], [2,2], [2,3], [1,4]])
@@ -27,9 +34,10 @@ class Hirb::Helpers::Tree
   class <<self
     # Main method which renders a tree.
     # ==== Options:
-    # [:type] Type of tree. Either :basic or :directory. Default is :basic.
+    # [:type] Type of tree. Either :basic, :directory or :number. Default is :basic.
     # [:validate] Boolean to validate tree. Checks to see if all nodes have parents. Raises ParentlessNodeError if
     #             an invalid node is found. Default is false.
+    # [:indent] Number of spaces to indent between levels for basic + number trees. Default is 4.
     #  Examples:
     #     Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=>:directory)
     def render(nodes, options={})
@@ -55,9 +63,12 @@ class Hirb::Helpers::Tree
   end
 
   def render
+    @indent = ' ' * (@options[:indent] || 4 )
     case @type.to_s
     when 'directory'
       render_directory
+    when 'number'
+      render_number
     else
       render_basic
     end
@@ -78,9 +89,19 @@ class Hirb::Helpers::Tree
     new_nodes.join("\n")
   end
   
+  def render_number
+    counter = {}
+    @nodes.each {|e|
+      parent_level_key = "#{(e.parent ||{})[:index]}.#{e[:level]}"
+      counter[parent_level_key] ||= 0
+      counter[parent_level_key] += 1
+      e[:pre_value] = "#{counter[parent_level_key]}. "
+    }
+    @nodes.map {|e| @indent * e[:level] + e[:pre_value] + e[:value]}.join("\n")
+  end
+  
   def render_basic
-    @indent_char = @options[:indent_char] || "    "
-    @nodes.map {|e| @indent_char * e[:level] + e[:value]}.join("\n")
+    @nodes.map {|e| @indent * e[:level] + e[:value]}.join("\n")
   end
   
   def validate_nodes
