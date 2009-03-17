@@ -5,7 +5,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
     Hirb::Helpers::Tree.render(*args)
   end
   
-  test "filesystem tree renders" do
+  test "directory tree renders" do
     expected_tree = <<-TREE.unindent
     0.0
     |-- 1.1
@@ -13,10 +13,10 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
     |   `-- 3.2
     `-- 4.1
     TREE
-    tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :type=>:filesystem).should == expected_tree
+    tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :type=>:directory).should == expected_tree
   end
   
-  test "filesystem tree with multiple children per level renders" do
+  test "directory tree with multiple children per level renders" do
     expected_tree = <<-TREE.unindent
     0.0
     |-- 1.1
@@ -26,7 +26,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
     |       `-- 5.3
     `-- 6.1
     TREE
-    tree([[0,'0.0'], [1,'1.1'], [2,'2.2'],[3,'3.3'],[2,'4.2'],[3,'5.3'],[1,'6.1']], :type=>:filesystem).should == expected_tree
+    tree([[0,'0.0'], [1,'1.1'], [2,'2.2'],[3,'3.3'],[2,'4.2'],[3,'5.3'],[1,'6.1']], :type=>:directory).should == expected_tree
   end
   
   test "basic tree with hash nodes renders" do
@@ -80,7 +80,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       `-- 4.1
       TREE
       root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :name)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem).should == expected_tree
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
     end
     
     test "with object_id value renders" do
@@ -92,7 +92,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       `-- 4.1
       TREE
       root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :object_id)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem).should == expected_tree
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
     end
 
     test "with value_method option renders" do
@@ -104,7 +104,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       `-- 4.1
       TREE
       root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :blah)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:filesystem, :value_method=>:blah).should == expected_tree
+      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
   end
 end

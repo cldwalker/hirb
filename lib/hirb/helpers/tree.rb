@@ -1,12 +1,43 @@
+# Base tree class which given an array of nodes produces different types of trees.
+# The types of trees currently are:
+# * basic:
+#    0
+#      1
+#        2
+#        3
+#      4
+# 
+# * directory:
+#    0
+#    |-- 1
+#    |   |-- 2
+#    |   `-- 3
+#    `-- 4
+# 
+# Tree nodes can be given as an array of arrays or an array of hashes.
+# To render the above basic tree with an array of arrays:
+#   Hirb::Helpers::Tree.render([[0,0], [1,1], [2,2], [2,3], [1,4]])
+#
+# To render the above basic tree with an array of hashes:
+#   Hirb::Helpers::Tree.render([{:value=>0, :level=>0}, {:value=>1, :level=>1}, {:value=>2, :level=>2}, 
+#     {:value=>3, :level=>2}, {:value=>4, :level=>1}])
 class Hirb::Helpers::Tree
   class ParentlessNodeError < StandardError; end
 
   class <<self
+    # Main method which renders a tree.
+    # ==== Options:
+    # [:type] Type of tree. Either :basic or :directory. Default is :basic.
+    # [:validate] Boolean to validate tree. Checks to see if all nodes have parents. Raises ParentlessNodeError if
+    #             an invalid node is found. Default is false.
+    #  Examples:
+    #     Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=>:directory)
     def render(nodes, options={})
       new(nodes, options).render
     end
   end
 
+  # :stopdoc:
   attr_accessor :nodes
   
   def initialize(input_nodes, options={})
@@ -18,20 +49,21 @@ class Hirb::Helpers::Tree
       @nodes = input_nodes.map {|e| Node.new(e)}
     end
     @nodes.each_with_index {|e,i| e.merge!(:tree=>self, :index=>i)}
+    @nodes.each {|e| e[:value] = e[:value].to_s }
     validate_nodes if options[:validate]
     self
   end
 
   def render
     case @type.to_s
-    when 'filesystem'
-      render_filesystem
+    when 'directory'
+      render_directory
     else
       render_basic
     end
   end
 
-  def render_filesystem
+  def render_directory
     mark_last_nodes_per_level
     new_nodes = []
     @nodes.each_with_index {|e, i|
@@ -53,21 +85,19 @@ class Hirb::Helpers::Tree
   
   def validate_nodes
     @nodes.each do |e|
-      raise ParentlessNodeError if (e[:level] > e.previous[:level]) && (e[:level] - e.previous[:level]).abs > 1
+      raise ParentlessNodeError if (e[:level] > e.previous[:level]) && (e[:level] - e.previous[:level]) > 1
     end
   end
   
+  # walks tree accumulating last nodes per unique parent+level
   def mark_last_nodes_per_level
     @nodes.each {|e| e.delete(:last_node)}
-    saved_last_nodes = []
     last_node_hash = @nodes.inject({}) {|h,e|
-      h[e[:level]] = e
-      saved_last_nodes << e if e.next && e.next[:level] < e[:level]
-      h
+      h["#{(e.parent ||{})[:index]}.#{e[:level]}"] = e; h
     }
-    (saved_last_nodes + last_node_hash.values).uniq.each {|e| e[:last_node] = true}
+    last_node_hash.values.uniq.each {|e| e[:last_node] = true}
   end
-
+  #:startdoc:
   class Node < ::Hash #:nodoc:
     class MissingLevelError < StandardError; end
     class MissingValueError < StandardError; end

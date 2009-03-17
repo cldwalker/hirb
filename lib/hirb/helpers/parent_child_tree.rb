@@ -1,19 +1,21 @@
 class Hirb::Helpers::ParentChildTree < Hirb::Helpers::Tree
   class <<self
+    # Starting with the given node, this builds a tree by recursively calling a children method.
+    # ==== Options:
+    # [:value_method] Method to call to display as a node's value. If not given, uses :name if node
+    #                 responds to :name or defaults to :object_id.
+    # [:children_method] Method to call to obtain a node's children. Default is :children.
     def render(root_node, options={})
       @value_method = options[:value_method] || (root_node.respond_to?(:name) ? :name : :object_id)
+      @children_method = options[:children_method] || :children
       @nodes = []
-      save_node(root_node, 0)
+      build_node(root_node, 0)
       super(@nodes, options)
     end
 
-    def save_node(node, level)
+    def build_node(node, level) #:nodoc:
       @nodes << {:value=>node.send(@value_method), :level=>level}
-      node.children.each {|e| save_node(e, level + 1)}
-    end
-
-    def node_value(node)
-      node.send(@value_method)
+      node.send(@children_method).each {|e| build_node(e, level + 1)}
     end
   end
 end
