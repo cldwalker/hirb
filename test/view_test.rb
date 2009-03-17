@@ -140,6 +140,12 @@ class Hirb::ViewTest < Test::Unit::TestCase
       Hirb::View.render_output('dude', :class=>"Commify")
     end
     
+    test "formats with output_method option" do
+      set_config 'String'=>{:class=>"Blahify"}
+      Hirb::View.render_method.expects(:call).with('d,u,d')
+      Hirb::View.render_output('dude', :class=>"Commify", :output_method=>:chop)
+    end
+
     test "formats with block" do
       Hirb::View.load_config
       Hirb::View.render_method.expects(:call).with('=dude=')

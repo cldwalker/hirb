@@ -43,6 +43,7 @@ module Hirb
       # [:method] Specifies a global (Kernel) method to do the formatting.
       # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and 
       #          an options hash.
+      # [:output_method] Specifies a method to call on output before passing it to a formatter.
       # [:options] Options to pass the formatter method or class.
       def render_output(output, options={}, &block)
         if block && block.arity > 0
@@ -87,7 +88,7 @@ module Hirb
       #:stopdoc:
       def console_render_output(output, options={}, &block)
         # iterates over format_output options that aren't :options
-        real_options = [:method, :class].inject({}) do |h, e|
+        real_options = [:method, :class, :output_method].inject({}) do |h, e|
           h[e] = options.delete(e) if options[e]
           h
         end
@@ -97,7 +98,7 @@ module Hirb
       def format_output(output, options={})
         output_class = determine_output_class(output)
         options = Util.recursive_hash_merge(output_class_options(output_class), options)
-        args = [output]
+        args = options[:output_method] ? [output.send(options[:output_method])] : [output]
         args << options[:options] if options[:options] && !options[:options].empty?
         if options[:method]
           new_output = send(options[:method],*args)
