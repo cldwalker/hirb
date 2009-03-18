@@ -4,8 +4,8 @@ Hirb currently provides a mini view framework for console applications, designed
 Given the output of a console application, it renders a view if there is one configured, based on
 the output's class. The framework encourages reusing views by letting you package them in classes
 and associate them with any number of output classes.  Hirb comes with tree views (see
-Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table), which work out of the box with any
-output class, especially Rails' model classes.
+Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table). By default Hirb displays Rails'
+model classes as tables.
 
 == Install
 
