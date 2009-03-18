@@ -51,6 +51,28 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :indent=>2).should == expected_tree
     end
 
+    test "with limit option renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+          1.1
+          4.1
+      TREE
+      tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :limit=>1).should == expected_tree
+    end
+
+    test "with description option renders" do
+      expected_tree = <<-TREE.unindent(6)
+      0.0
+          1.1
+              2.2
+              3.2
+          4.1
+      
+      5 nodes in tree
+      TREE
+      tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :description=>true).should == expected_tree
+    end
+
     test "with type directory renders" do
       expected_tree = <<-TREE.unindent
       0.0

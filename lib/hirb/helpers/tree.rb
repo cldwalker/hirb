@@ -14,7 +14,7 @@
 #    |   `-- 3
 #    `-- 4
 # 
-#  * number:
+# * number:
 #    1. 0
 #      1. 1
 #        1. 2
@@ -22,12 +22,15 @@
 #      2. 4 
 # 
 # Tree nodes can be given as an array of arrays or an array of hashes.
-# To render the above basic tree with an array of arrays:
-#   Hirb::Helpers::Tree.render([[0,0], [1,1], [2,2], [2,3], [1,4]])
-#
 # To render the above basic tree with an array of hashes:
 #   Hirb::Helpers::Tree.render([{:value=>0, :level=>0}, {:value=>1, :level=>1}, {:value=>2, :level=>2}, 
 #     {:value=>3, :level=>2}, {:value=>4, :level=>1}])
+# Note from the hash keys that :level refers to the depth of the tree while :value refers to the text displayed
+# for a node.
+#
+# To render the above basic tree with an array of arrays:
+#   Hirb::Helpers::Tree.render([[0,0], [1,1], [2,2], [2,3], [1,4]])
+# Note that the each array pair consists of the level and the value for the node.
 class Hirb::Helpers::Tree
   class ParentlessNodeError < StandardError; end
 
@@ -38,6 +41,8 @@ class Hirb::Helpers::Tree
     # [:validate] Boolean to validate tree. Checks to see if all nodes have parents. Raises ParentlessNodeError if
     #             an invalid node is found. Default is false.
     # [:indent] Number of spaces to indent between levels for basic + number trees. Default is 4.
+    # [:limit] Limits the level or depth of a tree that is displayed. Root node is level 0.
+    # [:description] Displays brief description about tree ie how many nodes it has.
     #  Examples:
     #     Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=>:directory)
     def render(nodes, options={})
@@ -63,7 +68,18 @@ class Hirb::Helpers::Tree
   end
 
   def render
+    body = render_tree
+    body += render_description if @options[:description]
+    body
+  end
+  
+  def render_description
+    "\n\n#{@nodes.length} #{@nodes.length == 1 ? 'node' : 'nodes'} in tree"
+  end
+
+  def render_tree
     @indent = ' ' * (@options[:indent] || 4 )
+    @nodes = @nodes.select {|e| e[:level] <= @options[:limit] } if @options[:limit]
     case @type.to_s
     when 'directory'
       render_directory
