@@ -1,6 +1,7 @@
 class Hirb::Helpers::ParentChildTree < Hirb::Helpers::Tree
   class <<self
     # Starting with the given node, this builds a tree by recursively calling a children method.
+    # Takes same options as Hirb::Helper::Table.render with some additional ones below.
     # ==== Options:
     # [:value_method] Method to call to display as a node's value. If not given, uses :name if node
     #                 responds to :name or defaults to :object_id.

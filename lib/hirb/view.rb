@@ -71,7 +71,7 @@ module Hirb
 
       # Config hash which maps classes to view hashes. View hashes are the same as the options hash of render_output().
       def output_config
-        @config[:output]
+        config[:output]
       end
 
       def output_config=(value)
@@ -84,9 +84,15 @@ module Hirb
         current_config = self.config.dup.merge(:output=>output_config)
         load_config(current_config)
       end
-
-      #:stopdoc:
+      
+      # A console version of render_output which takes its same options but allows for some shortcuts.
+      # Examples:
+      #   console_render_output output, :tree, :type=>:directory
+      #   # is the same as:
+      #   render_output output, :class=>"Hirb::Helpers::Tree", :options=> {:type=>:directory}
+      #
       def console_render_output(*args, &block)
+        load_config unless @config
         output = args.shift
         if args[0].is_a?(Symbol) && (view = args.shift)
           symbol_options = find_view(view)
@@ -100,6 +106,7 @@ module Hirb
         render_output(output, real_options.merge(:options=>options), &block)
       end
 
+      #:stopdoc:
       def find_view(name)
         name = name.to_s
         if (view_method = output_config.values.find {|e| e[:method] == name })

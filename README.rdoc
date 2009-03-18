@@ -218,6 +218,7 @@ app's needs}[http://github.com/cldwalker/tag-tree].
 
 == Links
 * http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html
+* http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html
 
 == Todo
 * Configurable max height, which if exceeded activates a pager.

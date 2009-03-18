@@ -9,7 +9,7 @@ module Hirb
     def table(output, options={})
       Hirb::View.console_render_output(output, options.merge(:class=>"Hirb::Helpers::AutoTable"))
     end
-    # Renders any specified view for the given object. Takes same options as Hirb::View.render_output.
+    # Renders any specified view for the given object. Takes same options as Hirb::View.console_render_output.
     def view(*args)
       Hirb::View.console_render_output(*args)
     end
