@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Class: Hirb::Helpers::ParentChildTree [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Helpers::ParentChildTree
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/hirb/helpers/parent_child_tree_rb.html">lib/hirb/helpers/parent_child_tree.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a href="Tree.html">Hirb::Helpers::Tree</a></strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000006">render</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000006'>
+                <a name='M000006'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>render</span>
+                  <span class='arguments'>(root_node, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Starting with the given node, this builds a tree by recursively calling a
+                  children method. Takes same options as Hirb::Helper::Table.render with some
+                  additional ones below.
+                  </p>
+                  <h4>Options:</h4>
+                  <dl>
+                  <dt>:value_method</dt><dd>Method to call to display as a node&#8217;s value. If not given, uses :name
+                  if node responds to :name or defaults to :object_id.
+                  
+                  </dd>
+                  <dt>:children_method</dt><dd>Method to call to obtain a node&#8217;s children. Default is :children.
+                  
+                  </dd>
+                  </dl>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/parent_child_tree.rb, line 9</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">root_node</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-ivar">@value_method</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:value_method</span>] <span class="ruby-operator">||</span> (<span class="ruby-identifier">root_node</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:name</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">:name</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">:object_id</span>)&#x000A;      <span class="ruby-ivar">@children_method</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:children_method</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">:children</span>&#x000A;      <span class="ruby-ivar">@nodes</span> = []&#x000A;      <span class="ruby-identifier">build_node</span>(<span class="ruby-identifier">root_node</span>, <span class="ruby-value">0</span>)&#x000A;      <span class="ruby-keyword kw">super</span>(<span class="ruby-ivar">@nodes</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

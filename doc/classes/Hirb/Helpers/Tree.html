@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Class: Hirb::Helpers::Tree [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Helpers::Tree
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/hirb/helpers/tree_rb.html">lib/hirb/helpers/tree.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Base tree class which given an array of nodes produces different types of
+            trees. The types of trees currently are:
+            </p>
+            <ul>
+            <li>basic:
+            
+            <pre>0&#x000A;  1&#x000A;    2&#x000A;    3&#x000A;  4</pre>
+            </li>
+            <li>directory:
+            
+            <pre>0&#x000A;|-- 1&#x000A;|   |-- 2&#x000A;|   `-- 3&#x000A;`-- 4</pre>
+            </li>
+            <li>number:
+            
+            <pre>1. 0&#x000A;  1. 1&#x000A;    1. 2&#x000A;    2. 3&#x000A;  2. 4</pre>
+            </li>
+            </ul>
+            <p>
+            <a href="Tree.html">Tree</a> nodes can be given as an array of arrays or an
+            array of hashes. To render the above basic tree with an array of hashes:
+            </p>
+            <pre>Hirb::Helpers::Tree.render([{:value=&gt;0, :level=&gt;0}, {:value=&gt;1, :level=&gt;1}, {:value=&gt;2, :level=&gt;2},&#x000A;  {:value=&gt;3, :level=&gt;2}, {:value=&gt;4, :level=&gt;1}])</pre>
+            <p>
+            Note from the hash keys that :level refers to the depth of the tree while
+            :value refers to the text displayed for a node.
+            </p>
+            <p>
+            To render the above basic tree with an array of arrays:
+            </p>
+            <pre>Hirb::Helpers::Tree.render([[0,0], [1,1], [2,2], [2,3], [1,4]])</pre>
+            <p>
+            Note that the each array pair consists of the level and the value for the
+            node.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000007">render</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Tree/ParentlessNodeError.html" class="link">Hirb::Helpers::Tree::ParentlessNodeError</a><br />
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000007'>
+                <a name='M000007'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>render</span>
+                  <span class='arguments'>(nodes, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Main method which renders a tree.
+                  </p>
+                  <h4>Options:</h4>
+                  <dl>
+                  <dt>:type</dt><dd>Type of tree. Either :basic, :directory or :number. Default is :basic.
+                  
+                  </dd>
+                  <dt>:validate</dt><dd>Boolean to validate tree. Checks to see if all nodes have parents. Raises
+                  <a href="Tree/ParentlessNodeError.html">ParentlessNodeError</a> if an
+                  invalid node is found. Default is false.
+                  
+                  </dd>
+                  <dt>:indent</dt><dd>Number of spaces to indent between levels for basic + number trees. Default
+                  is 4.
+                  
+                  </dd>
+                  <dt>:limit</dt><dd>Limits the level or depth of a tree that is displayed. Root node is level
+                  0.
+                  
+                  </dd>
+                  <dt>:description</dt><dd>Displays brief description about tree ie how many nodes it has.
+                  
+                  </dd>
+                  </dl>
+                  <pre>Examples:&#x000A;   Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=&gt;:directory)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/tree.rb, line 48</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

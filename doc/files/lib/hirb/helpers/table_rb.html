@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: table.rb [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>table.rb</h1>
+        <div class='paths'>
+          lib/hirb/helpers/table.rb
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Sun Mar 15 15:32:33 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Base Table class from which other table classes inherit. By default, a
+            table is constrained to a default width but this can be adjusted via
+            options as well as Hirb:Helpers::Table.max_width. Rows can be an array of
+            arrays or an array of hashes.
+            </p>
+            <p>
+            An array of arrays ie [[1,2], [2,3]], would render:
+            </p>
+            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
+            <p>
+            By default, the fields/columns are the numerical indices of the array.
+            </p>
+            <p>
+            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
+            would render:
+            </p>
+            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
+            <p>
+            By default, the fields/columns are the keys of the first hash.
+            </p>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

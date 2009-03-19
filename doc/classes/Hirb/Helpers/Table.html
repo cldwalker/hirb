@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>Class: Hirb::Helpers::Table [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Helpers::Table
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/hirb/helpers/table_rb.html">lib/hirb/helpers/table.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Base <a href="Table.html">Table</a> class from which other table classes
+            inherit. By default, a table is constrained to a default width but this can
+            be adjusted via options as well as Hirb:Helpers::Table.max_width. Rows can
+            be an array of arrays or an array of hashes.
+            </p>
+            <p>
+            An array of arrays ie [[1,2], [2,3]], would render:
+            </p>
+            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
+            <p>
+            By default, the fields/columns are the numerical indices of the array.
+            </p>
+            <p>
+            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
+            would render:
+            </p>
+            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
+            <p>
+            By default, the fields/columns are the keys of the first hash.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000004">render</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Table/TooManyFieldsForWidthError.html" class="link">Hirb::Helpers::Table::TooManyFieldsForWidthError</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_MAX_WIDTH</td>
+                    <td>=</td>
+                    <td class='context-item-value'>150</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>max_width</td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000004'>
+                <a name='M000004'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>render</span>
+                  <span class='arguments'>(rows, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Main method which returns a formatted table.
+                  </p>
+                  <h4>Options:</h4>
+                  <dl>
+                  <dt>:fields</dt><dd>An array which overrides the default fields and can be used to indicate
+                  field order.
+                  
+                  </dd>
+                  <dt>:headers</dt><dd>A hash of fields and their header names. Fields that aren&#8217;t specified
+                  here default to their name. This option can also be an array but only for
+                  array rows.
+                  
+                  </dd>
+                  <dt>:field_lengths</dt><dd>A hash of fields and their maximum allowed lengths. If a field exceeds
+                  it&#8217;s maximum length than it&#8217;s truncated and has a &#8230;
+                  appended to it. Fields that aren&#8217;t specified here have no maximum
+                  allowed length.
+                  
+                  </dd>
+                  <dt>:max_width</dt><dd>The maximum allowed width of all fields put together. This option is
+                  enforced except when the field_lengths option is set. This doesn&#8217;t
+                  count field borders as part of the total.
+                  
+                  </dd>
+                  </dl>
+                  <p>
+                  Examples:
+                  </p>
+                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 48</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>,<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
