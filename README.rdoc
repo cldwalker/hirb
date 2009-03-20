@@ -216,6 +216,9 @@ and colors to work nicely, please fork. To colorize your Hirb output:
 Table code from http://gist.github.com/72234 and {my console
 app's needs}[http://github.com/cldwalker/tag-tree].
 
+== Bugs
+Please report them as tickets here: http://cldwalker.lighthouseapp.com/projects/27735-hirb/tickets
+
 == Links
 * http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html
 * http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html
