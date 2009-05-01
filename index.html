@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Tagaholic - hirb</title>
     
       <meta name="keywords" content="hirb, irb, console, automated views, trees, tables, view framework" />
@@ -16,7 +16,6 @@
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic' title="All Tagaholic posts"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/tag' title="Tagaholic posts tagged tag"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/ruby' title="Tagaholic posts tagged ruby"/>
-    <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/github' title="Tagaholic posts tagged github"/>
     <link rel='alternate' type='application/rss+xml' href='http://feeds2.feedburner.com/tagaholic/tag/rails' title="Tagaholic posts tagged rails"/>
   </head>
   <body>
@@ -34,7 +33,7 @@
       </div>
       <div id='content'>
         <style type="text/css">
-  h1 { font-size: 3.8em; color: #000; margin: 0px; }
+  h1 { font-size: 3.0em; color: #000; margin: 0px; }
   h1 .small { font-size: 0.4em; }
   h1 a { text-decoration: none }
   h2 { font-size: 1.5em; color: #000; }
@@ -43,8 +42,10 @@
   .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
   .download { float: right; }
   pre { background: #000; color: #fff; padding: 15px;}
+  #install { font-size: 1.2em}
   hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
   .footer { text-align:center; padding-top:30px; font-style: italic; }
+  #documentation_link {font-weight: bold;}
 </style>
 
 <a href="http://github.com/cldwalker/hirb"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
@@ -64,26 +65,36 @@
   A mini view framework for console/irb that's easy to use, even while under its influence.
 </div>
 
-<h2>Install</h2>
-<p>gem install cldwalker-hirb -s http://gems.github.com</p>
 
-<h2>Documentation</h2>
+<h2>Install</h2>
+<pre id="install">gem install cldwalker-hirb --source http://gems.github.com</pre>
+
+
+<h2>Description</h2>
 <p>
-  Hirb currently provides a mini view framework for console applications, designed with irb in mind.  Given the output of a console application, it renders a view if there is one configured, based on the output's class. The framework encourages reusing views by letting you package them in classes and associate them with any number of output classes.  Hirb comes with tree views (see Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table). By default Hirb displays Rails' model classes as tables.
+  <p>
+Hirb currently provides a mini view framework for console applications,
+designed with irb in mind. Given the output of a console application, it
+renders a view if there is one configured, based on the output&#8217;s
+class. The framework encourages reusing views by letting you package them
+in classes and associate them with any number of output classes. Hirb comes
+with tree views (see Hirb::Helpers::Tree) and table views (see
+Hirb::Helpers::Table). By default Hirb displays Rails&#8217; model classes
+as tables.
+</p>
+
   
-  <p> <a href="doc/index.html">Read full documentation...</a></p>
+  <p> <a id="documentation_link" href="doc/index.html">Read documentation.</a></p>
 </p>
 
 <h2>License</h2>
 <p>MIT</p>
 
 <h2>Authors</h2>
-<p>Gabriel Horner (gabriel.horner [AT] gmail.com)<br/><br/>      </p>
+<p>Gabriel Horner (gabriel.horner [AT] gmail.com)</p>
 
-
-<h2>Bugs</h2>
-<p>Please report them as tickets <a href="http://cldwalker.lighthouseapp.com/projects/27735-hirb/tickets">here</a>.
-
+<h2>Issues</h2>
+<p>Issues, bugs? <a href="http://github.com/cldwalker/hirb/issues">Please report them on github.</a>
 
 <h2>Download</h2>
 <p>
