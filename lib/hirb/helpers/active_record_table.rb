@@ -8,8 +8,7 @@ class Hirb::Helpers::ActiveRecordTable < Hirb::Helpers::ObjectTable
     rows = [rows] unless rows.is_a?(Array)
     options[:fields] ||= 
       begin
-        fields = rows.first.attribute_names
-        fields.unshift(fields.delete('id')) if fields.include?('id')
+        fields = rows.first.class.column_names
         fields.map {|e| e.to_sym }
       end
     super(rows, options)

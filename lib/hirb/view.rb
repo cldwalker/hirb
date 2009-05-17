@@ -27,7 +27,12 @@ module Hirb
           end
         end
       end
-      
+
+      # Indicates if Hirb::View is enabled.
+      def enabled?
+        @enabled || false
+      end
+
       # Disable's Hirb's output by reverting back to irb's.
       def disable
         @enabled = false
