@@ -53,6 +53,7 @@ class Hirb::Helpers::Table
   #:stopdoc:
   def initialize(rows, options={})
     @options = options
+    @options[:filters] ||= {}
     @fields = options[:fields] || ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} : 
       rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : [])
     @rows = setup_rows(rows)
@@ -71,6 +72,7 @@ class Hirb::Helpers::Table
         new_rows << array_to_indices_hash(row)
       }
     end
+    rows = filter_values(rows)
     validate_values(rows)
     rows
   end
@@ -157,6 +159,21 @@ class Hirb::Helpers::Table
       end
     end
     field_lengths
+  end
+
+  def filter_values(rows)
+    rows.map {|row|
+      new_row = {}
+      @fields.each {|f|
+        if @options[:filters][f]
+          new_row[f] = @options[:filters][f].is_a?(Proc) ? @options[:filters][f].call(row[f]) :
+            row[f].send(*@options[:filters][f])
+        else
+          new_row[f] = row[f]
+        end
+      }
+      new_row
+    }
   end
 
   def validate_values(rows)
