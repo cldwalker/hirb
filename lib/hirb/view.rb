@@ -126,8 +126,8 @@ module Hirb
       def format_output(output, options={})
         output_class = determine_output_class(output)
         options = Util.recursive_hash_merge(output_class_options(output_class), options)
-        output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| e.send(options[:output_method])} : 
-          output.send(options[:output_method]) ) : output
+        output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| call_output_method(options[:output_method], e) } : 
+          call_output_method(options[:output_method], output) ) : output
         args = [output]
         args << options[:options] if options[:options] && !options[:options].empty?
         if options[:method]
@@ -136,6 +136,10 @@ module Hirb
           new_output = view_class.render(*args)
         end
         new_output
+      end
+
+      def call_output_method(output_method, output)
+        output_method.is_a?(Proc) ? output_method.call(output) : output.send(output_method)
       end
 
       def determine_output_class(output)
