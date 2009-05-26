@@ -20,10 +20,12 @@ module Hirb
         return puts("Already enabled.") if @enabled
         @enabled = true
         load_config(Hirb::HashStruct.block_to_hash(block))
-        ::IRB::Irb.class_eval do
-          alias :non_hirb_render_output  :output_value
-          def output_value #:nodoc:
-            Hirb::View.render_output(@context.last_value) || non_hirb_render_output
+        if Object.const_defined?(:IRB)
+          ::IRB::Irb.class_eval do
+            alias :non_hirb_render_output  :output_value
+            def output_value #:nodoc:
+              Hirb::View.render_output(@context.last_value) || non_hirb_render_output
+            end
           end
         end
       end
