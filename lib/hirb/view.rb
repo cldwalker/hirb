@@ -16,9 +16,10 @@ module Hirb
       # Examples:
       #   Hirb.enable
       #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
-      def enable(&block)
+      def enable(options={}, &block)
         return puts("Already enabled.") if @enabled
         @enabled = true
+        Hirb.config_file = options[:config_file] if options[:config_file]
         load_config(Hirb::HashStruct.block_to_hash(block))
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do

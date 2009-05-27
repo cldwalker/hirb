@@ -15,10 +15,14 @@ module Hirb
   class <<self
     # Default is config/hirb.yml or ~/hirb.yml in that order.
     def config_file
-      File.exists?('config/hirb.yml') ? 'config/hirb.yml' : File.expand_path(File.join("~",".hirb.yml"))
+      @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' : File.expand_path(File.join(ENV["HOME"],".hirb.yml"))
     end
 
     #:stopdoc:
+    def config_file=(value)
+      @config_file = value
+    end
+
     def read_config_file(file=config_file)
       File.exists?(file) ? YAML::load_file(file) : {}
     end
