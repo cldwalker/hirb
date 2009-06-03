@@ -40,6 +40,7 @@ class Hirb::Helpers::Table
     #                  length.
     # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
     #              This doesn't count field borders as part of the total.
+    # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -62,6 +63,10 @@ class Hirb::Helpers::Table
       @headers = options[:headers].is_a?(Hash) ? @headers.merge(options[:headers]) : 
         (options[:headers].is_a?(Array) ? array_to_indices_hash(options[:headers]) : options[:headers])
     end
+    if options[:number]
+      @headers[:hirb_number] = "number"
+      @fields.unshift :hirb_number
+    end
   end
   
   def setup_rows(rows)
@@ -73,6 +78,7 @@ class Hirb::Helpers::Table
       }
     end
     rows = filter_values(rows)
+    rows.each_with_index {|e,i| e[:hirb_number] = (i + 1).to_s} if @options[:number]
     validate_values(rows)
     rows
   end
