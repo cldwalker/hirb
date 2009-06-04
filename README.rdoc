@@ -139,7 +139,7 @@ A view method is the smallest reuseable view.
   # Configure view and reload it
   irb>>Hirb::View.output_config = {"Hash"=>{:method=>:yaml}}
   =>{"Hash"=>{:method=>:yaml}}
-  irb>>Hash::View.reload_config
+  irb>>Hirb::View.reload_config
   =>true
 
   # Hashes now appear as yaml
