@@ -18,4 +18,8 @@ class Hirb::UtilTest < Test::Unit::TestCase
     Hirb::Util.recursive_hash_merge({:output=>{:fields=>%w{f1 f2}}, :key1=>'hash1'},
       {:output=>{:method=>'blah'}, :key2=>'hash2'}).should == expected_hash
   end
+
+  test "choose from array" do
+    Hirb::Util.choose_from_array([1,2,3,4], '1-2,4').should == [1,2,4]
+  end
 end

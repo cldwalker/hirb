@@ -227,6 +227,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([['some', {:num=>2}], ['thing', {:num=>1}]], :filters=>{0=>lambda {|e| e.split("").join(",")},
         1=>[:[], :num]}).should == expected_table
     end
+
+    test "with number option renders" do
+      expected_table = <<-TABLE.unindent
+      +--------+---+---+
+      | number | 0 | 1 |
+      +--------+---+---+
+      | 1      | a | b |
+      | 2      | c | d |
+      +--------+---+---+
+      2 rows in set
+      TABLE
+      table([['a','b'], ['c', 'd']], :number=>true).should == expected_table
+    end
   end
   
   context "object table" do
