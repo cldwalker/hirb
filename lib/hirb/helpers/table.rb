@@ -41,11 +41,14 @@ class Hirb::Helpers::Table
     # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
     #              This doesn't count field borders as part of the total.
     # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
+    # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
+    #            a given proc or an array containing a method and optional arguments to it.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
+    #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
       new(rows,options).render
     end

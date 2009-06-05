@@ -214,6 +214,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2], [3,4]], :headers=>['A', 'B']).should == expected_table
     end
     
+    test "with filters option renders" do
+      expected_table = <<-TABLE.unindent
+      +-----------+---+
+      | 0         | 1 |
+      +-----------+---+
+      | s,o,m,e   | 2 |
+      | t,h,i,n,g | 1 |
+      +-----------+---+
+      2 rows in set
+      TABLE
+      table([['some', {:num=>2}], ['thing', {:num=>1}]], :filters=>{0=>lambda {|e| e.split("").join(",")},
+        1=>[:[], :num]}).should == expected_table
+    end
   end
   
   context "object table" do
@@ -240,7 +253,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   
   context "activerecord table" do
     before(:all) {
-      @pets = [stub(:name=>'rufus', :age=>7, :attribute_names=>['age', 'name']), stub(:name=>'alf', :age=>101)]
+      @pets = [stub(:name=>'rufus', :age=>7, :class=>mock(:column_names=>[:age, :name])), stub(:name=>'alf', :age=>101)]
     }
     test "renders" do
       expected_table = <<-TABLE.unindent

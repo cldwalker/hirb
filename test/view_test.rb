@@ -64,6 +64,11 @@ class Hirb::ViewTest < Test::Unit::TestCase
       Hirb::View.enable {|c| c.output = class_hash }
       output_config['Something::Base'].should == class_hash['Something::Base']
     end
+
+    test "is enabled?" do
+      Hirb::View.enable
+      assert Hirb::View.enabled?
+    end
   end
 
   test "reload_config resets config to detect new Hirb::Views" do
