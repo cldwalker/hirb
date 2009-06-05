@@ -51,7 +51,7 @@ module Hirb
       # [:method] Specifies a global (Kernel) method to do the formatting.
       # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and 
       #          an options hash.
-      # [:output_method] Specifies a method to call on output before passing it to a formatter.
+      # [:output_method] Specifies a method or proc to call on output before passing it to a formatter.
       # [:options] Options to pass the formatter method or class.
       def render_output(output, options={}, &block)
         if block && block.arity > 0

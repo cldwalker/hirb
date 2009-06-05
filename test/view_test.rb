@@ -69,6 +69,18 @@ class Hirb::ViewTest < Test::Unit::TestCase
       Hirb::View.enable
       assert Hirb::View.enabled?
     end
+
+    test "works without irb" do
+      Object.expects(:const_defined?).with(:IRB).returns(false)
+      Hirb::View.enable
+      assert output_config.size > 0
+    end
+
+    test "with config_file option sets config_file" do
+      Hirb.config_file.should_not == 'test_file'
+      Hirb::View.enable :config_file=> 'test_file'
+      Hirb.config_file.should == 'test_file'
+    end
   end
 
   test "reload_config resets config to detect new Hirb::Views" do
@@ -145,10 +157,16 @@ class Hirb::ViewTest < Test::Unit::TestCase
       Hirb::View.render_output('dude', :class=>"Commify")
     end
     
-    test "formats with output_method option" do
+    test "formats with output_method option as method" do
       set_config 'String'=>{:class=>"Blahify"}
       Hirb::View.render_method.expects(:call).with('d,u,d')
       Hirb::View.render_output('dude', :class=>"Commify", :output_method=>:chop)
+    end
+
+    test "formats with output_method option as proc" do
+      set_config 'String'=>{:class=>"Blahify"}
+      Hirb::View.render_method.expects(:call).with('d,u,d')
+      Hirb::View.render_output('dude', :class=>"Commify", :output_method=>lambda {|e| e.chop})
     end
 
     test "formats output array with output_method option" do
