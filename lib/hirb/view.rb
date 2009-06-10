@@ -186,7 +186,13 @@ module Hirb
       def cached_output_config; @cached_output_config; end
 
       def default_render_method
-        lambda {|output| puts output}
+        lambda {|output|
+          use_pager?(output) ? Hirb::Helpers::Pager.render(output) : puts(output)
+        }
+      end
+
+      def use_pager?(string)
+        !!(config[:pager] && (string.count("\n") > config[:pager]))
       end
 
       def default_config
