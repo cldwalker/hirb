@@ -19,7 +19,23 @@ class Hirb::UtilTest < Test::Unit::TestCase
       {:output=>{:method=>'blah'}, :key2=>'hash2'}).should == expected_hash
   end
 
-  test "choose from array" do
+  test "choose_from_array specifies range with -" do
     Hirb::Util.choose_from_array([1,2,3,4], '1-2,4').should == [1,2,4]
+  end
+
+  test "choose_from_array specifies range with .." do
+    Hirb::Util.choose_from_array([1,2,3,4], '1 .. 2,4').should == [1,2,4]
+  end
+
+  test "choose_from_array chooses all with *" do
+    Hirb::Util.choose_from_array([1,2,3,4], '*').should == [1,2,3,4]
+  end
+
+  test "choose_from_array ignores non-numerical input" do
+    Hirb::Util.choose_from_array([1,2,3,4], 'a,2').should == [2]
+  end
+
+  test "choose_from_array ignores 0" do
+    Hirb::Util.choose_from_array([1,2,3,4], '0,2').should == [2]
   end
 end

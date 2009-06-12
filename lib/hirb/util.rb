@@ -26,20 +26,22 @@ module Hirb
       string.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
     end
 
-    def choose_from_array(array, range, options={})
+    def choose_from_array(array, input, options={})
       options = {:splitter=>","}.merge(options)
+      return array if input.strip == '*'
       result = []
-      for r in range.split(options[:splitter])
-      if r =~ /-/
-        min,max = r.split('-')
-        slice_min = min.to_i - 1
-        slice_min += options[:offset] if options[:offset]
-        result.push(*array.slice(slice_min, max.to_i - min.to_i + 1))
-      else
-        index = r.to_i - 1
-        index += options[:offset] if options[:offset]
-        result.push(array[index])
-      end
+      input.split(options[:splitter]).each do |e|
+        if e =~ /-|\.\./
+          min,max = e.split(/-|\.\./)
+          slice_min = min.to_i - 1
+          slice_min += options[:offset] if options[:offset]
+          result.push(*array.slice(slice_min, max.to_i - min.to_i + 1))
+        elsif e =~ /\s*(\d+)\s*/
+          index = $1.to_i - 1
+          next if index < 0
+          index += options[:offset] if options[:offset]
+          result.push(array[index])
+        end
       end
       return result
     end
