@@ -25,3 +25,13 @@ class String
     gsub(regex, '').chomp
   end
 end
+
+# mocks IRB for View + Pager
+module ::IRB
+  class Irb
+    def initialize(context)
+      @context = context
+    end
+    def output_value; end
+  end
+end

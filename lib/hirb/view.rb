@@ -21,12 +21,13 @@ module Hirb
         @enabled = true
         Hirb.config_file = options[:config_file] if options[:config_file]
         load_config(Hirb::HashStruct.block_to_hash(block))
+        resize
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do
             alias :non_hirb_render_output  :output_value
             def output_value #:nodoc:
-              Hirb::View.render_output(@context.last_value) || ( Hirb::View.use_pager?(@context.last_value.inspect, true) ?
-                Hirb::View.page(@context.last_value.inspect) : non_hirb_render_output)
+              Hirb::View.render_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
+                non_hirb_render_output
             end
           end
         end
@@ -52,7 +53,7 @@ module Hirb
       end
 
       def resize
-        config.merge! width_and_height_hash
+        pager.resize(config[:width], config[:height])
       end
       
       # This is the main method of this class. This method searches for the first formatter it can apply
@@ -125,7 +126,20 @@ module Hirb
         render_output(output, real_options.merge(:options=>options), &block)
       end
 
+      def page_output(output, width_detection=false)
+        if config[:pager] && pager.activated_by?(output, width_detection) && Hirb::Pager.has_valid_pager?
+          pager.page(output)
+          true
+        else
+          false
+        end
+      end
+
       #:stopdoc:
+      def pager
+        @pager ||= Hirb::Pager.new(config[:width], config[:height])
+      end
+
       def find_view(name)
         name = name.to_s
         if (view_method = output_config.values.find {|e| e[:method] == name })
@@ -197,37 +211,11 @@ module Hirb
       def cached_output_config; @cached_output_config; end
 
       def default_render_method
-        lambda {|output|
-          use_pager?(output) ? page(output) : puts(output)
-        }
-      end
-
-      def page(string)
-        Hirb::Helpers::Pager.render(string)
-      end
-
-      def use_pager?(string_to_page, width_detection=false)
-        output_pageable?(string_to_page, width_detection) && Hirb::Helpers::Pager.has_valid_pager?
-      end
-
-      def output_pageable?(string_to_page, width_detection=false)
-        if width_detection
-          config[:pager] && (string_to_page.size > config[:height] * config[:width])
-        else
-          config[:pager] && (string_to_page.count("\n") > config[:height])
-        end
+        lambda {|output| page_output (output) || puts(output) }
       end
 
       def default_config
-        Hirb::Util.recursive_hash_merge({:output=>default_output_config, :pager=>false}.update(width_and_height_hash), Hirb.config[:view] || {})
-      end
-
-      # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
-      def width_and_height_hash
-        hash = {}
-        hash[:width] = ENV['COLUMNS'] =~ /^\d+$/ ? ENV['COLUMNS'].to_i : 150
-        hash[:height] = ENV['LINES'] =~ /^\d+$/ ? ENV['LINES'].to_i : 50
-        hash
+        Hirb::Util.recursive_hash_merge({:output=>default_output_config, :pager=>false}, Hirb.config[:view] || {})
       end
 
       def default_output_config

@@ -6,6 +6,7 @@ require 'hirb/helpers'
 require 'hirb/view'
 require 'hirb/views/activerecord_base'
 require 'hirb/console'
+require 'hirb/pager'
 
 # Most of Hirb's functionality currently resides in Hirb::View.
 # Hirb has an optional yaml config file defined by config_file. This config file
