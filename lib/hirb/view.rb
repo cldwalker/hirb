@@ -126,9 +126,9 @@ module Hirb
         render_output(output, real_options.merge(:options=>options), &block)
       end
 
-      def page_output(output, width_detection=false)
-        if config[:pager] && pager.activated_by?(output, width_detection) && Hirb::Pager.has_valid_pager?
-          pager.page(output)
+      def page_output(output, inspect_mode=false)
+        if config[:pager] && pager.activated_by?(output, inspect_mode) && Hirb::Pager.has_valid_pager?
+          pager.page(output, inspect_mode)
           true
         else
           false
@@ -211,7 +211,7 @@ module Hirb
       def cached_output_config; @cached_output_config; end
 
       def default_render_method
-        lambda {|output| page_output (output) || puts(output) }
+        lambda {|output| page_output(output) || puts(output) }
       end
 
       def default_config

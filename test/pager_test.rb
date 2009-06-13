@@ -29,7 +29,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
     test "activates within default irb when output is wide enough" do
       Hirb::View.enable {|c| c.pager = true}
       input = create_pageable_string(true)
-      Hirb::View.pager.expects(:page).with(input.inspect)
+      Hirb::View.pager.expects(:page).with(input.inspect, true)
       Hirb::View.expects(:render_output).returns(false)
       irb_eval input
     end
@@ -44,7 +44,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
     test "activates within default irb with an explicit width" do
       Hirb::View.enable {|c| c.pager = true; c.width = 10}
       input = create_pageable_string true, :width=>10
-      Hirb::View.pager.expects(:page).with(input.inspect)
+      Hirb::View.pager.expects(:page).with(input.inspect, true)
       Hirb::View.expects(:render_output).returns(false)
       irb_eval input
     end
@@ -62,7 +62,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
       Hirb::View.enable {|c| c.pager = true}
       input = create_pageable_string
       Hirb::View.expects(:format_output).returns(input)
-      Hirb::View.pager.expects(:page).with(input)
+      Hirb::View.pager.expects(:page).with(input, false)
       irb_eval(input)
     end
 
@@ -78,7 +78,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
       Hirb::View.enable {|c| c.pager = true; c.height = 100 }
       input = create_pageable_string false, :height=>100
       Hirb::View.expects(:format_output).returns(input)
-      Hirb::View.pager.expects(:page).with(input)
+      Hirb::View.pager.expects(:page).with(input, false)
       irb_eval(input)
     end
 
