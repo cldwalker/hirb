@@ -16,6 +16,10 @@ class Hirb::Helpers::Pager
     IO.popen(pager_binary, "w")
   end
 
+  def self.has_valid_pager?
+    !! pager_binary
+  end
+
   def self.pager_binary
     @pager_binary ||= [ ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq.find {|e|
       ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, e) }

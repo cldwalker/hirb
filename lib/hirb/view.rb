@@ -206,23 +206,27 @@ module Hirb
         Hirb::Helpers::Pager.render(string)
       end
 
-      def use_pager?(string, width_detection=false)
+      def use_pager?(string_to_page, width_detection=false)
+        output_pageable?(string_to_page, width_detection) && Hirb::Helpers::Pager.has_valid_pager?
+      end
+
+      def output_pageable?(string_to_page, width_detection=false)
         if width_detection
-          !!(config[:pager] && (string.size > config[:height] * config[:width]))
+          config[:pager] && (string_to_page.size > config[:height] * config[:width])
         else
-          !!(config[:pager] && (string.count("\n") > config[:height]))
+          config[:pager] && (string_to_page.count("\n") > config[:height])
         end
       end
 
       def default_config
-        Hirb::Util.recursive_hash_merge({:output=>default_output_config}.update(width_and_height_hash), Hirb.config[:view] || {})
+        Hirb::Util.recursive_hash_merge({:output=>default_output_config, :pager=>false}.update(width_and_height_hash), Hirb.config[:view] || {})
       end
 
       # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
       def width_and_height_hash
         hash = {}
-        hash[:width] = ENV['COLUMNS'].to_i rescue 150
-        hash[:height] = ENV['LINES'].to_i rescue 50
+        hash[:width] = ENV['COLUMNS'] =~ /^\d+$/ ? ENV['COLUMNS'].to_i : 150
+        hash[:height] = ENV['LINES'] =~ /^\d+$/ ? ENV['LINES'].to_i : 50
         hash
       end
 
