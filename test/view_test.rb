@@ -71,7 +71,7 @@ class Hirb::ViewTest < Test::Unit::TestCase
     end
 
     test "works without irb" do
-      Object.expects(:const_defined?).with(:IRB).returns(false)
+      Object.stubs(:const_defined?).with(:IRB).returns(false)
       Hirb::View.enable
       assert output_config.size > 0
     end
@@ -81,6 +81,15 @@ class Hirb::ViewTest < Test::Unit::TestCase
       Hirb::View.enable :config_file=> 'test_file'
       Hirb.config_file.should == 'test_file'
     end
+  end
+
+  context "pager" do
+    # not set by default
+    # enabled with :pager true
+    # enabled with :pager :width
+    # enabled with :pager :height
+    # toggle_pager
+    # resize
   end
 
   test "reload_config resets config to detect new Hirb::Views" do
@@ -105,6 +114,13 @@ class Hirb::ViewTest < Test::Unit::TestCase
     Hirb::View.disable
     context_stub = stub(:last_value=>'')
     ::IRB::Irb.new(context_stub).output_value
+  end
+
+  test "disable works without irb defined" do
+    Object.stubs(:const_defined?).with(:IRB).returns(false)
+    Hirb::View.enable
+    Hirb::View.disable
+    Hirb::View.enabled?.should be(false)
   end
 
   context "render_output" do

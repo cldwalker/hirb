@@ -25,7 +25,8 @@ module Hirb
           ::IRB::Irb.class_eval do
             alias :non_hirb_render_output  :output_value
             def output_value #:nodoc:
-              Hirb::View.render_output(@context.last_value) || non_hirb_render_output
+              Hirb::View.render_output(@context.last_value) || ( Hirb::View.use_pager?(@context.last_value.inspect, true) ?
+                Hirb::View.page(@context.last_value.inspect) : non_hirb_render_output)
             end
           end
         end
@@ -39,9 +40,19 @@ module Hirb
       # Disable's Hirb's output by reverting back to irb's.
       def disable
         @enabled = false
-        ::IRB::Irb.class_eval do
-          alias :output_value :non_hirb_render_output
+        if Object.const_defined?(:IRB)
+          ::IRB::Irb.class_eval do
+            alias :output_value :non_hirb_render_output
+          end
         end
+      end
+
+      def toggle_pager
+        config[:pager] = !config[:pager]
+      end
+
+      def resize
+        config.merge! width_and_height_hash
       end
       
       # This is the main method of this class. This method searches for the first formatter it can apply
@@ -187,16 +198,32 @@ module Hirb
 
       def default_render_method
         lambda {|output|
-          use_pager?(output) ? Hirb::Helpers::Pager.render(output) : puts(output)
+          use_pager?(output) ? page(output) : puts(output)
         }
       end
 
-      def use_pager?(string)
-        !!(config[:pager] && (string.count("\n") > config[:pager]))
+      def page(string)
+        Hirb::Helpers::Pager.render(string)
+      end
+
+      def use_pager?(string, width_detection=false)
+        if width_detection
+          !!(config[:pager] && (string.size > config[:height] * config[:width]))
+        else
+          !!(config[:pager] && (string.count("\n") > config[:height]))
+        end
       end
 
       def default_config
-        Hirb::Util.recursive_hash_merge({:output=>default_output_config}, Hirb.config[:view] || {} )
+        Hirb::Util.recursive_hash_merge({:output=>default_output_config}.update(width_and_height_hash), Hirb.config[:view] || {})
+      end
+
+      # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
+      def width_and_height_hash
+        hash = {}
+        hash[:width] = ENV['COLUMNS'].to_i rescue 150
+        hash[:height] = ENV['LINES'].to_i rescue 50
+        hash
       end
 
       def default_output_config

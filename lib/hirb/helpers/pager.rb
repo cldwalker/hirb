@@ -13,8 +13,12 @@ class Hirb::Helpers::Pager
   end
 
   def self.setup_pager
-    for pager in [ ENV['PAGER'], "less", "more", 'pager' ].compact.uniq
-      return IO.popen(pager, "w") rescue nil
-    end
+    IO.popen(pager_binary, "w")
+  end
+
+  def self.pager_binary
+    @pager_binary ||= [ ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq.find {|e|
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, e) }
+    }
   end
 end

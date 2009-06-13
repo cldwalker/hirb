@@ -1,7 +1,6 @@
 class Hirb::Helpers::Menu
   def self.render(output, options={})
-    options = {:helper_class=>Hirb::Helpers::Table, :prompt=>"Choose #{options[:choose] || ""}: ", :ask=>true}.merge(options)
-    options[:helper_class] ||= Hirb::Helpers::Table
+    options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:choose] || ""}: ", :ask=>true}.merge(options)
     if output.size == 1 && !options[:ask]
       yield(output) if output.size > 0 and block_given?
       return output
