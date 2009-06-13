@@ -224,8 +224,6 @@ Please report them {on github}[http://github.com/cldwalker/hirb/issues].
 * http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html
 
 == Todo
-* Configurable max height, which if exceeded activates a pager.
-* Possibly add non-view irb goodies ie command manager.
 * Consider applying multiple views/filters to output.
 * Provides helper methods to all view classes.
 * Consider adding a template system as needed.
