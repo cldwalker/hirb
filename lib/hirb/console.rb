@@ -15,7 +15,7 @@ module Hirb
     end
 
     def menu(output, options={})
-      Hirb::View.console_render_output(output, options.merge(:class=>"Hirb::Helpers::Menu"))
+      Hirb::View.console_format_output(output, options.merge(:class=>"Hirb::Helpers::Menu"))
     end
   end
 end

@@ -52,7 +52,7 @@ module Hirb
       
     end
 
-    attr_accessor :width, :height
+    attr_reader :width, :height
 
     def initialize(width, height, options={})
       resize(width, height)

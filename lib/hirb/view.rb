@@ -21,7 +21,7 @@ module Hirb
         @enabled = true
         Hirb.config_file = options[:config_file] if options[:config_file]
         load_config(Hirb::HashStruct.block_to_hash(block))
-        resize
+        resize(config[:width], config[:height])
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do
             alias :non_hirb_render_output  :output_value
@@ -48,12 +48,18 @@ module Hirb
         end
       end
 
+      # Toggles pager on or off. The pager only works while Hirb::View is enabled.
       def toggle_pager
         config[:pager] = !config[:pager]
       end
 
-      def resize
-        pager.resize(config[:width], config[:height])
+      # Resizes the console width and height for use with the pager i.e. after having resized the console window. *nix users
+      # should only have to call this method. Non-*nix users should call this method with explicit width and height. If you don't know
+      # your width and height, use highline's Highline::SystemExtensions.terminal_size().
+      def resize(width=nil, height=nil)
+        config[:width] = width if width
+        config[:height] = height if height
+        pager.resize(width, height)
       end
       
       # This is the main method of this class. This method searches for the first formatter it can apply
@@ -112,6 +118,25 @@ module Hirb
       #   render_output output, :class=>"Hirb::Helpers::Tree", :options=> {:type=>:directory}
       #
       def console_render_output(*args, &block)
+        render_output(*parse_console_input(*args), &block)
+      end
+
+      # Takes same arguments and options as console_render_output() but returns formatted output instead of rendering it.
+      def console_format_output(*args, &block)
+        format_output(*parse_console_input(*args), &block)
+      end
+
+      #:stopdoc:
+      def page_output(output, inspect_mode=false)
+        if enabled? && config[:pager] && pager.activated_by?(output, inspect_mode)
+          pager.page(output, inspect_mode)
+          true
+        else
+          false
+        end
+      end
+
+      def parse_console_input(*args)
         load_config unless @config
         output = args.shift
         if args[0].is_a?(Symbol) && (view = args.shift)
@@ -123,19 +148,10 @@ module Hirb
         real_options = [:method, :class, :output_method].inject({}) do |h, e|
           h[e] = options.delete(e) if options[e]; h
         end
-        render_output(output, real_options.merge(:options=>options), &block)
+        real_options.merge! :options=>options
+        [output, real_options]
       end
 
-      def page_output(output, inspect_mode=false)
-        if enabled? && config[:pager] && pager.activated_by?(output, inspect_mode)
-          pager.page(output, inspect_mode)
-          true
-        else
-          false
-        end
-      end
-
-      #:stopdoc:
       def pager
         @pager ||= Hirb::Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
       end
