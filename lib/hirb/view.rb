@@ -127,7 +127,7 @@ module Hirb
       end
 
       def page_output(output, inspect_mode=false)
-        if config[:pager] && pager.activated_by?(output, inspect_mode)
+        if enabled? && config[:pager] && pager.activated_by?(output, inspect_mode)
           pager.page(output, inspect_mode)
           true
         else
@@ -137,8 +137,10 @@ module Hirb
 
       #:stopdoc:
       def pager
-        @pager ||= Hirb::Pager.new(config[:width], config[:height])
+        @pager ||= Hirb::Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
       end
+
+      def pager=(value); @pager = value; end
 
       def find_view(name)
         name = name.to_s

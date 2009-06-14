@@ -2,19 +2,19 @@ module Hirb
   class Pager
     class<<self
       def command_pager(output, options={})
-        if options[:pager_command] 
-          basic_pager(output) if pager_command(options[:pager_command])
-          return
-        elsif pager_command
-          basic_pager(output)
-        end
+        basic_pager(output) if valid_pager_command?(options[:pager_command])
+      end
+
+      def valid_pager_command?(cmd)
+        cmd ? pager_command(cmd) : pager_command
       end
 
       def pager_command(*commands)
-        @pager_command ||= begin
-          commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
-          commands.compact.uniq.find {|e| command_exists?(e) }
-        end
+        @pager_command = (!@pager_command.nil? && commands.empty?) ? @pager_command : 
+          begin
+            commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
+            commands.compact.uniq.find {|e| command_exists?(e) }
+          end
       end
 
       def default_pager(output, options={})
@@ -37,7 +37,7 @@ module Hirb
         begin
           save_stdout = STDOUT.clone
           STDOUT.reopen(pager)
-          puts obj
+          puts output
         ensure
          STDOUT.reopen(save_stdout)
          save_stdout.close
@@ -54,15 +54,15 @@ module Hirb
 
     attr_accessor :width, :height
 
-    def initialize(width, height)
+    def initialize(width, height, options={})
       resize(width, height)
+      @pager_command = options[:pager_command] if options[:pager_command]
     end
 
     def page(string, inspect_mode)
-      if self.class.pager_command
-        self.class.command_pager(string)
+      if self.class.valid_pager_command?(@pager_command)
+        self.class.command_pager(string, :pager_command=>@pager_command)
       else
-        puts "Using default pager since no valid pager commmand is set. Set one with :pager_command"
         self.class.default_pager(string, :width=>@width, :height=>@height, :inspect=>inspect_mode)
       end
     end

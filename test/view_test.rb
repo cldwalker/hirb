@@ -27,6 +27,22 @@ class Hirb::ViewTest < Test::Unit::TestCase
     Hirb::View.output_class_options(String).should == {}
   end
 
+  test "page_output pages when view is enabled" do
+    Hirb::View.enable
+    Hirb::View.pager.stubs(:activated_by?).returns(true)
+    Hirb::View.pager.expects(:page)
+    Hirb::View.page_output('blah').should be(true)
+    Hirb::View.disable
+  end
+  
+  test "page_output doesn't page when view is disabled" do
+    Hirb::View.enable
+    Hirb::View.disable
+    Hirb::View.pager.stubs(:activated_by?).returns(true)
+    Hirb::View.pager.expects(:page).never
+    Hirb::View.page_output('blah').should be(false)
+  end
+
   context "enable" do
     before(:each) {Hirb::View.config = {}}
     after(:each) { Hirb::View.disable }

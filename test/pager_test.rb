@@ -25,7 +25,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
 
   context "default_pager" do
     before(:all) { Hirb::View.config = {}; Hirb::View.enable {|c| c.pager = true}}
-    before(:each) { Hirb::Pager.stubs(:pager_command).returns(nil) }
+    before(:each) { Hirb::View.pager = nil; Hirb::Pager.stubs(:pager_command).returns(nil) }
     after(:all) { Hirb::View.disable }
 
     test "pages once in normal mode" do
@@ -55,10 +55,9 @@ class Hirb::PagerTest < Test::Unit::TestCase
     end
   end
 
-  # "default irb"/inspect_mode - refers to execution within @irb.output_value after Hirb::View.render_output
-  # "render_output"/normal mode -refers to execution within render_output()
-  context "pager scenarios:" do
+  context "pager" do
     before(:all) { Hirb::View.config = {}; Hirb::View.enable }
+    before(:each) { Hirb::View.pager = nil }
     after(:all) { Hirb::View.disable }
 
     def irb_eval(string)
@@ -66,63 +65,69 @@ class Hirb::PagerTest < Test::Unit::TestCase
       ::IRB::Irb.new(context_stub).output_value
     end
 
-    test "activates within default irb when output is wide enough" do
-      output = create_pageable_string(true)
-      Hirb::View.pager.expects(:page).with(output.inspect, true)
-      Hirb::View.expects(:render_output).returns(false)
-      irb_eval output
+    # this mode is called within @irb.output_value
+    context "in inspect_mode" do
+      test "activates when output is wide enough" do
+        output = create_pageable_string(true)
+        Hirb::View.pager.expects(:page).with(output.inspect, true)
+        Hirb::View.expects(:render_output).returns(false)
+        irb_eval output
+      end
+
+      test "doesn't activate when output isn't wide enough" do
+        Hirb::View.pager.expects(:page).never
+        Hirb::View.expects(:render_output).returns(false)
+        irb_eval("a")
+      end
+
+      test "activates with an explicit width" do
+        Hirb::View.config[:width] = 10
+        output = create_pageable_string true, :width=>10
+        Hirb::View.pager.expects(:page).with(output.inspect, true)
+        Hirb::View.expects(:render_output).returns(false)
+        irb_eval output
+      end
+
+      test "activates default_pager when pager command is invalid" do
+        Hirb::Pager.expects(:pager_command).returns(nil)
+        output = create_pageable_string(true)
+        Hirb::Pager.expects(:default_pager).with(output.inspect, anything)
+        Hirb::View.expects(:render_output).returns(false)
+        capture_stdout { irb_eval output }
+      end
     end
 
-    test "doesn't activate within default irb when output isn't wide enough" do
-      Hirb::View.pager.expects(:page).never
-      Hirb::View.expects(:render_output).returns(false)
-      irb_eval("a")
-    end
+    # this mode is called within Hirb::View.render_output
+    context "in normal mode" do
+      test "activates when output is long enough" do
+        output = create_pageable_string
+        Hirb::View.expects(:format_output).returns(output)
+        Hirb::View.pager.expects(:page).with(output, false)
+        irb_eval(output)
+      end
 
-    test "activates within default irb with an explicit width" do
-      Hirb::View.pager.width = 10
-      output = create_pageable_string true, :width=>10
-      Hirb::View.pager.expects(:page).with(output.inspect, true)
-      Hirb::View.expects(:render_output).returns(false)
-      irb_eval output
-    end
+      test "doesn't activate when output isn't long enough" do
+        output = "a\n"
+        Hirb::View.expects(:format_output).returns(output)
+        Hirb::View.pager.expects(:page).never
+        capture_stdout { irb_eval(output) }
+      end
 
-    test "activates default_pager within default irb when pager command is invalid" do
-      Hirb::Pager.expects(:pager_command).returns(nil)
-      output = create_pageable_string(true)
-      Hirb::Pager.expects(:default_pager).with(output.inspect, anything)
-      Hirb::View.expects(:render_output).returns(false)
-      capture_stdout { irb_eval output }
-    end
+      test "activates with an explicit height" do
+        Hirb::View.config[:height] = 100
+        output = create_pageable_string false, :height=>100
+        Hirb::View.expects(:format_output).returns(output)
+        Hirb::View.pager.expects(:page).with(output, false)
+        irb_eval(output)
+      end
 
-    test "activates within render_output when output is long enough" do
-      output = create_pageable_string
-      Hirb::View.expects(:format_output).returns(output)
-      Hirb::View.pager.expects(:page).with(output, false)
-      irb_eval(output)
-    end
-
-    test "doesn't activate within render_output when output isn't long enough" do
-      output = "a\n"
-      Hirb::View.expects(:format_output).returns(output)
-      Hirb::View.pager.expects(:page).never
-      capture_stdout { irb_eval(output) }
-    end
-
-    test "activates within render_output with an explicit height" do
-      Hirb::View.pager.height = 100
-      output = create_pageable_string false, :height=>100
-      Hirb::View.expects(:format_output).returns(output)
-      Hirb::View.pager.expects(:page).with(output, false)
-      irb_eval(output)
-    end
-
-    test "activates default_pager within render_output when pager_command is invalid" do
-      Hirb::Pager.expects(:pager_command).returns(nil)
-      output = create_pageable_string
-      Hirb::Pager.expects(:default_pager).with(output, anything)
-      Hirb::View.expects(:format_output).returns(output)
-      capture_stdout { irb_eval output }
+      test "activates default_pager when pager_command is invalid" do
+        Hirb::Pager.expects(:pager_command).returns(nil)
+        output = create_pageable_string
+        Hirb::Pager.expects(:default_pager).with(output, anything)
+        Hirb::View.expects(:format_output).returns(output)
+        capture_stdout { irb_eval output }
+      end
     end
 
     test "state is toggled by toggle_pager" do
@@ -135,6 +140,32 @@ class Hirb::PagerTest < Test::Unit::TestCase
       Hirb::View.resize
       Hirb::View.pager.width.should == 10
       Hirb::View.pager.height.should == 10
+    end
+
+    test "when resized and no environment still has valid width and height" do
+      Hirb::View.config[:width] = Hirb::View.config[:height] = nil
+      ENV['COLUMNS'] = ENV['LINES'] = nil
+      Hirb::View.resize
+      Hirb::View.pager.width.is_a?(Integer).should be(true)
+      Hirb::View.pager.height.is_a?(Integer).should be(true)
+    end
+
+    test "activates pager_command with valid pager_command option" do
+      Hirb::View.config[:pager_command] = "less"
+      Hirb::View.expects(:render_output).returns(false)
+      Hirb::Pager.expects(:command_exists?).returns(true)
+      Hirb::Pager.expects(:command_pager)
+      irb_eval create_pageable_string(true)
+      Hirb::View.config[:pager_command] = nil
+    end
+
+    test "doesn't activate pager_command with invalid pager_command option" do
+      Hirb::View.config[:pager_command] = "moreless"
+      Hirb::View.expects(:render_output).returns(false)
+      Hirb::Pager.expects(:command_exists?).returns(false)
+      Hirb::Pager.expects(:default_pager)
+      irb_eval create_pageable_string(true)
+      Hirb::View.config[:pager_command] = nil
     end
   end
 end
