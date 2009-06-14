@@ -1,27 +1,20 @@
 module Hirb
   class Pager
     class<<self
-      def shell_pager(obj, options={})
-        pager = IO.popen(pager_binary, "w")
-        begin
-          save_stdout = STDOUT.clone
-          STDOUT.reopen(pager)
-          puts obj
-        ensure
-         STDOUT.reopen(save_stdout)
-         save_stdout.close
-         pager.close
+      def command_pager(output, options={})
+        if options[:pager_command] 
+          basic_pager(output) if pager_command(options[:pager_command])
+          return
+        elsif pager_command
+          basic_pager(output)
         end
       end
 
-      def has_valid_pager?
-        !! pager_binary
-      end
-
-      def pager_binary
-        @pager_binary ||= [ ENV['PAGER'], 'less', 'more', 'pager'].compact.uniq.find {|e|
-          ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, e) }
-        }
+      def pager_command(*commands)
+        @pager_command ||= begin
+          commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
+          commands.compact.uniq.find {|e| command_exists?(e) }
+        end
       end
 
       def default_pager(output, options={})
@@ -35,24 +28,46 @@ module Hirb
       end
 
       private
+      def command_exists?(command)
+        ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+      end
+
+      def basic_pager(output)
+        pager = IO.popen(pager_command, "w")
+        begin
+          save_stdout = STDOUT.clone
+          STDOUT.reopen(pager)
+          puts obj
+        ensure
+         STDOUT.reopen(save_stdout)
+         save_stdout.close
+         pager.close
+        end
+      end
+
       def continue_paging?
         puts "=== Press enter/return to continue or q to quit: ==="
-        !gets.chomp[/q/i]
+        !$stdin.gets.chomp[/q/i]
       end
       
     end
 
-    attr_reader :width, :height
+    attr_accessor :width, :height
 
     def initialize(width, height)
       resize(width, height)
     end
 
     def page(string, inspect_mode)
-      self.class.has_valid_pager? ? self.class.shell_pager(string) :
-        default_pager(string, :width=>@width, :height=>@height, :inspect=>inspect_mode)
+      if self.class.pager_command
+        self.class.command_pager(string)
+      else
+        puts "Using default pager since no valid pager commmand is set. Set one with :pager_command"
+        self.class.default_pager(string, :width=>@width, :height=>@height, :inspect=>inspect_mode)
+      end
     end
 
+    # note: the last line will be cut early in inspect_mode if the correct height + width aren't set
     def slice!(output, inspect_mode=false)
       if inspect_mode
         sliced_output = output.slice(0,@width * @height)
@@ -67,11 +82,7 @@ module Hirb
     end
 
     def activated_by?(string_to_page, inspect_mode=false)
-      if inspect_mode
-        string_to_page.size > @height * @width
-      else
-        string_to_page.count("\n") > @height
-      end
+      inspect_mode ? (string_to_page.size > @height * @width) : (string_to_page.count("\n") > @height)
     end
 
     # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
