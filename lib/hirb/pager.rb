@@ -87,8 +87,8 @@ module Hirb
 
     # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
     def resize(width, height)
-      @width = width || (ENV['COLUMNS'] =~ /^\d+$/ ? ENV['COLUMNS'].to_i : 150)
-      @height = height || (ENV['LINES'] =~ /^\d+$/ ? ENV['LINES'].to_i : 50)
+      @width = width || Hirb::View.resize_width
+      @height = height || Hirb::View.resize_height
     end
   end
 end

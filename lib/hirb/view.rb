@@ -8,6 +8,8 @@ module Hirb
   # 
   #           Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
   module View
+    DEFAULT_WIDTH = 150
+    DEFAULT_HEIGHT = 50
     class<<self
       attr_accessor :config, :render_method
 
@@ -53,13 +55,13 @@ module Hirb
         config[:pager] = !config[:pager]
       end
 
-      # Resizes the console width and height for use with the pager i.e. after having resized the console window. *nix users
+      # Resizes the console width and height for use with the table + pager i.e. after having resized the console window. *nix users
       # should only have to call this method. Non-*nix users should call this method with explicit width and height. If you don't know
       # your width and height, use highline's Highline::SystemExtensions.terminal_size().
       def resize(width=nil, height=nil)
-        config[:width] = width if width
-        config[:height] = height if height
-        pager.resize(width, height)
+        config[:width] = width || resize_width
+        config[:height] = height || resize_height
+        pager.resize(config[:width], config[:height])
       end
       
       # This is the main method of this class. This method searches for the first formatter it can apply
@@ -128,7 +130,24 @@ module Hirb
         format_output(*parse_console_input(*args), &block)
       end
 
+      def width
+        config[:width] || DEFAULT_WIDTH
+      end
+
+      def height
+        config[:height] || DEFAULT_HEIGHT
+      end
+
       #:stopdoc:
+
+      def resize_width
+        ENV['COLUMNS'] =~ /^\d+$/ ? ENV['COLUMNS'].to_i : DEFAULT_WIDTH
+      end
+
+      def resize_height
+        ENV['LINES'] =~ /^\d+$/ ? ENV['LINES'].to_i : DEFAULT_HEIGHT
+      end
+
       def page_output(output, inspect_mode=false)
         if enabled? && config[:pager] && pager.activated_by?(output, inspect_mode)
           pager.page(output, inspect_mode)

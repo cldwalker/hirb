@@ -25,7 +25,6 @@
 #--
 # derived from http://gist.github.com/72234
 class Hirb::Helpers::Table
-  DEFAULT_MAX_WIDTH = 150
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
   class << self
@@ -136,8 +135,7 @@ class Hirb::Helpers::Table
     if @options[:field_lengths]
       @field_lengths.merge!(@options[:field_lengths])
     else
-      table_max_width = Hirb::Helpers::Table.max_width || DEFAULT_MAX_WIDTH
-      table_max_width = @options[:max_width] if @options.has_key?(:max_width)
+      table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : Hirb::View.width
       restrict_field_lengths(@field_lengths, table_max_width) if table_max_width
     end
   end

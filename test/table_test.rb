@@ -4,6 +4,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   def table(*args)
     Hirb::Helpers::Table.render(*args)
   end
+  before(:all) { Hirb::View.config = {}}
   
   context "basic table" do
     test "renders" do
@@ -163,7 +164,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>nil).should == expected_table
     end
     
-    test "global max_width renders" do
+    test "global width renders" do
       expected_table = <<-TABLE.unindent
       +-----------+---+-----------+
       | a         | b | c         |
@@ -172,9 +173,8 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +-----------+---+-----------+
       1 row in set
   TABLE
-      Hirb::Helpers::Table.max_width = 30
+      Hirb::View.config[:width] = 30
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
-      Hirb::Helpers::Table.max_width = Hirb::Helpers::Table::DEFAULT_MAX_WIDTH
     end
 
     test "headers option and headers longer than fields renders" do
