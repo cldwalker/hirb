@@ -111,7 +111,9 @@ module Hirb
         load_config(current_config)
       end
       
-      # A console version of render_output which takes its same options but allows for some shortcuts.
+      # A console version of render_output() which takes its same options but allows for some shortcuts.
+      # The second argument can be an optional symbol which maps to a helper class's nested name. Last argument is an options 
+      # hash which is passed to the formatter class except for formatter options: :class, :method and :output_method.
       # Examples:
       #   console_render_output output, :tree, :type=>:directory
       #   # is the same as:
@@ -136,6 +138,12 @@ module Hirb
         end
       end
 
+      def pager
+        @pager ||= Hirb::Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
+      end
+
+      def pager=(value); @pager = value; end
+
       def parse_console_input(*args)
         load_config unless @config
         output = args.shift
@@ -151,12 +159,6 @@ module Hirb
         real_options.merge! :options=>options
         [output, real_options]
       end
-
-      def pager
-        @pager ||= Hirb::Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
-      end
-
-      def pager=(value); @pager = value; end
 
       def find_view(name)
         name = name.to_s

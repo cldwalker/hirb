@@ -5,13 +5,13 @@ class Hirb::Helpers::Menu
       yield(output) if output.size > 0 and block_given?
       return output
     end
-    $stdout.puts options[:helper_class].render(output, options.merge(:number=>true))
-    $stdout.print options[:prompt]
+    puts options[:helper_class].render(output, options.merge(:number=>true))
+    print options[:prompt]
     input = $stdin.gets.chomp.strip
     results = Hirb::Util.choose_from_array(output, input)
     if options[:choose] == :one
       if results.size != 1
-        $stdout.puts "Choose one. You chose #{results.size} items."
+        puts "Choose one. You chose #{results.size} items."
         return nil
       else
         return results[0]

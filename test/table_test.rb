@@ -244,7 +244,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   
   context "object table" do
     before(:all) {
-      @pets = [stub(:name=>'rufus', :age=>7), stub(:name=>'alf', :age=>101)]
+      @pets = [stub(:name=>'rufus', :age=>7, :to_s=>'rufus'), stub(:name=>'alf', :age=>101, :to_s=>'alf')]
     }
     test "renders" do
       expected_table = <<-TABLE.unindent
@@ -259,8 +259,32 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       Hirb::Helpers::ObjectTable.render(@pets, :fields=>[:name, :age]).should == expected_table
     end
     
-    test "with no options fields raises ArgumentError" do
-      assert_raises(ArgumentError) { Hirb::Helpers::ObjectTable.render(@pets) }
+    test "with no options defaults to to_s field" do
+      expected_table = <<-TABLE.unindent
+      +-------+
+      | to_s  |
+      +-------+
+      | rufus |
+      | alf   |
+      +-------+
+      2 rows in set
+      TABLE
+      Hirb::Helpers::ObjectTable.render(@pets).should == expected_table
+    end
+
+    test "renders simple arrays" do
+      expected_table = <<-TABLE.unindent
+      +------+
+      | to_s |
+      +------+
+      | 1    |
+      | 2    |
+      | 3    |
+      | 4    |
+      +------+
+      4 rows in set
+      TABLE
+      Hirb::Helpers::ObjectTable.render([1,2,3,4]).should == expected_table
     end
   end
   
