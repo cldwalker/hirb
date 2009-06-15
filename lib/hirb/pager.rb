@@ -67,16 +67,16 @@ module Hirb
       end
     end
 
-    # note: the last line will be cut early in inspect_mode if the correct height + width aren't set
     def slice!(output, inspect_mode=false)
+      effective_height = @height - 2 # takes into account pager prompt
       if inspect_mode
-        sliced_output = output.slice(0,@width * @height)
-        output.replace output.slice(@width * @height..-1)
+        sliced_output = output.slice(0, @width * effective_height)
+        output.replace output.slice(@width * effective_height..-1)
         sliced_output
       else
         # could use output.scan(/[^\n]*\n?/) instead of split
-        sliced_output = output.split("\n").slice(0,@height).join("\n")
-        output.replace output.split("\n").slice(@height..-1).join("\n")
+        sliced_output = output.split("\n").slice(0, effective_height).join("\n")
+        output.replace output.split("\n").slice(effective_height..-1).join("\n")
         sliced_output
       end
     end
