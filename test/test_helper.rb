@@ -7,6 +7,12 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'hirb'
 
 class Test::Unit::TestCase
+  # set these to avoid invoking stty multiple times which doubles test suite running time
+  ENV["LINES"] = ENV["COLUMNS"] = "20"
+  def reset_terminal_size
+    ENV["LINES"] = ENV["COLUMNS"] = "20"
+  end
+
   def capture_stdout(&block)
     original_stdout = $stdout
     $stdout = fake = StringIO.new

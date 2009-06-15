@@ -45,5 +45,18 @@ module Hirb
       end
       return result
     end
+
+    def command_exists?(command)
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+    end
+
+    # returns [width, height] of terminal when detected, nil if not detected
+    # simpler version of highline's Highline::SystemExtensions.terminal_size()
+    def detect_terminal_size
+      (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/) ? [ENV['COLUMNS'].to_i, ENV['LINES'].to_i] :
+        ( command_exists?('stty') ? `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse : nil )
+    rescue
+      nil
+    end
   end
 end

@@ -27,8 +27,8 @@
 class Hirb::Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
+
   class << self
-    attr_accessor :max_width
     
     # Main method which returns a formatted table.
     # ==== Options:

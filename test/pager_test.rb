@@ -12,13 +12,13 @@ class Hirb::PagerTest < Test::Unit::TestCase
   end
 
   test "command_pager sets pager_command when command exists" do
-    Hirb::Pager.expects(:command_exists?).returns(true)
+    Hirb::Util.expects(:command_exists?).returns(true)
     Hirb::Pager.expects(:basic_pager)
     Hirb::Pager.command_pager 'blah', :pager_command=>'less'
   end
 
   test "command_pager doesn't set pager_command when command doesn't exist" do
-    Hirb::Pager.expects(:command_exists?).returns(false)
+    Hirb::Util.expects(:command_exists?).returns(false)
     Hirb::Pager.expects(:basic_pager).never
     Hirb::Pager.command_pager 'blah', :pager_command=>'moreless'
   end
@@ -135,25 +135,36 @@ class Hirb::PagerTest < Test::Unit::TestCase
       Hirb::View.config[:pager].should == false
     end
 
-    test "when resized changes width and height" do
+    test "when resized changes width and height with stty" do
+      Hirb::Util.expects(:command_exists?).with('stty').returns(true)
+      ENV['COLUMNS'] = ENV['LINES'] = nil # bypasses env usage
+      Hirb::View.resize
+      Hirb::View.pager.width.should_not == 10
+      Hirb::View.pager.height.should_not == 10
+      reset_terminal_size
+    end
+
+    test "when resized changes width and height with ENV" do
       ENV['COLUMNS'] = ENV['LINES'] = '10' # simulates resizing
       Hirb::View.resize
       Hirb::View.pager.width.should == 10
       Hirb::View.pager.height.should == 10
     end
 
-    test "when resized and no environment still has valid width and height" do
+    test "when resized and no environment or stty still has valid width and height" do
       Hirb::View.config[:width] = Hirb::View.config[:height] = nil
+      Hirb::Util.expects(:command_exists?).with('stty').returns(false)
       ENV['COLUMNS'] = ENV['LINES'] = nil
       Hirb::View.resize
       Hirb::View.pager.width.is_a?(Integer).should be(true)
       Hirb::View.pager.height.is_a?(Integer).should be(true)
+      reset_terminal_size
     end
 
     test "activates pager_command with valid pager_command option" do
       Hirb::View.config[:pager_command] = "less"
       Hirb::View.expects(:render_output).returns(false)
-      Hirb::Pager.expects(:command_exists?).returns(true)
+      Hirb::Util.expects(:command_exists?).returns(true)
       Hirb::Pager.expects(:command_pager)
       irb_eval create_pageable_string(true)
       Hirb::View.config[:pager_command] = nil
@@ -162,7 +173,7 @@ class Hirb::PagerTest < Test::Unit::TestCase
     test "doesn't activate pager_command with invalid pager_command option" do
       Hirb::View.config[:pager_command] = "moreless"
       Hirb::View.expects(:render_output).returns(false)
-      Hirb::Pager.expects(:command_exists?).returns(false)
+      Hirb::Util.expects(:command_exists?).returns(false)
       Hirb::Pager.expects(:default_pager)
       irb_eval create_pageable_string(true)
       Hirb::View.config[:pager_command] = nil

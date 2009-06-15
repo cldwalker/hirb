@@ -13,7 +13,7 @@ module Hirb
         @pager_command = (!@pager_command.nil? && commands.empty?) ? @pager_command : 
           begin
             commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
-            commands.compact.uniq.find {|e| command_exists?(e) }
+            commands.compact.uniq.find {|e| Util.command_exists?(e) }
           end
       end
 
@@ -28,10 +28,6 @@ module Hirb
       end
 
       private
-      def command_exists?(command)
-        ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
-      end
-
       def basic_pager(output)
         pager = IO.popen(pager_command, "w")
         begin
@@ -85,10 +81,8 @@ module Hirb
       inspect_mode ? (string_to_page.size > @height * @width) : (string_to_page.count("\n") > @height)
     end
 
-    # these environment variables should work for *nix, others should use highline's Highline::SystemExtensions.terminal_size
     def resize(width, height)
-      @width = width || Hirb::View.resize_width
-      @height = height || Hirb::View.resize_height
+      @width, @height = Hirb::View.determine_terminal_size(width, height)
     end
   end
 end

@@ -57,10 +57,9 @@ module Hirb
 
       # Resizes the console width and height for use with the table + pager i.e. after having resized the console window. *nix users
       # should only have to call this method. Non-*nix users should call this method with explicit width and height. If you don't know
-      # your width and height, use highline's Highline::SystemExtensions.terminal_size().
+      # your width and height, in irb play with "a"* width to find width and puts "a\n" * height to find height.
       def resize(width=nil, height=nil)
-        config[:width] = width || resize_width
-        config[:height] = height || resize_height
+        config[:width], config[:height] = determine_terminal_size(width, height)
         pager.resize(config[:width], config[:height])
       end
       
@@ -130,22 +129,21 @@ module Hirb
         format_output(*parse_console_input(*args), &block)
       end
 
+      # current console width
       def width
         config[:width] || DEFAULT_WIDTH
       end
 
+      # current console height
       def height
         config[:height] || DEFAULT_HEIGHT
       end
 
       #:stopdoc:
 
-      def resize_width
-        ENV['COLUMNS'] =~ /^\d+$/ ? ENV['COLUMNS'].to_i : DEFAULT_WIDTH
-      end
-
-      def resize_height
-        ENV['LINES'] =~ /^\d+$/ ? ENV['LINES'].to_i : DEFAULT_HEIGHT
+      def determine_terminal_size(width, height)
+        detected  = (width.nil? || height.nil?) ? Util.detect_terminal_size || [] : []
+        [width || detected[0] || DEFAULT_WIDTH , height || detected[1] || DEFAULT_HEIGHT]
       end
 
       def page_output(output, inspect_mode=false)
@@ -227,6 +225,10 @@ module Hirb
       def config=(value)
         reset_cached_output_config
         @config = value
+      end
+
+      def config
+        @config ||= {}
       end
       
       def reset_cached_output_config
