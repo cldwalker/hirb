@@ -262,7 +262,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     test "with no options defaults to to_s field" do
       expected_table = <<-TABLE.unindent
       +-------+
-      | to_s  |
+      | value |
       +-------+
       | rufus |
       | alf   |
@@ -274,14 +274,14 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
 
     test "renders simple arrays" do
       expected_table = <<-TABLE.unindent
-      +------+
-      | to_s |
-      +------+
-      | 1    |
-      | 2    |
-      | 3    |
-      | 4    |
-      +------+
+      +-------+
+      | value |
+      +-------+
+      | 1     |
+      | 2     |
+      | 3     |
+      | 4     |
+      +-------+
       4 rows in set
       TABLE
       Hirb::Helpers::ObjectTable.render([1,2,3,4]).should == expected_table

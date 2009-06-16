@@ -38,4 +38,8 @@ class Hirb::UtilTest < Test::Unit::TestCase
   test "choose_from_array ignores 0" do
     Hirb::Util.choose_from_array([1,2,3,4], '0,2').should == [2]
   end
+
+  test "choose_from_array returns empty when empty input" do
+    Hirb::Util.choose_from_array([1,2,3,4], "\n").should == []
+  end
 end
