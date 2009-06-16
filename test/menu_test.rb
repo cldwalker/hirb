@@ -2,7 +2,9 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 class Hirb::Helpers::MenuTest < Test::Unit::TestCase
   def menu(*args, &block)
-    Hirb::Helpers::Menu.render(*args, &block)
+    # testing via menu's main use case (through console) instead of Hirb::Helpers::Menu.render
+    @menu ||= Object.new.extend(Hirb::Console)
+    @menu.menu(*args, &block)
   end
 
   def basic_menu(*args, &block)

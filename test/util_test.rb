@@ -42,4 +42,9 @@ class Hirb::UtilTest < Test::Unit::TestCase
   test "choose_from_array returns empty when empty input" do
     Hirb::Util.choose_from_array([1,2,3,4], "\n").should == []
   end
+
+  test "capture_stdout" do
+    string = "sweetness man"
+    Hirb::Util.capture_stdout { puts string }.should == string + "\n"
+  end
 end

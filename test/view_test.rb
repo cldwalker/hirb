@@ -120,6 +120,12 @@ class Hirb::ViewTest < Test::Unit::TestCase
     Hirb::View.enabled?.should be(false)
   end
 
+  test "capture_and_render" do
+    string = 'no waaaay'
+    Hirb::View.render_method.expects(:call).with(string)
+    Hirb::View.capture_and_render { print string }
+  end
+
   context "parse_console_input" do
     before(:each) { Hirb::View.config = nil }
     test "config is set if it wasn't before" do

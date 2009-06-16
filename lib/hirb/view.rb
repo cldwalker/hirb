@@ -85,6 +85,11 @@ module Hirb
         end
       end
 
+      # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.
+      def capture_and_render(&block)
+        ::Hirb::View.render_method.call ::Hirb::Util.capture_stdout(&block)
+      end
+
       # A lambda or proc which handles the final formatted object.
       # Although this puts the object by default, it could be set to do other things
       # ie write the formatted object to a file.
@@ -188,7 +193,7 @@ module Hirb
         end
       end
 
-      def format_output(output, options={})
+      def format_output(output, options={}, &block)
         output_class = determine_output_class(output)
         options = Util.recursive_hash_merge(output_class_options(output_class), options)
         output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| call_output_method(options[:output_method], e) } : 
@@ -198,7 +203,7 @@ module Hirb
         if options[:method]
           new_output = send(options[:method],*args)
         elsif options[:class] && (view_class = Util.any_const_get(options[:class]))
-          new_output = view_class.render(*args)
+          new_output = view_class.render(*args, &block)
         end
         new_output
       end

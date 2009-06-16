@@ -33,7 +33,7 @@ module Hirb
         begin
           save_stdout = STDOUT.clone
           STDOUT.reopen(pager)
-          puts output
+          STDOUT.puts output
         ensure
          STDOUT.reopen(save_stdout)
          save_stdout.close
