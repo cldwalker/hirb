@@ -22,7 +22,7 @@ class Hirb::ViewTest < Test::Unit::TestCase
   end
 
   context "enable" do
-    before(:each) {Hirb::View.config = {}}
+    before(:each) { reset_config }
     after(:each) { Hirb::View.disable }
     test "redefines irb output_value" do
       Hirb::View.expects(:render_output).once
@@ -86,9 +86,8 @@ class Hirb::ViewTest < Test::Unit::TestCase
   end
 
   context "parse_console_input" do
-    before(:each) { Hirb::View.config = nil }
+    before(:each) { reset_config }
     test "config is set if it wasn't before" do
-      Hirb::View.config = nil
       Hirb::View.expects(:render_output)
       Hirb::View.console_render_output('blah')
       Hirb::View.config.is_a?(Hash).should == true

@@ -4,7 +4,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   def table(*args)
     Hirb::Helpers::Table.render(*args)
   end
-  before(:all) { Hirb::View.config = {}}
+  before(:all) { reset_config }
   
   context "basic table" do
     test "renders" do

@@ -1,15 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 class Hirb::FormatterTest < Test::Unit::TestCase
-  def reset_config
-    Hirb::View.instance_eval "@config = nil"
-  end
-
   def set_formatter_config(value)
     Hirb::View.formatter.config = value
     Hirb::View.formatter.reset_cached_config
-  end
-  
+  end  
 
   context "formatter" do
     before(:each) { @formatter = Hirb::Formatter.new }
@@ -59,6 +54,9 @@ class Hirb::FormatterTest < Test::Unit::TestCase
   end
 
   context "render_output" do
+    def render_output(*args, &block); Hirb::View.render_output(*args, &block); end
+    def render_method(*args); Hirb::View.render_method(*args); end
+
     before(:all) { 
       eval %[module ::Commify
         def self.render(strings)
@@ -73,63 +71,63 @@ class Hirb::FormatterTest < Test::Unit::TestCase
     test "formats with config method option" do
       eval "module ::Kernel; def commify(string); string.split('').join(','); end; end"
       set_formatter_config "String"=>{:method=>:commify}
-      Hirb::View.render_method.expects(:call).with('d,u,d,e')
-      Hirb::View.render_output('dude')
+      render_method.expects(:call).with('d,u,d,e')
+      render_output('dude')
     end
     
     test "formats with config class option" do
       set_formatter_config "String"=>{:class=>"Commify"}
-      Hirb::View.render_method.expects(:call).with('d,u,d,e')
-      Hirb::View.render_output('dude')
+      render_method.expects(:call).with('d,u,d,e')
+      render_output('dude')
     end
     
     test "formats with output array" do
       set_formatter_config "String"=>{:class=>"Commify"}
-      Hirb::View.render_method.expects(:call).with('d,u,d,e')
-      Hirb::View.render_output(['dude'])
+      render_method.expects(:call).with('d,u,d,e')
+      render_output(['dude'])
     end
     
     test "formats with config options option" do
       eval "module ::Blahify; def self.render(*args); end; end"
       set_formatter_config "String"=>{:class=>"Blahify", :options=>{:fields=>%w{a b}}}
       Blahify.expects(:render).with('dude', :fields=>%w{a b})
-      Hirb::View.render_output('dude')
+      render_output('dude')
     end
     
     test "doesn't format and returns false when no format method found" do
       Hirb::View.load_config
-      Hirb::View.render_method.expects(:call).never
-      Hirb::View.render_output(Date.today).should == false
+      render_method.expects(:call).never
+      render_output(Date.today).should == false
     end
     
     test "formats with explicit class option" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
-      Hirb::View.render_method.expects(:call).with('d,u,d,e')
-      Hirb::View.render_output('dude', :class=>"Commify")
+      render_method.expects(:call).with('d,u,d,e')
+      render_output('dude', :class=>"Commify")
     end
     
     test "formats with output_method option as method" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
-      Hirb::View.render_method.expects(:call).with('d,u,d')
-      Hirb::View.render_output('dude', :class=>"Commify", :output_method=>:chop)
+      render_method.expects(:call).with('d,u,d')
+      render_output('dude', :class=>"Commify", :output_method=>:chop)
     end
 
     test "formats with output_method option as proc" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
-      Hirb::View.render_method.expects(:call).with('d,u,d')
-      Hirb::View.render_output('dude', :class=>"Commify", :output_method=>lambda {|e| e.chop})
+      render_method.expects(:call).with('d,u,d')
+      render_output('dude', :class=>"Commify", :output_method=>lambda {|e| e.chop})
     end
 
     test "formats output array with output_method option" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
-      Hirb::View.render_method.expects(:call).with("d,u,d\nm,a")
-      Hirb::View.render_output(['dude', 'man'], :class=>"Commify", :output_method=>:chop)
+      render_method.expects(:call).with("d,u,d\nm,a")
+      render_output(['dude', 'man'], :class=>"Commify", :output_method=>:chop)
     end
 
     test "formats with block" do
       Hirb::View.load_config
-      Hirb::View.render_method.expects(:call).with('=dude=')
-      Hirb::View.render_output('dude') {|output|
+      render_method.expects(:call).with('=dude=')
+      render_output('dude') {|output|
         "=#{output}="
       }
     end
@@ -137,7 +135,7 @@ class Hirb::FormatterTest < Test::Unit::TestCase
     test "console_render_output merge options option" do
       set_formatter_config "String"=>{:class=>"Commify", :options=>{:fields=>%w{f1 f2}}}
       Commify.expects(:render).with('dude', :max_width=>10, :fields=>%w{f1 f2})
-      Hirb::View.render_output('dude', :options=>{:max_width=>10})
+      render_output('dude', :options=>{:max_width=>10})
     end
   end
 end

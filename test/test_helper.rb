@@ -23,6 +23,10 @@ class Test::Unit::TestCase
     end
     fake.string
   end
+
+  def reset_config
+    Hirb::View.instance_eval "@config = nil"
+  end
 end
 
 class String
