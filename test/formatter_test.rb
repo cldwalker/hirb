@@ -4,7 +4,7 @@ class Hirb::FormatterTest < Test::Unit::TestCase
   def set_formatter_config(value)
     Hirb::View.formatter.config = value
     Hirb::View.formatter.reset_cached_config
-  end  
+  end
 
   context "formatter" do
     before(:each) { @formatter = Hirb::Formatter.new }
@@ -53,8 +53,8 @@ class Hirb::FormatterTest < Test::Unit::TestCase
     end
   end
 
-  context "render_output" do
-    def render_output(*args, &block); Hirb::View.render_output(*args, &block); end
+  context "view_output" do
+    def view_output(*args, &block); Hirb::View.view_output(*args, &block); end
     def render_method(*args); Hirb::View.render_method(*args); end
 
     before(:all) { 
@@ -64,6 +64,7 @@ class Hirb::FormatterTest < Test::Unit::TestCase
           strings.map {|e| e.split('').join(',')}.join("\n")
         end
       end]
+      reset_config
       Hirb::View.enable 
     }
     after(:all) { Hirb::View.disable }
@@ -72,70 +73,62 @@ class Hirb::FormatterTest < Test::Unit::TestCase
       eval "module ::Kernel; def commify(string); string.split('').join(','); end; end"
       set_formatter_config "String"=>{:method=>:commify}
       render_method.expects(:call).with('d,u,d,e')
-      render_output('dude')
+      view_output('dude')
     end
     
     test "formats with config class option" do
       set_formatter_config "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
-      render_output('dude')
+      view_output('dude')
     end
     
     test "formats with output array" do
       set_formatter_config "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
-      render_output(['dude'])
+      view_output(['dude'])
     end
     
     test "formats with config options option" do
       eval "module ::Blahify; def self.render(*args); end; end"
       set_formatter_config "String"=>{:class=>"Blahify", :options=>{:fields=>%w{a b}}}
       Blahify.expects(:render).with('dude', :fields=>%w{a b})
-      render_output('dude')
+      view_output('dude')
     end
     
     test "doesn't format and returns false when no format method found" do
       Hirb::View.load_config
       render_method.expects(:call).never
-      render_output(Date.today).should == false
+      view_output(Date.today).should == false
     end
     
     test "formats with explicit class option" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
       render_method.expects(:call).with('d,u,d,e')
-      render_output('dude', :class=>"Commify")
+      view_output('dude', :class=>"Commify")
     end
     
     test "formats with output_method option as method" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
       render_method.expects(:call).with('d,u,d')
-      render_output('dude', :class=>"Commify", :output_method=>:chop)
+      view_output('dude', :class=>"Commify", :output_method=>:chop)
     end
 
     test "formats with output_method option as proc" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
       render_method.expects(:call).with('d,u,d')
-      render_output('dude', :class=>"Commify", :output_method=>lambda {|e| e.chop})
+      view_output('dude', :class=>"Commify", :output_method=>lambda {|e| e.chop})
     end
 
     test "formats output array with output_method option" do
       set_formatter_config 'String'=>{:class=>"Blahify"}
       render_method.expects(:call).with("d,u,d\nm,a")
-      render_output(['dude', 'man'], :class=>"Commify", :output_method=>:chop)
+      view_output(['dude', 'man'], :class=>"Commify", :output_method=>:chop)
     end
 
-    test "formats with block" do
-      Hirb::View.load_config
-      render_method.expects(:call).with('=dude=')
-      render_output('dude') {|output|
-        "=#{output}="
-      }
-    end
-    
-    test "console_render_output merge options option" do
+    test "formats with options option" do
       set_formatter_config "String"=>{:class=>"Commify", :options=>{:fields=>%w{f1 f2}}}
       Commify.expects(:render).with('dude', :max_width=>10, :fields=>%w{f1 f2})
-      render_output('dude', :options=>{:max_width=>10})
+      view_output('dude', :options=>{:max_width=>10})
     end
   end
 end

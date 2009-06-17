@@ -28,7 +28,7 @@ module Hirb
           ::IRB::Irb.class_eval do
             alias :non_hirb_render_output  :output_value
             def output_value #:nodoc:
-              Hirb::View.render_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
+              Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
                 non_hirb_render_output
             end
           end
@@ -55,6 +55,10 @@ module Hirb
         config[:pager] = !config[:pager]
       end
 
+      def toggle_formatter
+        config[:formatter] = !config[:formatter]
+      end
+
       # Resizes the console width and height for use with the table + pager i.e. after having resized the console window. *nix users
       # should only have to call this method. Non-*nix users should call this method with explicit width and height. If you don't know
       # your width and height, in irb play with "a"* width to find width and puts "a\n" * height to find height.
@@ -65,7 +69,7 @@ module Hirb
       
       # TODO: view must be enabled to call this
       # This is the main method of this class. This method searches for the first formatter it can apply
-      # to the object in this order: local block, method option, class option. If a formatter is found it applies it to the object
+      # to the object in this order: output_method option, method option, class option. If a formatter is found it applies it to the object
       # and returns true. Returns false if no formatter found.
       # ==== Options:
       # [:method] Specifies a global (Kernel) method to do the formatting.
@@ -73,17 +77,8 @@ module Hirb
       #          an options hash.
       # [:output_method] Specifies a method or proc to call on output before passing it to a formatter.
       # [:options] Options to pass the formatter method or class.
-      def render_output(output, options={}, &block)
-        if block && block.arity > 0
-          formatted_output = block.call(output)
-          render_method.call(formatted_output)
-          true
-        elsif (formatted_output = format_output(output, options))
-          render_method.call(formatted_output)
-          true
-        else
-          false
-        end
+      def view_output(output, options={})
+        config[:formatter] && render_output(output, options)
       end
 
       # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.
@@ -110,23 +105,6 @@ module Hirb
         formatter.config = config[:output]
       end
       
-      # A console version of render_output() which takes its same options but allows for some shortcuts.
-      # The second argument can be an optional symbol which maps to a helper class's nested name. Last argument is an options 
-      # hash which is passed to the formatter class except for formatter options: :class, :method and :output_method.
-      # Examples:
-      #   console_render_output output, :tree, :type=>:directory
-      #   # is the same as:
-      #   render_output output, :class=>"Hirb::Helpers::Tree", :options=> {:type=>:directory}
-      #
-      def console_render_output(*args, &block)
-        render_output(*parse_console_input(*args), &block)
-      end
-
-      # Takes same arguments and options as console_render_output() but returns formatted output instead of rendering it.
-      def console_format_output(*args, &block)
-        format_output(*parse_console_input(*args), &block)
-      end
-
       # current console width
       def width
         config[:width] || DEFAULT_WIDTH
@@ -138,6 +116,14 @@ module Hirb
       end
 
       #:stopdoc:
+      def render_output(output, options={})
+        if (formatted_output = formatter.format_output(output, options))
+          render_method.call(formatted_output)
+          true
+        else
+          false
+        end
+      end
 
       def determine_terminal_size(width, height)
         detected  = (width.nil? || height.nil?) ? Util.detect_terminal_size || [] : []
@@ -151,10 +137,6 @@ module Hirb
         else
           false
         end
-      end
-
-      def format_output(output, options={}, &block)
-        formatter.format_output(output, options, &block)
       end
 
       def pager
@@ -172,40 +154,15 @@ module Hirb
         @formatter ||= Hirb::Formatter.new(config[:output])
       end
 
-      def formatter=(value); @formatter = nil; end
-
-      def parse_console_input(*args)
-        load_config unless @config
-        output = args.shift
-        if args[0].is_a?(Symbol) && (view = args.shift)
-          symbol_options = find_view(view)
-        end
-        options = args[-1].is_a?(Hash) ? args[-1] : {}
-        options.merge!(symbol_options) if symbol_options
-        # iterates over format_output options that aren't :options
-        real_options = [:method, :class, :output_method].inject({}) do |h, e|
-          h[e] = options.delete(e) if options[e]; h
-        end
-        real_options.merge! :options=>options
-        [output, real_options]
-      end
-
-      def find_view(name)
-        name = name.to_s
-        if (view_method = formatter_config.values.find {|e| e[:method] == name })
-          {:method=>view_method[:method]}
-        elsif (view_class = Hirb::Helpers.constants.find {|e| e == Util.camelize(name)})
-          {:class=>"Hirb::Helpers::#{view_class}"}
-        else
-          {}
-        end
-      end
+      def formatter=(value); @formatter = value; end
 
       def load_config(additional_config={})
         self.config = Util.recursive_hash_merge default_config, additional_config
         formatter
         true
       end
+
+      def config_loaded?; !!@config; end
 
       # Stores all view config. Current valid keys:
       #   :output- contains value of formatter_config
@@ -222,7 +179,7 @@ module Hirb
       end
 
       def default_config
-        Hirb::Util.recursive_hash_merge({:pager=>true}, Hirb.config[:view] || {})
+        Hirb::Util.recursive_hash_merge({:pager=>true, :formatter=>true}, Hirb.config[:view] || {})
       end
       #:startdoc:
     end
