@@ -56,8 +56,8 @@ class Hirb::PagerTest < Test::Unit::TestCase
   end
 
   context "pager" do
-    before(:all) { Hirb::View.config = {}; Hirb::View.enable }
-    before(:each) { Hirb::View.pager = nil }
+    before(:all) { Hirb::View.instance_eval "@config=nil" ; Hirb::View.enable }
+    before(:each) { Hirb::View.pager = nil; Hirb::View.formatter = nil }
     after(:all) { Hirb::View.disable }
 
     def irb_eval(string)
