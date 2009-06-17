@@ -58,15 +58,15 @@ class Hirb::Helpers::Table
   def initialize(rows, options={})
     @options = options
     @options[:filters] ||= {}
-    @fields = options[:fields] || ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} : 
+    @fields = @options[:fields] ? @options[:fields].dup : ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} :
       rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : [])
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
-    if options.has_key?(:headers)
-      @headers = options[:headers].is_a?(Hash) ? @headers.merge(options[:headers]) : 
-        (options[:headers].is_a?(Array) ? array_to_indices_hash(options[:headers]) : options[:headers])
+    if @options.has_key?(:headers)
+      @headers = @options[:headers].is_a?(Hash) ? @headers.merge(@options[:headers]) :
+        (@options[:headers].is_a?(Array) ? array_to_indices_hash(@options[:headers]) : @options[:headers])
     end
-    if options[:number]
+    if @options[:number]
       @headers[:hirb_number] = "number"
       @fields.unshift :hirb_number
     end

@@ -90,6 +90,12 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([[1,2,3]], :fields=>[0,2]).should == expected_table
     end
+
+    test "fields and number options copies fields option and does not modify it" do
+      options = {:fields=>[:f1], :number=>true}
+      table({:f1=>1, :f2=>2}, options)
+      options[:fields].should == [:f1]
+    end
   
     test "invalid fields option renders empty columns" do
       expected_table = <<-TABLE.unindent
