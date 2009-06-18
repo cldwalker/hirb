@@ -48,22 +48,6 @@ class Hirb::ViewTest < Test::Unit::TestCase
     end
   end
 
-  test "reload_config resets config to detect new Hirb::Views" do
-    Hirb::View.load_config
-    formatter_config.keys.include?('Zzz').should be(false)
-    eval "module ::Hirb::Views::Zzz; def self.render; end; end"
-    Hirb::View.reload_config
-    formatter_config.keys.include?('Zzz').should be(true)
-  end
-  
-  test "reload_config picks up local changes" do
-    Hirb::View.load_config
-    formatter_config.keys.include?('Dooda').should be(false)
-    Hirb::View.formatter.config.merge!('Dooda'=>{:class=>"DoodaView"})
-    Hirb::View.reload_config
-    formatter_config['Dooda'].should == {:class=>"DoodaView"}
-  end
-  
   test "disable points output_value back to original output_value" do
     Hirb::View.expects(:render_output).never
     Hirb::View.enable

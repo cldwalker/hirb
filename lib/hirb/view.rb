@@ -86,14 +86,6 @@ module Hirb
       def reset_render_method
         @render_method = default_render_method
       end
-
-      # Needs to be called for config changes to take effect. Reloads Hirb::Views classes and registers
-      # most recent config changes.
-      def reload_config
-        current_config = self.config.dup.merge(:output=>formatter_config)
-        load_config(current_config)
-        formatter.config = config[:output]
-      end
       
       # current console width
       def width

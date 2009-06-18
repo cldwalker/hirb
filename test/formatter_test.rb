@@ -3,26 +3,43 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 class Hirb::FormatterTest < Test::Unit::TestCase
   def set_formatter_config(value)
     Hirb::View.formatter.config = value
-    Hirb::View.formatter.reset_cached_config
+    Hirb::View.formatter.reset_klass_config
   end
 
   context "formatter" do
     before(:each) { @formatter = Hirb::Formatter.new }
 
-    test "output_class_options merges ancestor options" do
+    test "klass_config merges ancestor options" do
       @formatter.config = {"String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output, :ancestor=>true}, "Kernel"=>{:method=>:default_output}}
       expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true}
-      @formatter.output_class_options(String).should == expected_result
+      @formatter.klass_config(String).should == expected_result
     end
 
-    test "output_class_options doesn't merge ancestor options" do
+    test "klass_config doesn't merge ancestor options" do
       @formatter.config = {"String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}}
       expected_result = {:args=>[1, 2]}
-      @formatter.output_class_options(String).should == expected_result
+      @formatter.klass_config(String).should == expected_result
     end
 
-    test "output_class_options returns hash when nothing found" do
-      @formatter.output_class_options(String).should == {}
+    test "klass_config returns hash when nothing found" do
+      @formatter.klass_config(String).should == {}
+    end
+
+    test "reload detects new Hirb::Views" do
+      @formatter.config.keys.include?('Zzz').should be(false)
+      eval "module ::Hirb::Views::Zzz; def self.render; end; end"
+      @formatter.reload
+      @formatter.config.keys.include?('Zzz').should be(true)
+    end
+
+    test "format_class sets formatter config" do
+      eval "module ::Dooda; end"
+      @formatter.config.keys.include?(::Dooda).should be(false)
+      @formatter.format_class ::Dooda, :class=>"DoodaView"
+      @formatter.klass_config(::Dooda).should == {:class=>"DoodaView"}
+
+      @formatter.format_class ::Dooda, :class=>"DoodaView2"
+      @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
   end
 

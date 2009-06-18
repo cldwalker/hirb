@@ -4,6 +4,7 @@ module Hirb
   
   class Formatter
     def initialize(additional_config={})
+      @klass_config = {}
       @config = Util.recursive_hash_merge default_config, additional_config || {}
     end
 
@@ -27,12 +28,23 @@ module Hirb
       @config = Util.recursive_hash_merge default_config, value || {}
     end
 
+    def format_class(klass, helper_config)
+      @klass_config.delete(klass)
+      @config[klass.to_s] = helper_config
+      true
+    end
+
+    def reload
+      @config = Util.recursive_hash_merge default_config, @config
+    end
+
     # This is the main method of this class. The formatter looks for the first helper in its config for the given output class.
     # If a helper is found, the output is converted by the helper into a string and returned. If not, nil is returned. The options
-    # this class takes are a helper config hash as described in config(). If a block is given it's passed along to a helper class.
+    # this class takes are a helper config hash as described in config(). These options will be merged with any existing helper config hash
+    # an output class has in config(). Any block given is passed along to a helper class.
     def format_output(output, options={}, &block)
       output_class = determine_output_class(output)
-      options = Util.recursive_hash_merge(output_class_options(output_class), options)
+      options = Util.recursive_hash_merge(klass_config(output_class), options)
       output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| call_output_method(options[:output_method], e) } : 
         call_output_method(options[:output_method], output) ) : output
       args = [output]
@@ -60,23 +72,19 @@ module Hirb
 
     # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
     # ancestors to the most recent ones.
-    def output_class_options(output_class)
-      @cached_config ||= {}
-      @cached_config[output_class] ||= 
+    def klass_config(output_class)
+      @klass_config[output_class] ||=
         begin
           output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| @config.has_key?(e)}
-          @cached_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
+          @klass_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
             (klass == output_class.to_s || @config[klass][:ancestor]) ? h.update(@config[klass]) : h
           }
         end
-      @cached_config[output_class]
     end
 
-    def reset_cached_config
-      @cached_config = nil
+    def reset_klass_config
+      @klass_config = {}
     end
-    
-    def cached_config; @cached_config; end
 
     def default_config
       Views.constants.inject({}) {|h,e|
