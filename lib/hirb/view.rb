@@ -1,14 +1,9 @@
 module Hirb
-  # This class contains one method, view_output, which formats and possibly pages the output its given from a console application.
-  # The hash with the following keys are valid for Hirb::View.config as well as the :view key mentioned in Hirb:
-  # [:output] This hash is saved to formatter_config. It maps output classes to hashes that are passed to view_output. Thus these hashes
-  #           take the same options as view_output. In addition it takes the following keys:
-  #           * :ancestor- Boolean which if true allows all subclasses of the configured output class to inherit this config.
-  # 
-  #           Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
+  # This class is responsible for managing all view-related functionality. Its functionality is determined by the configuration file
+  # explained in Hirb or passed to enable().
   module View
-    DEFAULT_WIDTH = 150
-    DEFAULT_HEIGHT = 50
+    DEFAULT_WIDTH = 120
+    DEFAULT_HEIGHT = 40
     class<<self
       attr_accessor :config, :render_method
 
@@ -23,7 +18,7 @@ module Hirb
         return puts("Already enabled.") if @enabled
         @enabled = true
         Hirb.config_file = options[:config_file] if options[:config_file]
-        load_config(Hirb::HashStruct.block_to_hash(block))
+        load_config(HashStruct.block_to_hash(block))
         resize(config[:width], config[:height])
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do
@@ -69,27 +64,21 @@ module Hirb
         pager.resize(config[:width], config[:height])
       end
       
-      # This is the main method of this class. When enabled, this method searches for the first formatter it can apply
-      # to the object in this order: output_method option, method option, class option. If a formatter is found it applies it to the object
-      # and returns true. Returns false if no formatter found or if not enabled.
-      # ==== Options:
-      # [:method] Specifies a global (Kernel) method to do the formatting.
-      # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and 
-      #          an options hash.
-      # [:output_method] Specifies a method or proc to call on output before passing it to a formatter.
-      # [:options] Options to pass the formatter method or class.
+      # This is the main method of this class. When view is enabled, this method searches for a formatter it can use for the output and if
+      # successful renders it using render_method(). The options this method takes are helper config hashes as described in 
+      # Hirb::Formatter.format_output(). Returns true if successful and false if no formatting is done or if not enabled.
       def view_output(output, options={})
         enabled? && config[:formatter] && render_output(output, options)
       end
 
       # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.
       def capture_and_render(&block)
-        ::Hirb::View.render_method.call ::Hirb::Util.capture_stdout(&block)
+        render_method.call Util.capture_stdout(&block)
       end
 
       # A lambda or proc which handles the final formatted object.
       # Although this puts the object by default, it could be set to do other things
-      # ie write the formatted object to a file.
+      # i.e. write the formatted object to a file.
       def render_method
         @render_method ||= default_render_method
       end
@@ -141,7 +130,7 @@ module Hirb
       end
 
       def pager
-        @pager ||= Hirb::Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
+        @pager ||= Pager.new(config[:width], config[:height], :pager_command=>config[:pager_command])
       end
 
       def pager=(value); @pager = value; end
@@ -151,15 +140,15 @@ module Hirb
         formatter.config
       end
 
-      def formatter
-        @formatter ||= Hirb::Formatter.new(config[:output])
+      def formatter(reload=false)
+        @formatter = reload || @formatter.nil? ? Formatter.new(config[:output]) : @formatter
       end
 
       def formatter=(value); @formatter = value; end
 
       def load_config(additional_config={})
         @config = Util.recursive_hash_merge default_config, additional_config
-        formatter
+        formatter(true)
         true
       end
 
@@ -174,7 +163,7 @@ module Hirb
       end
 
       def default_config
-        Hirb::Util.recursive_hash_merge({:pager=>true, :formatter=>true}, Hirb.config[:view] || {})
+        Util.recursive_hash_merge({:pager=>true, :formatter=>true}, Hirb.config || {})
       end
       #:startdoc:
     end

@@ -15,7 +15,7 @@ class Hirb::FormatterTest < Test::Unit::TestCase
       @formatter.output_class_options(String).should == expected_result
     end
 
-    test "output_class_options doesn't ancestor options" do
+    test "output_class_options doesn't merge ancestor options" do
       @formatter.config = {"String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}}
       expected_result = {:args=>[1, 2]}
       @formatter.output_class_options(String).should == expected_result

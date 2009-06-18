@@ -1,14 +1,35 @@
 module Hirb
+  # This class is used by the View to format an output into a string. The formatter object looks for an output's class config in config()
+  # and if found applies a helper to the output.
+  
   class Formatter
-    attr_accessor :config
     def initialize(additional_config={})
       @config = Util.recursive_hash_merge default_config, additional_config || {}
     end
 
-    def config=(value)
+    # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method or :class option
+    # for a helper to be applied to an output. A helper config hash has the following keys:
+    # [:ancestor] Boolean which if true causes subclasses of the output class to inherit its config. Defaults to false.
+    #             This is used by activerecord classes.
+    # [:method] Specifies a global (Kernel) method to do the formatting.
+    # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and
+    #          an options hash.
+    # [:output_method] Specifies a method or proc to call on output before passing it to a helper. If the output is an array, it's applied
+    #                  to every element in the array.
+    # [:options] Options to pass the helper method or class.
+    # 
+    #   Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
+    def config
+      @config
+    end
+
+    def config=(value) #:nodoc:
       @config = Util.recursive_hash_merge default_config, value || {}
     end
 
+    # This is the main method of this class. The formatter looks for the first helper in its config for the given output class.
+    # If a helper is found, the output is converted by the helper into a string and returned. If not, nil is returned. The options
+    # this class takes are a helper config hash as described in config(). If a block is given it's passed along to a helper class.
     def format_output(output, options={}, &block)
       output_class = determine_output_class(output)
       options = Util.recursive_hash_merge(output_class_options(output_class), options)
@@ -24,6 +45,7 @@ module Hirb
       new_output
     end
 
+    #:stopdoc:
     def determine_output_class(output)
       if output.is_a?(Array)
         output[0].class
@@ -66,6 +88,6 @@ module Hirb
         h
       }
     end
-    
+    #:startdoc:
   end
 end
