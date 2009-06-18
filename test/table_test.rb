@@ -179,8 +179,9 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +-----------+---+-----------+
       1 row in set
   TABLE
-      Hirb::View.config[:width] = 30
+      Hirb::View.config = {:width => 30 }
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
+      reset_config
     end
 
     test "headers option and headers longer than fields renders" do
@@ -207,7 +208,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :field_lengths=>{:a=>5}).should == expected_table
     end
     
-    test "with headers option as an array renders" do
+    test "headers option as an array renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
       | A | B |
@@ -220,7 +221,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2], [3,4]], :headers=>['A', 'B']).should == expected_table
     end
     
-    test "with filters option renders" do
+    test "filters option renders" do
       expected_table = <<-TABLE.unindent
       +-----------+---+
       | 0         | 1 |
@@ -234,7 +235,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
         1=>[:[], :num]}).should == expected_table
     end
 
-    test "with number option renders" do
+    test "number option renders" do
       expected_table = <<-TABLE.unindent
       +--------+---+---+
       | number | 0 | 1 |

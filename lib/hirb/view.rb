@@ -1,9 +1,8 @@
 module Hirb
-  # This class contains one method, render_output, which formats and renders the output its given from a console application.
-  # However, this only happens for output classes that are configured to do so or if render_output is explicitly given
-  # a view formatter. The hash with the following keys are valid for Hirb::View.config as well as the :view key mentioned in Hirb:
-  # [:output] This hash is saved to formatter_config. It maps output classes to hashes that are passed to render_output. Thus these hashes
-  #           take the same options as render_output. In addition it takes the following keys:
+  # This class contains one method, view_output, which formats and possibly pages the output its given from a console application.
+  # The hash with the following keys are valid for Hirb::View.config as well as the :view key mentioned in Hirb:
+  # [:output] This hash is saved to formatter_config. It maps output classes to hashes that are passed to view_output. Thus these hashes
+  #           take the same options as view_output. In addition it takes the following keys:
   #           * :ancestor- Boolean which if true allows all subclasses of the configured output class to inherit this config.
   # 
   #           Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
@@ -13,8 +12,10 @@ module Hirb
     class<<self
       attr_accessor :config, :render_method
 
-      # Overrides irb's output method with Hirb::View.render_output. Takes an optional
-      # block which sets the view config.
+      # This is the main on and off switch for the formatter and pager, height + width TODO.
+      # If irb exists, it overrides irb's output method with Hirb::View.view_output. Takes an optional
+      # block which sets the view config. If enabling Wirble, you should call this after it.
+      # Options: TODO
       # Examples:
       #   Hirb.enable
       #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
@@ -26,10 +27,10 @@ module Hirb
         resize(config[:width], config[:height])
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do
-            alias :non_hirb_render_output  :output_value
+            alias :non_hirb_view_output  :output_value
             def output_value #:nodoc:
               Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
-                non_hirb_render_output
+                non_hirb_view_output
             end
           end
         end
@@ -40,12 +41,12 @@ module Hirb
         @enabled || false
       end
 
-      # Disable's Hirb's output by reverting back to irb's.
+      # Disable's Hirb's output and revert's irb's output method if irb exists.
       def disable
         @enabled = false
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do
-            alias :output_value :non_hirb_render_output
+            alias :output_value :non_hirb_view_output
           end
         end
       end
@@ -55,6 +56,7 @@ module Hirb
         config[:pager] = !config[:pager]
       end
 
+      # Toggles formatter on or off.
       def toggle_formatter
         config[:formatter] = !config[:formatter]
       end
@@ -67,10 +69,9 @@ module Hirb
         pager.resize(config[:width], config[:height])
       end
       
-      # TODO: view must be enabled to call this
-      # This is the main method of this class. This method searches for the first formatter it can apply
+      # This is the main method of this class. When enabled, this method searches for the first formatter it can apply
       # to the object in this order: output_method option, method option, class option. If a formatter is found it applies it to the object
-      # and returns true. Returns false if no formatter found.
+      # and returns true. Returns false if no formatter found or if not enabled.
       # ==== Options:
       # [:method] Specifies a global (Kernel) method to do the formatting.
       # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and 
@@ -78,7 +79,7 @@ module Hirb
       # [:output_method] Specifies a method or proc to call on output before passing it to a formatter.
       # [:options] Options to pass the formatter method or class.
       def view_output(output, options={})
-        config[:formatter] && render_output(output, options)
+        enabled? && config[:formatter] && render_output(output, options)
       end
 
       # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.
@@ -107,12 +108,12 @@ module Hirb
       
       # current console width
       def width
-        config[:width] || DEFAULT_WIDTH
+        config ? config[:width] : DEFAULT_WIDTH
       end
 
       # current console height
       def height
-        config[:height] || DEFAULT_HEIGHT
+        config ? config[:height] : DEFAULT_HEIGHT
       end
 
       #:stopdoc:
@@ -157,21 +158,15 @@ module Hirb
       def formatter=(value); @formatter = value; end
 
       def load_config(additional_config={})
-        self.config = Util.recursive_hash_merge default_config, additional_config
+        @config = Util.recursive_hash_merge default_config, additional_config
         formatter
         true
       end
 
       def config_loaded?; !!@config; end
 
-      # Stores all view config. Current valid keys:
-      #   :output- contains value of formatter_config
-      def config=(value)
-        @config = value
-      end
-
       def config
-        @config ||= {}
+        @config
       end
       
       def default_render_method
