@@ -34,13 +34,11 @@ module Hirb
         if e =~ /-|\.\./
           min,max = e.split(/-|\.\./)
           slice_min = min.to_i - 1
-          slice_min += options[:offset] if options[:offset]
           result.push(*array.slice(slice_min, max.to_i - min.to_i + 1))
         elsif e =~ /\s*(\d+)\s*/
           index = $1.to_i - 1
           next if index < 0
-          index += options[:offset] if options[:offset]
-          result.push(array[index])
+          result.push(array[index]) if array[index]
         end
       end
       return result

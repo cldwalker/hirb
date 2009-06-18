@@ -44,6 +44,10 @@ module Hirb
       Util.choose_from_array([1,2,3,4], "\n").should == []
     end
 
+    test "choose_from_array returns empty with an invalid range" do
+      Util.choose_from_array([1,2,3,4], "5").should == []
+    end
+
     test "capture_stdout" do
       string = "sweetness man"
       Util.capture_stdout { puts string }.should == string + "\n"
