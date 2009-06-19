@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Hirb::Menu [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Menu
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/hirb/menu_rb.html">lib/hirb/menu.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            This class provides a selection menu using Hirb&#8217;s table helpers by
+            default to display choices.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000042">render</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000042'>
+                <a name='M000042'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>render</span>
+                  <span class='arguments'>(output, options={}) {|chosen| ...}</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  <a href="Menu.html">Menu</a> which asks to select from the given array and
+                  returns the selected menu items as an array. See <a
+                  href="Util.html#M000018">Hirb::Util.choose_from_array</a> for the syntax
+                  for specifying selections. All options except for the ones below are passed
+                  to render the menu.
+                  </p>
+                  <h4>Options:</h4>
+                  <dl>
+                  <dt>:helper_class</dt><dd>Helper class to render menu. Helper class is expected to implement
+                  numbering given a :number option. To use a very basic menu, set this to
+                  false. Defaults to <a
+                  href="Helpers/AutoTable.html">Hirb::Helpers::AutoTable</a>.
+                  
+                  </dd>
+                  <dt>:prompt</dt><dd>String for menu prompt. Defaults to &#8220;Choose: &#8220;.
+                  
+                  </dd>
+                  <dt>:validate_one</dt><dd>Validates that only one item in array is chosen and returns just that item.
+                  Default is false.
+                  
+                  </dd>
+                  <dt>:ask</dt><dd>Always ask for input, even if there is only one choice. Default is true.
+                  
+                  </dd>
+                  </dl>
+                  <p>
+                  Examples:
+                  </p>
+                  <pre>extend Hirb::Console&#x000A;menu([1,2,3], :fields=&gt;[:field1, :field2], :validate_one=&gt;true)&#x000A;menu([1,2,3], :helper_class=&gt;Hirb::Helpers::Table)</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000042-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000042-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 17</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">default_options</span> = {<span class="ruby-identifier">:helper_class=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">AutoTable</span>, <span class="ruby-identifier">:prompt=</span><span class="ruby-operator">&gt;</span><span class="ruby-node">&quot;Choose #{options[:validate_one] ? 'one' : ''}: &quot;</span>, <span class="ruby-identifier">:ask=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>}&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = [<span class="ruby-identifier">output</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;      <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">choose_from_menu</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">chosen</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;      <span class="ruby-identifier">chosen</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Module: Hirb::Console [RDoc Documentation]</title>
+    <title>: Hirb::Console [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -39,24 +39,93 @@
         <div id='text'>
           <div id='description'>
             <p>
-            This class is meant to be extended to provide methods for use in a
+            This module is meant to be extended to provide methods for use in a
             console/irb shell. For example:
             </p>
             <pre>irb&gt;&gt; extend Hirb::Console&#x000A;irb&gt;&gt; view 'some string', :class=&gt;Some::String::Formatter&#x000A;irb&gt;&gt; table [[:row1], [:row2]]</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000011">format_output</a></li>
+              <li><a href="#M000010">render_output</a></li>
+            </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000008">table</a></li>
-              <li><a href="#M000009">view</a></li>
+              <li><a href="#M000014">menu</a></li>
+              <li><a href="#M000012">table</a></li>
+              <li><a href="#M000013">view</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000011'>
+                <a name='M000011'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>format_output</span>
+                  <span class='arguments'>(output, options={}, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Takes same arguments and options as <a
+                  href="Console.html#M000010">render_output</a>() but returns formatted
+                  output instead of rendering it.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000011-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000011-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 22</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;        <span class="ruby-constant">View</span>.<span class="ruby-identifier">load_config</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">View</span>.<span class="ruby-identifier">config_loaded?</span>&#x000A;        <span class="ruby-constant">View</span>.<span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:console=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000010'>
+                <a name='M000010'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>render_output</span>
+                  <span class='arguments'>(output, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  A console version of <a href="Console.html#M000010">render_output</a>()
+                  which takes its same options but allows for shorthand. All options are
+                  passed to the helper except for the formatter options. <a
+                  href="Formatter.html">Formatter</a> options are :class, :method and
+                  :output_method. Examples:
+                  </p>
+                  <pre>render_output output, :class=&gt;:tree :type=&gt;:directory&#x000A;# is the same as:&#x000A;render_output output, :class=&gt;:tree, :options=&gt; {:type=&gt;:directory}</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000010-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000010-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 16</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;        <span class="ruby-constant">View</span>.<span class="ruby-identifier">load_config</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">View</span>.<span class="ruby-identifier">config_loaded?</span>&#x000A;        <span class="ruby-constant">View</span>.<span class="ruby-identifier">render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:console=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>))&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000008'>
-                <a name='M000008'>      </a>
+              <div class='public-instance method' id='method-M000014'>
+                <a name='M000014'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>menu</span>
+                  <span class='arguments'>(output, options={}, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Renders a menu given an array using <a
+                  href="Menu.html#M000042">Hirb::Menu.render</a>.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000014-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 39</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">menu</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">Console</span>.<span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:class</span>=<span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;Hirb::Menu&quot;</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000012'>
+                <a name='M000012'>      </a>
                 <div class='synopsis'>
                   <span class='name'>table</span>
                   <span class='arguments'>(output, options={})</span>
@@ -64,33 +133,33 @@
                 <div class='description'>
                   <p>
                   Renders a table for the given object. Takes same options as <a
-                  href="Helpers/Table.html#M000004">Hirb::Helpers::Table.render</a>.
+                  href="Helpers/Table.html#M000006">Hirb::Helpers::Table.render</a>.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000012-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000008-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 9</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">table</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">View</span>.<span class="ruby-identifier">console_render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:class</span>=<span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;Hirb::Helpers::AutoTable&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000012-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 29</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">table</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-constant">Console</span>.<span class="ruby-identifier">render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">:class</span>=<span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;Hirb::Helpers::AutoTable&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000009'>
-                <a name='M000009'>      </a>
+              <div class='public-instance method' id='method-M000013'>
+                <a name='M000013'>      </a>
                 <div class='synopsis'>
                   <span class='name'>view</span>
-                  <span class='arguments'>(*args)</span>
+                  <span class='arguments'>(output, options={})</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Renders any specified view for the given object. Takes same options as <a
-                  href="View.html#M000022">Hirb::View.console_render_output</a>.
+                  Renders any specified view for the given object. Takes same options as
+                  Hirb::View.render_output.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000009-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 13</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">view</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">View</span>.<span class="ruby-identifier">console_render_output</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000013-source'><span class="ruby-comment cmt"># File lib/hirb/console.rb, line 34</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">view</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-constant">Console</span>.<span class="ruby-identifier">render_output</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Hirb::Formatter [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Formatter
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/hirb/formatter_rb.html">lib/hirb/formatter.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            This class is format an output into a string using Hirb::Helpers::*,
+            Hirb::Views::* or any user-created views. The formatter object looks for an
+            output&#8217;s class config in <a
+            href="Formatter.html#M000044">Hirb::Formatter.config</a> and if found
+            applies a helper to the output.
+            </p>
+            <h2>Create and Configure <a href="Views.html">Views</a></h2>
+            <p>
+            Let&#8217;s create a simple view and configure it in different ways to be
+            Hash&#8217;s default view:
+            </p>
+            <h3>Setup</h3>
+            <pre>irb&gt;&gt; require 'hirb'&#x000A;=&gt;true&#x000A;irb&gt;&gt; Hirb.enable&#x000A;=&gt;nil&#x000A;irb&gt;&gt; require 'yaml'&#x000A;=&gt;true</pre>
+            <h3>Configure As <a href="View.html">View</a> Method</h3>
+            <p>
+            A view method is the smallest reuseable view.
+            </p>
+            <pre># Create yaml view method&#x000A;irb&gt;&gt; def yaml(output); output.to_yaml; end&#x000A;=&gt;nil&#x000A;&#x000A;# Configure view&#x000A;irb&gt;&gt;Hirb::View.format_class Hash, :method=&gt;:yaml&#x000A;=&gt;true&#x000A;&#x000A;# Hashes now appear as yaml&#x000A;irb&gt;&gt;{:a=&gt;1, :b=&gt;{:c=&gt;3}}&#x000A;---&#x000A;:a : 1&#x000A;:b :&#x000A;  :c : 3&#x000A;=&gt; true</pre>
+            <h3>Configure As <a href="View.html">View</a> Class</h3>
+            <p>
+            A view class is suited for more complex views. <a href="View.html">View</a>
+            classes can be under any namespace and are expected to provide a render
+            method. However, if a class is under the <a
+            href="Views.html">Hirb::Views</a> namespace, it will be automatically
+            loaded with no configuration. Something to think about when sharing views
+            with others.
+            </p>
+            <pre># Create yaml view class&#x000A;irb&gt;&gt; class Hirb::Views::Hash; def self.render(output, options={}); output.to_yaml; end ;end&#x000A;=&gt;nil&#x000A;# Just reload since no configuration is necessary&#x000A;irb&gt;&gt;Hirb::View.formatter.reload&#x000A;&#x000A;# Hashes now appear as yaml ...</pre>
+            <p>
+            Although the <a href="Views.html">Hirb::Views</a> namespace is great for
+            quick classes that just plug and play, you often want view classes that can
+            be reused with multiple outputs. For this case, it&#8217;s recommended to
+            use the Hirb::Helpers namespace.
+            </p>
+            <pre># Create yaml view class&#x000A;irb&gt;&gt; class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end&#x000A;=&gt;nil&#x000A;&#x000A;# Configure view and reload it&#x000A;irb&gt;&gt;Hirb::View.format_class Hash, :class=&gt;&quot;Hirb::Helpers::Yaml&quot;&#x000A;=&gt;true&#x000A;&#x000A;# Hashes now appear as yaml ...&#x000A;&#x000A;== Configure At Startup&#x000A;Once you know what views are associated with what output classes, you can configure&#x000A;them at startup by passing Hirb.enable an options hash:&#x000A;  # In .irbrc&#x000A;  require 'hirb'&#x000A;  # View class needs to come before enable()&#x000A;  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end&#x000A;  Hirb.enable :output=&gt;{&quot;Hash&quot;=&gt;{:class=&gt;&quot;Hirb::Helpers::Yaml&quot;}}&#x000A;&#x000A;Or by creating a config file at config/hirb.yml or ~/.hirb.yml:&#x000A;  # The config file for the yaml example would look like:&#x000A;  # ---&#x000A;  # :output :&#x000A;  #   Hash :&#x000A;  #    :class : Hirb::Helpers::Yaml&#x000A;&#x000A;  # In .irbrc&#x000A;  require 'hirb'&#x000A;  # View class needs to come before enable()&#x000A;  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end&#x000A;  Hirb.enable</pre>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000043">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000044">config</a></li>
+              <li><a href="#M000045">format_class</a></li>
+              <li><a href="#M000047">format_output</a></li>
+              <li><a href="#M000046">reload</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000043'>
+                <a name='M000043'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(additional_config={})</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000043-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 87</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">additional_config</span>={})&#x000A;      <span class="ruby-ivar">@klass_config</span> = {}&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-identifier">additional_config</span> <span class="ruby-operator">||</span> {}&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000044'>
+                <a name='M000044'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>config</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  A hash of Ruby class strings mapped to helper config hashes. A helper
+                  config hash must have at least a :method, :output_method or :class option
+                  for a helper to be applied to an output. A helper config hash has the
+                  following keys:
+                  </p>
+                  <dl>
+                  <dt>:method</dt><dd>Specifies a global (Kernel) method to do the formatting.
+                  
+                  </dd>
+                  <dt>:class</dt><dd>Specifies a class to do the formatting, using its render() class method. If
+                  a symbol it&#8217;s converted to a corresponding Hirb::Helpers::* class if
+                  it exists.
+                  
+                  </dd>
+                  <dt>:output_method</dt><dd>Specifies a method or proc to call on output before passing it to a helper.
+                  If the output is an array, it&#8217;s applied to every element in the
+                  array.
+                  
+                  </dd>
+                  <dt>:options</dt><dd>Options to pass the helper method or class.
+                  
+                  </dd>
+                  <dt>:ancestor</dt><dd>Boolean which when true causes subclasses of the output class to inherit
+                  its config. This doesn&#8217;t effect the current output class. Defaults to
+                  false. This is used by ActiveRecord classes.
+                  
+                  </dd>
+                  </dl>
+                  <pre>Examples:&#x000A;  {'WWW::Delicious::Element'=&gt;{:class=&gt;'Hirb::Helpers::ObjectTable', :ancestor=&gt;true, :options=&gt;{:max_width=&gt;180}}}&#x000A;  {'Date'=&gt;{:class=&gt;:auto_table, :ancestor=&gt;true}}</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000044-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000044-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 106</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config</span>&#x000A;      <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000045'>
+                <a name='M000045'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>format_class</span>
+                  <span class='arguments'>(klass, helper_config)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Sets the helper config for the given output class.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000045-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 111</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;      <span class="ruby-ivar">@klass_config</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">klass</span>)&#x000A;      <span class="ruby-ivar">@config</span>[<span class="ruby-identifier">klass</span>.<span class="ruby-identifier">to_s</span>] = <span class="ruby-identifier">helper_config</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000047'>
+                <a name='M000047'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>format_output</span>
+                  <span class='arguments'>(output, options={}, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  This is the main method of this class. The formatter looks for the first
+                  helper in its config for the given output class. If a helper is found, the
+                  output is converted by the helper into a string and returned. If not, nil
+                  is returned. The options this class takes are a helper config hash as
+                  described in config. These options will be merged with any existing helper
+                  config hash an output class has in config. Any block given is passed along
+                  to a helper class.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000047-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000047-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 126</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">output_class</span> = <span class="ruby-identifier">determine_output_class</span>(<span class="ruby-identifier">output</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">parse_console_options</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:console</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">klass_config</span>(<span class="ruby-identifier">output_class</span>), <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>] <span class="ruby-operator">?</span> (<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">e</span>) } <span class="ruby-operator">:</span> &#x000A;        <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">output</span>) ) <span class="ruby-operator">:</span> <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">output</span>]&#x000A;      <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>].<span class="ruby-identifier">empty?</span>&#x000A;      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>],<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>] <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">helper_class</span> = <span class="ruby-identifier">determine_helper_class</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>]))&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">helper_class</span>.<span class="ruby-identifier">render</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">new_output</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000046'>
+                <a name='M000046'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>reload</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Reloads autodetected <a href="Views.html">Hirb::Views</a>
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000046-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000046-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 118</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reload</span>&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

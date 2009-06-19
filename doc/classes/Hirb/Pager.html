@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Hirb::Pager [RDoc Documentation]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Hirb::Pager
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/hirb/pager_rb.html">lib/hirb/pager.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            This class provides class methods for paging and an object which can
+            conditionally page given a terminal size that is exceeded.
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000037">command_pager</a></li>
+              <li><a href="#M000038">default_pager</a></li>
+              <li><a href="#M000039">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000041">activated_by?</a></li>
+              <li><a href="#M000040">page</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>height</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>width</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000037'>
+                <a name='M000037'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>command_pager</span>
+                  <span class='arguments'>(output, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Pages using a configured or detected shell command.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000037-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000037-source'><span class="ruby-comment cmt"># File lib/hirb/pager.rb, line 6</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">command_pager</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;        <span class="ruby-identifier">basic_pager</span>(<span class="ruby-identifier">output</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">valid_pager_command?</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:pager_command</span>])&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000038'>
+                <a name='M000038'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>default_pager</span>
+                  <span class='arguments'>(output, options={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Pages with a ruby-only pager which either pages or quits.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000038-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000038-source'><span class="ruby-comment cmt"># File lib/hirb/pager.rb, line 19</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_pager</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;        <span class="ruby-identifier">pager</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:width</span>], <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:height</span>])&#x000A;        <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">pager</span>.<span class="ruby-identifier">activated_by?</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:inspect</span>])&#x000A;          <span class="ruby-identifier">puts</span> <span class="ruby-identifier">pager</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:inspect</span>])&#x000A;          <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">continue_paging?</span>&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;        <span class="ruby-identifier">puts</span> <span class="ruby-identifier">output</span>&#x000A;        <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;=== Pager finished. ===&quot;</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000039'>
+                <a name='M000039'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(width, height, options={})</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000039-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000039-source'><span class="ruby-comment cmt"># File lib/hirb/pager.rb, line 57</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">resize</span>(<span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span>)&#x000A;      <span class="ruby-ivar">@pager_command</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:pager_command</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:pager_command</span>]&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000041'>
+                <a name='M000041'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>activated_by?</span>
+                  <span class='arguments'>(string_to_page, inspect_mode=false)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Determines if string should be paged based on configured width and height.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000041-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000041-source'><span class="ruby-comment cmt"># File lib/hirb/pager.rb, line 86</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">activated_by?</span>(<span class="ruby-identifier">string_to_page</span>, <span class="ruby-identifier">inspect_mode</span>=<span class="ruby-keyword kw">false</span>)&#x000A;      <span class="ruby-identifier">inspect_mode</span> <span class="ruby-value">? </span>(<span class="ruby-identifier">string_to_page</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@height</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@width</span>) <span class="ruby-operator">:</span> (<span class="ruby-identifier">string_to_page</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value str">&quot;\n&quot;</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@height</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000040'>
+                <a name='M000040'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>page</span>
+                  <span class='arguments'>(string, inspect_mode)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Pages given string using configured pager.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000040-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000040-source'><span class="ruby-comment cmt"># File lib/hirb/pager.rb, line 63</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">page</span>(<span class="ruby-identifier">string</span>, <span class="ruby-identifier">inspect_mode</span>)&#x000A;      <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">valid_pager_command?</span>(<span class="ruby-ivar">@pager_command</span>)&#x000A;        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">command_pager</span>(<span class="ruby-identifier">string</span>, <span class="ruby-identifier">:pager_command=</span><span class="ruby-operator">&gt;</span><span class="ruby-ivar">@pager_command</span>)&#x000A;      <span class="ruby-keyword kw">else</span>&#x000A;        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_pager</span>(<span class="ruby-identifier">string</span>, <span class="ruby-identifier">:width=</span><span class="ruby-operator">&gt;</span><span class="ruby-ivar">@width</span>, <span class="ruby-identifier">:height=</span><span class="ruby-operator">&gt;</span><span class="ruby-ivar">@height</span>, <span class="ruby-identifier">:inspect=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">inspect_mode</span>)&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

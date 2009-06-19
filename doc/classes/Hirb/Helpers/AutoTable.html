@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Class: Hirb::Helpers::AutoTable [RDoc Documentation]</title>
+    <title>: Hirb::Helpers::AutoTable [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -43,22 +43,22 @@
         <div id='text'>
           <div id='description'>
             <p>
-            Attempts to autodetect the table class the output represents and delegates
-            rendering to it.
+            Detects the table class the output should use and delegates rendering to
+            it.
             </p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000003">render</a></li>
+              <li><a href="#M000005">render</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000003'>
-                <a name='M000003'>      </a>
+              <div class='public-class method' id='method-M000005'>
+                <a name='M000005'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(output, options={})</span>
@@ -66,14 +66,14 @@
                 <div class='description'>
                   <p>
                   Same options as <a
-                  href="Table.html#M000004">Hirb::Helpers::Table.render</a>.
+                  href="Table.html#M000006">Hirb::Helpers::Table.render</a>.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/auto_table.rb, line 4</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">klass</span> = <span class="ruby-keyword kw">if</span> ((<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">output</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>)) <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">false</span>)&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordTable</span>&#x000A;    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>]&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectTable</span>&#x000A;    <span class="ruby-keyword kw">else</span>&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">Table</span>&#x000A;    <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/auto_table.rb, line 4</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">klass</span> = <span class="ruby-keyword kw">if</span> ((<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">output</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>)) <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">false</span>)&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">ActiveRecordTable</span>&#x000A;    <span class="ruby-keyword kw">elsif</span> (<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">output</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">output</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)))&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectTable</span>&#x000A;    <span class="ruby-keyword kw">else</span>&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">Table</span>&#x000A;    <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

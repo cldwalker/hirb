@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Module: Hirb [RDoc Documentation]</title>
+    <title>: Hirb [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -34,10 +34,19 @@
             <a href="../files/lib/hirb/console_rb.html">lib/hirb/console.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/hirb/formatter_rb.html">lib/hirb/formatter.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/hirb/helpers_rb.html">lib/hirb/helpers.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/hirb/import_object_rb.html">lib/hirb/import_object.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/hirb/menu_rb.html">lib/hirb/menu.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/hirb/pager_rb.html">lib/hirb/pager.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/hirb/util_rb.html">lib/hirb/util.rb</a>
@@ -58,12 +67,36 @@
           <div id='description'>
             <p>
             Most of Hirb&#8217;s functionality currently resides in <a
-            href="Hirb/View.html">Hirb::View</a>. <a href="Hirb.html">Hirb</a> has an
-            optional yaml config file defined by config_file. This config file has the
+            href="Hirb/View.html">Hirb::View</a>. For an in-depth tutorial on creating
+            and configuring views see <a
+            href="Hirb/Formatter.html">Hirb::Formatter</a>. <a
+            href="Hirb.html">Hirb</a> has an optional yaml config file defined by <a
+            href="Hirb.html#M000003">config_file</a>(). This config file has the
             following top level keys:
             </p>
             <dl>
-            <dt>:view</dt><dd>See <a href="Hirb/View.html">Hirb::View</a> for the value of this entry.
+            <dt>:output</dt><dd>This hash is used by the formatter object. See <a
+            href="Hirb/Formatter.html#M000044">Hirb::Formatter.config</a> for its
+            format.
+            
+            </dd>
+            <dt>:width</dt><dd>Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly
+            autodetected when <a href="Hirb.html">Hirb</a> is enabled.
+            
+            </dd>
+            <dt>:height</dt><dd>Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly
+            autodetected when <a href="Hirb.html">Hirb</a> is enabled.
+            
+            </dd>
+            <dt>:formatter</dt><dd>Boolean which determines if the formatter is enabled. Defaults to true.
+            
+            </dd>
+            <dt>:pager</dt><dd>Boolean which determines if the pager is enabled. Defaults to true.
+            
+            </dd>
+            <dt>:pager_command</dt><dd>Command to be used for paging. Command can have options after it i.e.
+            &#8216;less -r&#8217;. Defaults to common pagers i.e. less and more if
+            detected.
             
             </dd>
             </dl>
@@ -72,7 +105,9 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000001">config_file</a></li>
+              <li><a href="#M000003">config_file</a></li>
+              <li><a href="#M000002">disable</a></li>
+              <li><a href="#M000001">enable</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -83,11 +118,14 @@
               Module <a href="Hirb/Util.html" class="link">Hirb::Util</a><br />
               Module <a href="Hirb/View.html" class="link">Hirb::View</a><br />
               Module <a href="Hirb/Views.html" class="link">Hirb::Views</a><br />
+              Class <a href="Hirb/Formatter.html" class="link">Hirb::Formatter</a><br />
+              Class <a href="Hirb/Menu.html" class="link">Hirb::Menu</a><br />
+              Class <a href="Hirb/Pager.html" class="link">Hirb::Pager</a><br />
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000001'>
-                <a name='M000001'>      </a>
+              <div class='public-class method' id='method-M000003'>
+                <a name='M000003'>      </a>
                 <div class='synopsis'>
                   <span class='name'>config_file</span>
                   <span class='arguments'>()</span>
@@ -98,10 +136,48 @@
                   </p>
                 </div>
                 <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 38</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-ivar">@config_file</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>],<span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000002'>
+                <a name='M000002'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>disable</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Disables view functionality. See <a
+                  href="Hirb/View.html#M000025">Hirb::View.disable</a> for details.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 34</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">disable</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000001'>
+                <a name='M000001'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>enable</span>
+                  <span class='arguments'>(options={}, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Enables view functionality. See <a
+                  href="Hirb/View.html#M000023">Hirb::View.enable</a> for details.
+                  </p>
+                </div>
+                <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000001-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 17</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;~&quot;</span>,<span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 29</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

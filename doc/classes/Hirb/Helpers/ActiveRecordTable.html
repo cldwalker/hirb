@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Class: Hirb::Helpers::ActiveRecordTable [RDoc Documentation]</title>
+    <title>: Hirb::Helpers::ActiveRecordTable [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -45,14 +45,14 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000002">render</a></li>
+              <li><a href="#M000004">render</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000002'>
-                <a name='M000002'>      </a>
+              <div class='public-class method' id='method-M000004'>
+                <a name='M000004'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(rows, options={})</span>
@@ -60,7 +60,7 @@
                 <div class='description'>
                   <p>
                   Rows are Rails&#8217; ActiveRecord::Base objects. Takes same options as <a
-                  href="Table.html#M000004">Hirb::Helpers::Table.render</a> except as noted
+                  href="Table.html#M000006">Hirb::Helpers::Table.render</a> except as noted
                   below.
                   </p>
                   <p>
@@ -69,10 +69,10 @@
                   <pre>:fields- Can be any attribute, column or not. If not given, this defaults to the database table's columns.</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/active_record_table.rb, line 7</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">rows</span> = [<span class="ruby-identifier">rows</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;    <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">||=</span> &#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-identifier">fields</span> = <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">attribute_names</span>&#x000A;        <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">unshift</span>(<span class="ruby-identifier">fields</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value str">'id'</span>)) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">'id'</span>)&#x000A;        <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_sym</span> }&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/active_record_table.rb, line 7</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">rows</span> = [<span class="ruby-identifier">rows</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;    <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">||=</span> &#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-identifier">fields</span> = <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">column_names</span>&#x000A;        <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_sym</span> }&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Class: Hirb::Helpers::Table [RDoc Documentation]</title>
+    <title>: Hirb::Helpers::Table [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -45,8 +45,9 @@
             <p>
             Base <a href="Table.html">Table</a> class from which other table classes
             inherit. By default, a table is constrained to a default width but this can
-            be adjusted via options as well as Hirb:Helpers::Table.max_width. Rows can
-            be an array of arrays or an array of hashes.
+            be adjusted via the max_width option or <a
+            href="../View.html#M000033">Hirb::View.width</a>. Rows can be an array of
+            arrays or an array of hashes.
             </p>
             <p>
             An array of arrays ie [[1,2], [2,3]], would render:
@@ -68,7 +69,7 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000004">render</a></li>
+              <li><a href="#M000006">render</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -81,29 +82,17 @@
               <div class='name-list'>
                 <table summary='Constants'>
                   <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>DEFAULT_MAX_WIDTH</td>
+                    <td class='context-item-name'>BORDER_LENGTH</td>
                     <td>=</td>
-                    <td class='context-item-value'>150</td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            <div id='attribute-list'>
-              <h2 class='section-bar'>Attributes</h2>
-              <div class='name-list'>
-                <table>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>max_width</td>
-                    <td class='context-item-value'>[RW]</td>
-                    <td class='context-item-desc'></td>
+                    <td class='context-item-value'>3</td>
                   </tr>
                 </table>
               </div>
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000004'>
-                <a name='M000004'>      </a>
+              <div class='public-class method' id='method-M000006'>
+                <a name='M000006'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(rows, options={})</span>
@@ -134,17 +123,26 @@
                   count field borders as part of the total.
                   
                   </dd>
+                  <dt>:number</dt><dd>When set to true, numbers rows by adding a :hirb_number column as the first
+                  column. Default is false.
+                  
+                  </dd>
+                  <dt>:filters</dt><dd>A hash of fields and the filters that each row in the field must run
+                  through. The filter converts the cell&#8217;s value by applying a given
+                  proc or an array containing a method and optional arguments to it.
+                  
+                  </dd>
                   </dl>
                   <p>
                   Examples:
                   </p>
-                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}</pre>
+                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 48</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>,<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 52</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>,<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

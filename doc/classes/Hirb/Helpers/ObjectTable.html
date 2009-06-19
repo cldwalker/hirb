@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>Class: Hirb::Helpers::ObjectTable [RDoc Documentation]</title>
+    <title>: Hirb::Helpers::ObjectTable [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../.././rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -45,14 +45,14 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000005">render</a></li>
+              <li><a href="#M000007">render</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000005'>
-                <a name='M000005'>      </a>
+              <div class='public-class method' id='method-M000007'>
+                <a name='M000007'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(rows, options ={})</span>
@@ -60,19 +60,19 @@
                 <div class='description'>
                   <p>
                   Rows are any ruby objects. Takes same options as <a
-                  href="Table.html#M000004">Hirb::Helpers::Table.render</a> except as noted
+                  href="Table.html#M000006">Hirb::Helpers::Table.render</a> except as noted
                   below.
                   </p>
                   <p>
                   Options:
                   </p>
-                  <pre>:fields- Methods of the object which are represented as columns in the table. Required option.&#x000A;  All method values are converted to strings via to_s.</pre>
+                  <pre>:fields- Methods of the object to represent as columns. Defaults to [:to_s].</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/object_table.rb, line 7</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span> ={})&#x000A;    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Option 'fields' is required.&quot;</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>]&#x000A;    <span class="ruby-identifier">rows</span> = [<span class="ruby-identifier">rows</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;    <span class="ruby-identifier">item_hashes</span> = <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">inject</span>([]) {<span class="ruby-operator">|</span><span class="ruby-identifier">t</span>,<span class="ruby-identifier">item</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">t</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>].<span class="ruby-identifier">inject</span>({}) {<span class="ruby-operator">|</span><span class="ruby-identifier">h</span>,<span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">h</span>[<span class="ruby-identifier">f</span>] = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">f</span>).<span class="ruby-identifier">to_s</span>; <span class="ruby-identifier">h</span>}&#x000A;    }&#x000A;    <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">item_hashes</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/object_table.rb, line 6</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span> ={})&#x000A;    <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">||=</span> [<span class="ruby-identifier">:to_s</span>]&#x000A;    <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:headers</span>] = {<span class="ruby-identifier">:to_s=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'value'</span>} <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">==</span> [<span class="ruby-identifier">:to_s</span>]&#x000A;    <span class="ruby-identifier">rows</span> = [<span class="ruby-identifier">rows</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;    <span class="ruby-identifier">item_hashes</span> = <span class="ruby-identifier">rows</span>.<span class="ruby-identifier">inject</span>([]) {<span class="ruby-operator">|</span><span class="ruby-identifier">t</span>,<span class="ruby-identifier">item</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">t</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:fields</span>].<span class="ruby-identifier">inject</span>({}) {<span class="ruby-operator">|</span><span class="ruby-identifier">h</span>,<span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">h</span>[<span class="ruby-identifier">f</span>] = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">f</span>); <span class="ruby-identifier">h</span>}&#x000A;    }&#x000A;    <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">item_hashes</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
