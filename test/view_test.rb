@@ -7,16 +7,16 @@ module Hirb
     end
     
     test "page_output pages when view is enabled" do
-      View.enable
+      Hirb.enable
       View.pager.stubs(:activated_by?).returns(true)
       View.pager.expects(:page)
       View.page_output('blah').should be(true)
-      View.disable
+      Hirb.disable
     end
     
     test "page_output doesn't page when view is disabled" do
-      View.enable
-      View.disable
+      Hirb.enable
+      Hirb.disable
       View.pager.stubs(:activated_by?).returns(true)
       View.pager.expects(:page).never
       View.page_output('blah').should be(false)
@@ -24,35 +24,35 @@ module Hirb
 
     context "enable" do
       before(:each) { reset_config }
-      after(:each) { View.disable }
+      after(:each) { Hirb.disable }
       test "redefines irb output_value" do
         View.expects(:render_output).once
-        View.enable
+        Hirb.enable
         context_stub = stub(:last_value=>'')
         ::IRB::Irb.new(context_stub).output_value
       end
       test "is enabled?" do
-        View.enable
+        Hirb.enable
         assert View.enabled?
       end
 
       test "works without irb" do
         Object.stubs(:const_defined?).with(:IRB).returns(false)
-        View.enable
+        Hirb.enable
         assert formatter_config.size > 0
       end
 
       test "with config_file option sets config_file" do
         Hirb.config_file.should_not == 'test_file'
-        View.enable :config_file=> 'test_file'
+        Hirb.enable :config_file=> 'test_file'
         Hirb.config_file.should == 'test_file'
       end
     end
 
     context "resize" do
       def pager; View.pager; end
-      before(:each) { View.pager = nil; reset_config; View.enable }
-      after(:each) { View.disable}
+      before(:each) { View.pager = nil; reset_config; Hirb.enable }
+      after(:each) { Hirb.disable}
       test "changes width and height with stty" do
         Util.expects(:command_exists?).with('stty').returns(true)
         ENV['COLUMNS'] = ENV['LINES'] = nil # bypasses env usage
@@ -82,16 +82,16 @@ module Hirb
 
     test "disable points output_value back to original output_value" do
       View.expects(:render_output).never
-      View.enable
-      View.disable
+      Hirb.enable
+      Hirb.disable
       context_stub = stub(:last_value=>'')
       ::IRB::Irb.new(context_stub).output_value
     end
 
     test "disable works without irb defined" do
       Object.stubs(:const_defined?).with(:IRB).returns(false)
-      View.enable
-      View.disable
+      Hirb.enable
+      Hirb.disable
       View.enabled?.should be(false)
     end
 

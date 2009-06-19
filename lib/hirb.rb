@@ -23,7 +23,15 @@ require 'hirb/menu'
 
 module Hirb
   class <<self
+    # Enables view functionality. See Hirb::View.enable for details.
+    def enable(options={}, &block)
+      View.enable(options, &block)
+    end
 
+    # Disables view functionality. See Hirb::View.disable for details.
+    def disable
+      View.disable
+    end
     # Default is config/hirb.yml or ~/hirb.yml in that order.
     def config_file
       @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' : File.expand_path(File.join(ENV["HOME"],".hirb.yml"))

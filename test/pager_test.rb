@@ -27,9 +27,9 @@ module Hirb
     end
 
     context "default_pager" do
-      before(:all) { reset_config; View.enable {|c| c.pager = true}}
+      before(:all) { reset_config; Hirb.enable {|c| c.pager = true}}
       before(:each) { View.pager = nil; Pager.stubs(:pager_command).returns(nil) }
-      after(:all) { View.disable }
+      after(:all) { Hirb.disable }
 
       test "pages once in normal mode" do
         $stdin.expects(:gets).returns("\n")
@@ -59,9 +59,9 @@ module Hirb
     end
 
     context "pager" do
-      before(:all) { reset_config; View.enable }
+      before(:all) { reset_config; Hirb.enable }
       before(:each) { View.pager = nil; View.formatter = nil }
-      after(:all) { View.disable }
+      after(:all) { Hirb.disable }
 
       def irb_eval(string)
         context_stub = stub(:last_value=>string)

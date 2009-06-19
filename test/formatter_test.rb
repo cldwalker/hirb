@@ -48,7 +48,7 @@ class FormatterTest < Test::Unit::TestCase
 
   context "enable" do
     before(:each) { View.formatter = nil; reset_config }
-    after(:each) { View.disable }
+    after(:each) { Hirb.disable }
 
     def formatter_config
       View.formatter.config
@@ -56,19 +56,19 @@ class FormatterTest < Test::Unit::TestCase
     
     test "sets default formatter config" do
       eval "module ::Hirb::Views::Something_Base; def self.render; end; end"
-      View.enable
+      Hirb.enable
       formatter_config["Something::Base"].should == {:class=>"Hirb::Views::Something_Base"}
     end
   
     test "sets default formatter config with default_options" do
       eval "module ::Hirb::Views::Blah; def self.render; end; def self.default_options; {:ancestor=>true}; end; end"
-      View.enable
+      Hirb.enable
       formatter_config["Blah"].should == {:class=>"Hirb::Views::Blah", :ancestor=>true}
     end
   
     test "with block sets formatter config" do
       class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
-      View.enable {|c| c.output = class_hash }
+      Hirb.enable {|c| c.output = class_hash }
       formatter_config['Something::Base'].should == class_hash['Something::Base']
     end
   end
@@ -78,7 +78,7 @@ class FormatterTest < Test::Unit::TestCase
     def render_method(*args); View.render_method(*args); end
 
     def enable_with_output(value)
-      View.enable :output=>value
+      Hirb.enable :output=>value
     end
 
     before(:all) { 
@@ -91,7 +91,7 @@ class FormatterTest < Test::Unit::TestCase
       reset_config
     }
     before(:each) { View.formatter = nil; reset_config }
-    after(:each) { View.disable }
+    after(:each) { Hirb.disable }
     
     test "formats with method option" do
       eval "module ::Kernel; def commify(string); string.split('').join(','); end; end"
@@ -126,7 +126,7 @@ class FormatterTest < Test::Unit::TestCase
     end
     
     test "doesn't format and returns false when no format method found" do
-     View.enable
+     Hirb.enable
       render_method.expects(:call).never
       view_output(Date.today).should == false
     end
