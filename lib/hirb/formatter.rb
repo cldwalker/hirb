@@ -1,6 +1,87 @@
 module Hirb
-  # This class is used by the View to format an output into a string. The formatter object looks for an output's class config 
-  # in Hirb::Formatter.config and if found applies a helper to the output.
+=begin rdoc
+  This class is format an output into a string using Hirb::Helpers::*, Hirb::Views::* or any user-created views.
+  The formatter object looks for an output's class config in Hirb::Formatter.config and if found applies a helper to the output.
+
+  == Create and Configure Views
+  Let's create a simple view and configure it in different ways to be Hash's default view:
+
+  === Setup
+    irb>> require 'hirb'
+    =>true
+    irb>> Hirb.enable
+    =>nil
+    irb>> require 'yaml'
+    =>true
+
+  === Configure As View Method
+  A view method is the smallest reuseable view.
+    # Create yaml view method
+    irb>> def yaml(output); output.to_yaml; end
+    =>nil
+
+    # Configure view
+    irb>>Hirb::View.format_class Hash, :method=>:yaml
+    =>true
+
+    # Hashes now appear as yaml
+    irb>>{:a=>1, :b=>{:c=>3}}
+    ---
+    :a : 1
+    :b : 
+      :c : 3
+    => true
+
+  === Configure As View Class
+  A view class is suited for more complex views. View classes can be under any namespace
+  and are expected to provide a render method. However, if a class is under the Hirb::Views namespace,
+  it will be automatically loaded with no configuration. Something to think about when
+  sharing views with others.
+
+    # Create yaml view class
+    irb>> class Hirb::Views::Hash; def self.render(output, options={}); output.to_yaml; end ;end
+    =>nil
+    # Just reload since no configuration is necessary
+    irb>>Hirb::View.formatter.reload
+
+    # Hashes now appear as yaml ...
+
+  Although the Hirb::Views namespace is great for quick classes that just plug and play, you
+  often want view classes that can be reused with multiple outputs. For this case, it's recommended to
+  use the Hirb::Helpers namespace.
+
+    # Create yaml view class
+    irb>> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+    =>nil
+
+    # Configure view and reload it
+    irb>>Hirb::View.format_class Hash, :class=>"Hirb::Helpers::Yaml"
+    =>true
+
+    # Hashes now appear as yaml ...
+
+    == Configure At Startup
+    Once you know what views are associated with what output classes, you can configure
+    them at startup by passing Hirb.enable an options hash:
+      # In .irbrc
+      require 'hirb'
+      # View class needs to come before enable()
+      class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+      Hirb.enable :output=>{"Hash"=>{:class=>"Hirb::Helpers::Yaml"}}
+
+    Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
+      # The config file for the yaml example would look like:
+      # ---
+      # :output :
+      #   Hash :
+      #    :class : Hirb::Helpers::Yaml
+
+      # In .irbrc
+      require 'hirb'
+      # View class needs to come before enable()
+      class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+      Hirb.enable
+=end 
   
   class Formatter
     def initialize(additional_config={})
@@ -8,8 +89,8 @@ module Hirb
       @config = Util.recursive_hash_merge default_config, additional_config || {}
     end
 
-    # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method or :class option
-    # for a helper to be applied to an output. A helper config hash has the following keys:
+    # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method, :output_method
+    # or :class option for a helper to be applied to an output. A helper config hash has the following keys:
     # [:method] Specifies a global (Kernel) method to do the formatting.
     # [:class] Specifies a class to do the formatting, using its render() class method. If a symbol it's converted to a corresponding
     #          Hirb::Helpers::* class if it exists.
@@ -26,6 +107,7 @@ module Hirb
       @config
     end
 
+    # Sets the helper config for the given output class.
     def format_class(klass, helper_config)
       @klass_config.delete(klass)
       @config[klass.to_s] = helper_config
@@ -52,6 +134,8 @@ module Hirb
         new_output = send(options[:method],*args)
       elsif options[:class] && (helper_class = determine_helper_class(options[:class]))
         new_output = helper_class.render(*args, &block)
+      elsif options[:output_method]
+        new_output = output
       end
       new_output
     end

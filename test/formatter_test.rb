@@ -126,7 +126,7 @@ class FormatterTest < Test::Unit::TestCase
     end
     
     test "doesn't format and returns false when no format method found" do
-     Hirb.enable
+      Hirb.enable
       render_method.expects(:call).never
       view_output(Date.today).should == false
     end

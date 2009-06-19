@@ -1,3 +1,10 @@
+== 0.2.0
+* Major refactoring with bug fixes and better tests.
+* Improved table algorithm to ensure that tables don't wrap.
+* Added a pager which detects if output should be paged, Hirb::Pager.
+* Added a selection menu, Hirb::Menu
+* Following API changes: Hirb::Helpers::Table.max_width removed and config files don't use
+  the :view key anymore.
 == 0.1.2
 * Added tree views.
 * Added output_method option to Hirb::View.render_output.

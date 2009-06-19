@@ -1,17 +1,22 @@
 == Description
 
-Hirb currently provides a mini view framework for console applications, designed with irb in mind.
-Given the output of a console application, it renders a view if there is one configured, based on
-the output's class. The framework encourages reusing views by letting you package them in classes
-and associate them with any number of output classes.  Hirb comes with tree views (see
+Hirb currently provides a mini view framework for console applications, designed to improve irb's default output.
+Hirb improves console output by providing a smart pager and auto-formatting output. The smart pager detects when an output exceeds
+a screenful and thus only pages output as needed. Auto-formatting adds a view to an output's class. This is helpful in separating
+views from content (MVC anyone?). The framework encourages reusing views by letting you
+package them in classes and associate them with any number of output classes.  Hirb comes with tree views (see
 Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table). By default Hirb displays Rails'
-model classes as tables.
+model classes as tables. Hirb also sports a nice selection menu, Hirb::Menu.
 
 == Install
 
 Install the gem with:
 
     sudo gem install cldwalker-hirb --source http://gems.github.com
+
+== Create and Configure Views
+
+If you'd like to learn how to create and configure views, {read the docs}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
 
 == Rails Example
 
@@ -20,12 +25,12 @@ Let's load and enable the view framework:
   Loading local environment (Rails 2.2.2)
   irb>> require 'hirb'
   => true
-  irb>> Hirb::View.enable
+  irb>> Hirb.enable
   => nil
 
 The default configuration provides table views for ActiveRecord::Base descendants.
 If a class isn't configured, Hirb reverts to irb's default echo mode.
-  irb>> Hirb::View.output_config
+  irb>> Hirb::View.formatter_config
   => {"ActiveRecord::Base"=>{:class=>"Hirb::Views::ActiveRecord_Base", :ancestor=>true}}
 
   # Tag is a model class and descendant of ActiveRecord::Base
@@ -60,7 +65,7 @@ you may appreciate it also detects configured output objects in an array:
   3 rows in set
 
 At any time you can disable Hirb if you really like irb's lovely echo mode:
-  irb>> Hirb::View.disable
+  irb>> Hirb.disable
   => nil
   irb>> Tag.all :limit=>3, :order=>"id DESC"
   => [#<Tag id: 907, name: "gem:tags=yaml", description: nil, created_at: "2009-03-06 21:10:41",
@@ -74,7 +79,7 @@ While preconfigured tables are great for database records, sometimes you just wa
 tables/views for any output object:
   
   #These examples don't need to have Hirb::View enabled.
-  irb>>Hirb::View.disable
+  irb>>Hirb.disable
   =>nil
 
   # Imports table() and view()
@@ -91,8 +96,8 @@ tables/views for any output object:
   +------------+--------+-----------+-------+--------------------------+
   2 rows in set
 
-  # Same table as the previous method. However view() will be able to call any view created.
-  irb>> view [Date.today, Date.today.next_month], :class=>Hirb::Helpers::ObjectTable,
+  # Same table as the previous method. However view() will be able to call any helper.
+  irb>> view [Date.today, Date.today.next_month], :class=>:object_table,
     :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
 
 If these console methods weren't convenient enough, try:
@@ -101,7 +106,7 @@ If these console methods weren't convenient enough, try:
   irb>> require 'hirb/import_object'
   =>true
   # Yields same table as above examples.
-  irb>> [Date.today, Date.today.next_month].view :class=>Hirb::Helpers::ObjectTable,
+  irb>> [Date.today, Date.today.next_month].view :class=>:object_table,
     :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
 
 Although views by default are printed to STDOUT, they can be easily modified to write anywhere:
@@ -109,7 +114,7 @@ Although views by default are printed to STDOUT, they can be easily modified to 
   irb>> Hirb::View.render_method = lambda {|output| File.open("console.log", 'w') {|f| f.write(output) } }
 
   # Writes to file with same table output as above example.
-  irb>> view [Date.today, Date.today.next_month], :class=>Hirb::Helpers::ObjectTable,
+  irb>> view [Date.today, Date.today.next_month], :class=>:object_table,
     :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
 
   # Doesn't write to file because Symbol isn't configured to use Hirb::View and thus defaults to irb's echo mode.
@@ -119,98 +124,13 @@ Although views by default are printed to STDOUT, they can be easily modified to 
   # Go back to printing Hirb views to STDOUT.
   irb>> Hirb::View.reset_render_method
 
-== Create and Configure Views
-Let's create a simple view and configure it in different ways to be Hash's default view:
-
-=== Setup
-  irb>> require 'hirb'
-  =>true
-  irb>> Hirb::View.enable
-  =>nil
-  irb>> require 'yaml'
-  =>true
-
-=== Configure As View Method
-A view method is the smallest reuseable view.
-  # Create yaml view method
-  irb>> def yaml(output); output.to_yaml; end
-  =>nil
-
-  # Configure view and reload it
-  irb>>Hirb::View.output_config = {"Hash"=>{:method=>:yaml}}
-  =>{"Hash"=>{:method=>:yaml}}
-  irb>>Hirb::View.reload_config
-  =>true
-
-  # Hashes now appear as yaml
-  irb>>{:a=>1, :b=>{:c=>3}}
-  ---
-  :a : 1
-  :b : 
-    :c : 3
-  => true
-
-=== Configure As View Class
-A view class is suited for more complex views. View classes can be under any namespace
-and are expected to provide a render method. However, if a class is under the Hirb::Views namespace,
-it will be automatically loaded with no configuration. Something to think about when
-sharing views with others.
-
-  # Create yaml view class
-  irb>> class Hirb::Views::Hash; def self.render(output, options={}); output.to_yaml; end ;end
-  =>nil
-  # Just reload since no configuration is necessary
-  irb>>Hirb::View.reload_config
-
-  # Hashes now appear as yaml ...
-
-Although the Hirb::Views namespace is great for quick classes that just plug and play, you
-often want view classes that can be reused with multiple outputs. For this case, it's recommended to
-use the Hirb::Helpers namespace.
-  
-  # Create yaml view class
-  irb>> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
-  =>nil
-
-  # Configure view and reload it
-  irb>>Hirb::View.output_config = {"Hash"=>{:class=>"Hirb::Helpers::Yaml"}}
-  =>{"Hash"=>{:class=>"Hirb::Helpers::Yaml"}}
-  irb>>Hirb::View.reload_config
-
-  # Hashes now appear as yaml ...
-
-=== Configure At Startup
-Once you know what views are associated with what output classes, you can configure
-them at startup by passing Hirb::View.enable a block:
-  # In .irbrc
-  require 'hirb'
-  # View class needs to come before enable()
-  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
-  Hirb::View.enable {|conf| conf.output = {"Hash"=>{:class=>"Hirb::Helpers::Yaml"}} }
-  
-Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
-  # The config file for the yaml example would look like:
-  # ---
-  # :view :
-  #  :output :
-  #    Hash :
-  #      :class : Hirb::Helpers::Yaml
-
-  # In .irbrc
-  require 'hirb'
-  # View class needs to come before enable()
-  class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
-  Hirb::View.enable
-
-== Contributing Views
-If you have views of your own you'd like to share, fork Hirb and put your views under
-the Hirb::Helpers namespace and the view files under lib/hirb/helpers/.
+== Sharing Views
+If you have tested views you'd like to share, fork Hirb and put your views under
+the lib/hirb/views/ and/or helpers files under lib/hirb/helpers/. If not tested, feel free to share
+them on the wiki.
 
 == Limitations
-Although Hirb preserves Wirble colorizing irb's default echo mode, it doesn't colorize its own views.
-This is mainly because colorizing caused table classes to render incorrectly. If you can get tables
-and colors to work nicely, please fork. To colorize your Hirb output:
-  Hirb::View.render_method = lambda {|output| puts Wirble::Colorize.colorize(output) }
+If using Wirble, you should call Hirb after it since they both override irb's default output.
 
 == Motivation
 Table code from http://gist.github.com/72234 and {my console
@@ -225,5 +145,6 @@ Please report them {on github}[http://github.com/cldwalker/hirb/issues].
 
 == Todo
 * Consider applying multiple views/filters to output.
+* Consider mapping a class' methods to their own views.
 * Provides helper methods to all view classes.
 * Consider adding a template system as needed.

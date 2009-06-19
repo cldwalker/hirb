@@ -102,6 +102,16 @@ module Hirb
         config ? config[:height] : DEFAULT_HEIGHT
       end
 
+      # Current formatter config
+      def formatter_config
+        formatter.config
+      end
+
+      # Sets the helper config for the given output class.
+      def format_class(klass, helper_config)
+        formatter.format_class(klass, helper_config)
+      end
+
       #:stopdoc:
       def render_output(output, options={})
         if (formatted_output = formatter.format_output(output, options))
@@ -131,11 +141,6 @@ module Hirb
       end
 
       def pager=(value); @pager = value; end
-
-      # Config hash which maps classes to view hashes. View hashes are the same as the options hash of render_output().
-      def formatter_config
-        formatter.config
-      end
 
       def formatter(reload=false)
         @formatter = reload || @formatter.nil? ? Formatter.new(config[:output]) : @formatter
