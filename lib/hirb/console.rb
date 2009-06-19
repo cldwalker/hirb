@@ -18,8 +18,8 @@ module Hirb
       end
 
       # Takes same arguments and options as render_output() but returns formatted output instead of rendering it.
-      def format_output(*args, &block)
-        View.formatter.format_output(*parse_input(*args), &block)
+      def format_output(output, options={}, &block)
+        View.formatter.format_output(*parse_input(output, options), &block)
       end
 
       def parse_input(output, options)
@@ -42,7 +42,7 @@ module Hirb
     end
 
     def menu(output, options={}, &block)
-      Console.format_output(output, options.merge(:class=>"Hirb::Helpers::Menu"), &block)
+      Console.format_output(output, options.merge(:class=>"Hirb::Menu"), &block)
     end
   end
 end
