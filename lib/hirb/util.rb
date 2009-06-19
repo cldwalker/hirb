@@ -1,7 +1,8 @@
 module Hirb
+  # Group of handy utility functions used throught Hirb.
   module Util
     extend self
-    # Returns a constant like const_get() no matter what namespace it's nested in.
+    # Returns a constant like Module#const_get no matter what namespace it's nested in.
     # Returns nil if the constant is not found.
     def any_const_get(name)
       return name if name.is_a?(Module)
@@ -21,11 +22,17 @@ module Hirb
       hash1.merge(hash2) {|k,o,n| (o.is_a?(Hash)) ? recursive_hash_merge(o,n) : n}
     end
 
-    # from Rails ActiveSupport
+    # From Rails ActiveSupport, converting undescored lowercase to camel uppercase.
     def camelize(string)
       string.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
     end
 
+    # Used by Hirb::Menu to select items from an array. Array counting starts at 1. Ranges of numbers are specified with a '-' or '..'.
+    # Multiple ranges can be comma delimited. Anything that isn't a valid number is ignored. All elements can be returned with a '*'.
+    # Examples:
+    #    1-3,5-6 -> [1,2,3,5,6]
+    #    *   -> all elements in array
+    #    ''  -> [] 
     def choose_from_array(array, input, options={})
       options = {:splitter=>","}.merge(options)
       return array if input.strip == '*'
@@ -44,12 +51,13 @@ module Hirb
       return result
     end
 
+    # Determines if a shell command exists by searching for it in ENV['PATH'].
     def command_exists?(command)
       ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
     end
 
-    # returns [width, height] of terminal when detected, nil if not detected
-    # simpler version of highline's Highline::SystemExtensions.terminal_size()
+    # Returns [width, height] of terminal when detected, nil if not detected.
+    # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
     def detect_terminal_size
       (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/) ? [ENV['COLUMNS'].to_i, ENV['LINES'].to_i] :
         ( command_exists?('stty') ? `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse : nil )
@@ -57,6 +65,7 @@ module Hirb
       nil
     end
 
+    # Captures STDOUT of anything run in its block and returns it as string.
     def capture_stdout(&block)
       original_stdout = $stdout
       $stdout = fake = StringIO.new

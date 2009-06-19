@@ -1,7 +1,7 @@
 module Hirb
   # This class provides a selection menu using Hirb's table helpers by default to display choices.
   class Menu
-    # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.chosen_from_array()
+    # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
     # for the syntax for specifying selections. All options except for the ones below are passed to render the menu.
     #
     # ==== Options:

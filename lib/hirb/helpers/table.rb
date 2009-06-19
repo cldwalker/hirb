@@ -1,6 +1,6 @@
 # Base Table class from which other table classes inherit.
 # By default, a table is constrained to a default width but this can be adjusted
-# via options as well as Hirb:Helpers::Table.max_width.
+# via the max_width option or Hirb::View.width.
 # Rows can be an array of arrays or an array of hashes.
 #
 # An array of arrays ie [[1,2], [2,3]], would render:

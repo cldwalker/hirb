@@ -1,4 +1,4 @@
-# Attempts to autodetect the table class the output represents and delegates rendering to it.
+# Detects the table class the output should use and delegates rendering to it.
 class Hirb::Helpers::AutoTable
   # Same options as Hirb::Helpers::Table.render.
   def self.render(output, options={})

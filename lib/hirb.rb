@@ -11,15 +11,15 @@ require 'hirb/pager'
 require 'hirb/menu'
 
 # Most of Hirb's functionality currently resides in Hirb::View.
-# Hirb has an optional yaml config file defined by config_file. This config file
+# Hirb has an optional yaml config file defined by config_file(). This config file
 # has the following top level keys:
-# [:output] This hash used by the formatter object. See Hirb::Formatter.config for its format.
+# [:output] This hash is used by the formatter object. See Hirb::Formatter.config for its format.
 # [:width]  Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
 # [:height]  Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
 # [:formatter] Boolean which determines if the formatter is enabled. Defaults to true.
 # [:pager] Boolean which determines if the pager is enabled. Defaults to true.
 # [:pager_command] Command to be used for paging. Command can have options after it i.e. 'less -r'.
-#                  Defaults to common pagers i.e. less and more if detected. Otherwise uses a basic ruby pager.
+#                  Defaults to common pagers i.e. less and more if detected.
 
 module Hirb
   class <<self

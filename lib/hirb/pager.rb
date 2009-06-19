@@ -1,15 +1,13 @@
 module Hirb
+  # This class provides class methods for paging and an object which can conditionally page given a terminal size that is exceeded.
   class Pager
     class<<self
+      # Pages using a configured or detected shell command.
       def command_pager(output, options={})
         basic_pager(output) if valid_pager_command?(options[:pager_command])
       end
 
-      def valid_pager_command?(cmd)
-        cmd ? pager_command(cmd) : pager_command
-      end
-
-      def pager_command(*commands)
+      def pager_command(*commands) #:nodoc:
         @pager_command = (!@pager_command.nil? && commands.empty?) ? @pager_command : 
           begin
             commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
@@ -17,6 +15,7 @@ module Hirb
           end
       end
 
+      # Pages with a ruby-only pager which either pages or quits.
       def default_pager(output, options={})
         pager = new(options[:width], options[:height])
         while pager.activated_by?(output, options[:inspect])
@@ -25,6 +24,11 @@ module Hirb
         end
         puts output
         puts "=== Pager finished. ==="
+      end
+
+      #:stopdoc:
+      def valid_pager_command?(cmd)
+        cmd ? pager_command(cmd) : pager_command
       end
 
       private
@@ -45,7 +49,7 @@ module Hirb
         puts "=== Press enter/return to continue or q to quit: ==="
         !$stdin.gets.chomp[/q/i]
       end
-      
+      #:startdoc:
     end
 
     attr_reader :width, :height
@@ -55,6 +59,7 @@ module Hirb
       @pager_command = options[:pager_command] if options[:pager_command]
     end
 
+    # Pages given string using configured pager.
     def page(string, inspect_mode)
       if self.class.valid_pager_command?(@pager_command)
         self.class.command_pager(string, :pager_command=>@pager_command)
@@ -63,7 +68,7 @@ module Hirb
       end
     end
 
-    def slice!(output, inspect_mode=false)
+    def slice!(output, inspect_mode=false) #:nodoc:
       effective_height = @height - 2 # takes into account pager prompt
       if inspect_mode
         sliced_output = output.slice(0, @width * effective_height)
@@ -77,11 +82,12 @@ module Hirb
       end
     end
 
+    # Determines if string should be paged based on configured width and height.
     def activated_by?(string_to_page, inspect_mode=false)
       inspect_mode ? (string_to_page.size > @height * @width) : (string_to_page.count("\n") > @height)
     end
 
-    def resize(width, height)
+    def resize(width, height) #:nodoc:
       @width, @height = Hirb::View.determine_terminal_size(width, height)
     end
   end

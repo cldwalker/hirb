@@ -1,6 +1,6 @@
 module Hirb
-  # This class is used by the View to format an output into a string. The formatter object looks for an output's class config in config()
-  # and if found applies a helper to the output.
+  # This class is used by the View to format an output into a string. The formatter object looks for an output's class config 
+  # in Hirb::Formatter.config and if found applies a helper to the output.
   
   class Formatter
     def initialize(additional_config={})
@@ -39,8 +39,8 @@ module Hirb
 
     # This is the main method of this class. The formatter looks for the first helper in its config for the given output class.
     # If a helper is found, the output is converted by the helper into a string and returned. If not, nil is returned. The options
-    # this class takes are a helper config hash as described in config(). These options will be merged with any existing helper config hash
-    # an output class has in config(). Any block given is passed along to a helper class.
+    # this class takes are a helper config hash as described in config. These options will be merged with any existing helper config hash
+    # an output class has in config. Any block given is passed along to a helper class.
     def format_output(output, options={}, &block)
       output_class = determine_output_class(output)
       options = Util.recursive_hash_merge(klass_config(output_class), options)

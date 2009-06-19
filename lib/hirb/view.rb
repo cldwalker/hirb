@@ -1,6 +1,6 @@
 module Hirb
-  # This class is responsible for managing all view-related functionality. Its functionality is determined by the configuration file
-  # explained in Hirb or passed to enable().
+  # This class is responsible for managing all view-related functionality. Its functionality is determined by setting up a configuration file
+  # as explained in Hirb and/or passed configuration directly to Hirb.enable. Most of the functionality in this class is dormant until enabled.
   module View
     DEFAULT_WIDTH = 120
     DEFAULT_HEIGHT = 40
@@ -8,7 +8,7 @@ module Hirb
       attr_accessor :render_method
       attr_reader :config
 
-      # This is the main on switch for the formatter, pager and size detection. If irb exists, it overrides irb's output
+      # This activates view functionality i.e. the formatter, pager and size detection. If irb exists, it overrides irb's output
       # method with Hirb::View.view_output. If using Wirble, you should call this after it. The view configuration
       # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
       # In addition to the config keys mentioned in Hirb, the options also take the following keys:
@@ -60,7 +60,7 @@ module Hirb
         config[:formatter] = !config[:formatter]
       end
 
-      # Resizes the console width and height for use with the table + pager i.e. after having resized the console window. *nix users
+      # Resizes the console width and height for use with the table and pager i.e. after having resized the console window. *nix users
       # should only have to call this method. Non-*nix users should call this method with explicit width and height. If you don't know
       # your width and height, in irb play with "a"* width to find width and puts "a\n" * height to find height.
       def resize(width=nil, height=nil)
@@ -81,22 +81,23 @@ module Hirb
       end
 
       # A lambda or proc which handles the final formatted object.
-      # Although this puts the object by default, it could be set to do other things
+      # Although this pages/puts the object by default, it could be set to do other things
       # i.e. write the formatted object to a file.
       def render_method
         @render_method ||= default_render_method
       end
 
+      # Resets render_method back to its default.
       def reset_render_method
         @render_method = default_render_method
       end
       
-      # current console width
+      # Current console width
       def width
         config ? config[:width] : DEFAULT_WIDTH
       end
 
-      # current console height
+      # Current console height
       def height
         config ? config[:height] : DEFAULT_HEIGHT
       end

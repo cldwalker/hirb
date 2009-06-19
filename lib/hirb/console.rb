@@ -22,7 +22,7 @@ module Hirb
         View.formatter.format_output(*parse_input(output, options), &block)
       end
 
-      def parse_input(output, options)
+      def parse_input(output, options) #:nodoc:
         View.load_config unless View.config_loaded?
         real_options = [:method, :class, :output_method].inject({}) do |h, e|
           h[e] = options.delete(e) if options[e]; h
@@ -36,11 +36,13 @@ module Hirb
     def table(output, options={})
       Console.render_output(output, options.merge(:class=>"Hirb::Helpers::AutoTable"))
     end
+
     # Renders any specified view for the given object. Takes same options as Hirb::View.render_output.
     def view(output, options={})
       Console.render_output(*args)
     end
 
+    # Renders a menu given an array using Hirb::Menu.render.
     def menu(output, options={}, &block)
       Console.format_output(output, options.merge(:class=>"Hirb::Menu"), &block)
     end
