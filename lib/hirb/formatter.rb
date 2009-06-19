@@ -10,22 +10,18 @@ module Hirb
 
     # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method or :class option
     # for a helper to be applied to an output. A helper config hash has the following keys:
-    # [:ancestor] Boolean which if true causes subclasses of the output class to inherit its config. Defaults to false.
-    #             This is used by activerecord classes.
     # [:method] Specifies a global (Kernel) method to do the formatting.
     # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and
     #          an options hash.
     # [:output_method] Specifies a method or proc to call on output before passing it to a helper. If the output is an array, it's applied
     #                  to every element in the array.
     # [:options] Options to pass the helper method or class.
+    # [:ancestor] Boolean which when true causes subclasses of the output class to inherit its config. This doesn't effect the current 
+    #             output class. Defaults to false. This is used by ActiveRecord classes.
     # 
     #   Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
     def config
       @config
-    end
-
-    def config=(value) #:nodoc:
-      @config = Util.recursive_hash_merge default_config, value || {}
     end
 
     def format_class(klass, helper_config)
@@ -34,6 +30,7 @@ module Hirb
       true
     end
 
+    # Reloads autodetected Hirb::Views
     def reload
       @config = Util.recursive_hash_merge default_config, @config
     end
@@ -73,13 +70,12 @@ module Hirb
     # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
     # ancestors to the most recent ones.
     def klass_config(output_class)
-      @klass_config[output_class] ||=
-        begin
-          output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| @config.has_key?(e)}
-          @klass_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
-            (klass == output_class.to_s || @config[klass][:ancestor]) ? h.update(@config[klass]) : h
-          }
-        end
+      @klass_config[output_class] ||= begin
+        output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| @config.has_key?(e)}
+        @klass_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
+          (klass == output_class.to_s || @config[klass][:ancestor]) ? h.update(@config[klass]) : h
+        }
+      end
     end
 
     def reset_klass_config

@@ -133,37 +133,6 @@ module Hirb
         end
       end
 
-      test "state is toggled by toggle_pager" do
-        View.toggle_pager
-        View.config[:pager].should == false
-      end
-
-      test "when resized changes width and height with stty" do
-        Util.expects(:command_exists?).with('stty').returns(true)
-        ENV['COLUMNS'] = ENV['LINES'] = nil # bypasses env usage
-        View.resize
-        pager.width.should_not == 10
-        pager.height.should_not == 10
-        reset_terminal_size
-      end
-
-      test "when resized changes width and height with ENV" do
-        ENV['COLUMNS'] = ENV['LINES'] = '10' # simulates resizing
-        View.resize
-        pager.width.should == 10
-        pager.height.should == 10
-      end
-
-      test "when resized and no environment or stty still has valid width and height" do
-        View.config[:width] = View.config[:height] = nil
-        Util.expects(:command_exists?).with('stty').returns(false)
-        ENV['COLUMNS'] = ENV['LINES'] = nil
-        View.resize
-        pager.width.is_a?(Integer).should be(true)
-        pager.height.is_a?(Integer).should be(true)
-        reset_terminal_size
-      end
-
       test "activates pager_command with valid pager_command option" do
         View.config[:pager_command] = "less"
         View.expects(:render_output).returns(false)

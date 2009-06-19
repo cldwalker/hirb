@@ -5,20 +5,24 @@ module Hirb
     DEFAULT_WIDTH = 120
     DEFAULT_HEIGHT = 40
     class<<self
-      attr_accessor :config, :render_method
+      attr_accessor :render_method
+      attr_reader :config
 
-      # This is the main on and off switch for the formatter and pager, height + width TODO.
-      # If irb exists, it overrides irb's output method with Hirb::View.view_output. Takes an optional
-      # block which sets the view config. If enabling Wirble, you should call this after it.
-      # Options: TODO
+      # This is the main on switch for the formatter, pager and size detection. If irb exists, it overrides irb's output
+      # method with Hirb::View.view_output. If using Wirble, you should call this after it. The view configuration
+      # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
+      # In addition to the config keys mentioned in Hirb, the options also take the following keys:
+      # Options:
+      # * config_file: Name of config file to read.
       # Examples:
-      #   Hirb.enable
-      #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
+      #   Hirb::View.enable
+      #   Hirb::View.enable :formatter=>false
+      #   Hirb::View.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
         return puts("Already enabled.") if @enabled
         @enabled = true
-        Hirb.config_file = options[:config_file] if options[:config_file]
-        load_config(HashStruct.block_to_hash(block))
+        Hirb.config_file = options.delete(:config_file) if options[:config_file]
+        load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
         if Object.const_defined?(:IRB)
           ::IRB::Irb.class_eval do

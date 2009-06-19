@@ -179,7 +179,8 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +-----------+---+-----------+
       1 row in set
   TABLE
-      Hirb::View.config = {:width => 30 }
+      Hirb::View.load_config
+      Hirb::View.resize(30)
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
       reset_config
     end
