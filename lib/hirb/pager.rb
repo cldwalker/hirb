@@ -13,7 +13,7 @@ module Hirb
         @pager_command = (!@pager_command.nil? && commands.empty?) ? @pager_command : 
           begin
             commands = [ENV['PAGER'], 'less', 'more', 'pager'] if commands.empty?
-            commands.compact.uniq.find {|e| Util.command_exists?(e) }
+            commands.compact.uniq.find {|e| Util.command_exists?(e[/\w+/]) }
           end
       end
 

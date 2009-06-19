@@ -142,6 +142,15 @@ module Hirb
         View.config[:pager_command] = nil
       end
 
+      test "activates pager_command with pager_command option that has command options" do
+        View.config[:pager_command] = "less -r"
+        View.expects(:render_output).returns(false)
+        Util.expects(:command_exists?).with('less').returns(true)
+        Pager.expects(:command_pager)
+        irb_eval create_pageable_string(true)
+        View.config[:pager_command] = nil
+      end
+
       test "doesn't activate pager_command with invalid pager_command option" do
         View.config[:pager_command] = "moreless"
         View.expects(:render_output).returns(false)

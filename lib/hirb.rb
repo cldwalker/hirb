@@ -18,6 +18,8 @@ require 'hirb/menu'
 # [:height]  Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
 # [:formatter] Boolean which determines if the formatter is enabled. Defaults to true.
 # [:pager] Boolean which determines if the pager is enabled. Defaults to true.
+# [:pager_command] Command to be used for paging. Command can have options after it i.e. 'less -r'.
+#                  Defaults to common pagers i.e. less and more if detected. Otherwise uses a basic ruby pager.
 
 module Hirb
   class <<self
