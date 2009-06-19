@@ -14,21 +14,14 @@ module Hirb
       #   render_output output, :class=>:tree, :options=> {:type=>:directory}
       #
       def render_output(output, options={})
-        View.render_output(*parse_input(output, options))
+        View.load_config unless View.config_loaded?
+        View.render_output(output, options.merge(:console=>true))
       end
 
       # Takes same arguments and options as render_output() but returns formatted output instead of rendering it.
       def format_output(output, options={}, &block)
-        View.formatter.format_output(*parse_input(output, options), &block)
-      end
-
-      def parse_input(output, options) #:nodoc:
         View.load_config unless View.config_loaded?
-        real_options = [:method, :class, :output_method].inject({}) do |h, e|
-          h[e] = options.delete(e) if options[e]; h
-        end
-        real_options.merge! :options=>options
-        [output, real_options]
+        View.formatter.format_output(output, options.merge(:console=>true), &block)
       end
     end
 

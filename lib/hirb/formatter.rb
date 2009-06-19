@@ -125,6 +125,7 @@ module Hirb
     # an output class has in config. Any block given is passed along to a helper class.
     def format_output(output, options={}, &block)
       output_class = determine_output_class(output)
+      options = parse_console_options(options) if options.delete(:console)
       options = Util.recursive_hash_merge(klass_config(output_class), options)
       output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| call_output_method(options[:output_method], e) } : 
         call_output_method(options[:output_method], output) ) : output
@@ -141,6 +142,13 @@ module Hirb
     end
 
     #:stopdoc:
+    def parse_console_options(options) #:nodoc:
+      real_options = [:method, :class, :output_method].inject({}) do |h, e|
+        h[e] = options.delete(e) if options[e]; h
+      end
+      real_options.merge! :options=>options
+      real_options
+    end
 
     def determine_helper_class(klass)
       if klass.is_a?(Symbol) && (helper_class = Helpers.constants.find {|e| e == Util.camelize(klass.to_s)})

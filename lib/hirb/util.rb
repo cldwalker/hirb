@@ -1,5 +1,5 @@
 module Hirb
-  # Group of handy utility functions used throught Hirb.
+  # Group of handy utility functions used throughout Hirb.
   module Util
     extend self
     # Returns a constant like Module#const_get no matter what namespace it's nested in.

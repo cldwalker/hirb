@@ -44,6 +44,13 @@ class FormatterTest < Test::Unit::TestCase
       @formatter.format_class ::Dooda, :class=>"DoodaView2"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
+
+    test "parse_console_options passes all options except for formatter options into :options" do
+      set_formatter
+      options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :blah=>'blah'}
+      expected_options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :options=>{:blah=>'blah'}}
+      @formatter.parse_console_options(options).should == expected_options
+    end
   end
 
   context "enable" do
