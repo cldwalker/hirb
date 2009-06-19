@@ -11,15 +11,17 @@ module Hirb
     # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method or :class option
     # for a helper to be applied to an output. A helper config hash has the following keys:
     # [:method] Specifies a global (Kernel) method to do the formatting.
-    # [:class] Specifies a class to do the formatting, using its render() class method. The render() method's arguments are the output and
-    #          an options hash.
+    # [:class] Specifies a class to do the formatting, using its render() class method. If a symbol it's converted to a corresponding
+    #          Hirb::Helpers::* class if it exists.
     # [:output_method] Specifies a method or proc to call on output before passing it to a helper. If the output is an array, it's applied
     #                  to every element in the array.
     # [:options] Options to pass the helper method or class.
     # [:ancestor] Boolean which when true causes subclasses of the output class to inherit its config. This doesn't effect the current 
     #             output class. Defaults to false. This is used by ActiveRecord classes.
     # 
-    #   Example: {'String'=>{:class=>'Hirb::Helpers::Table', :ancestor=>true, :options=>{:max_width=>180}}}
+    #   Examples:
+    #     {'WWW::Delicious::Element'=>{:class=>'Hirb::Helpers::ObjectTable', :ancestor=>true, :options=>{:max_width=>180}}}
+    #     {'Date'=>{:class=>:auto_table, :ancestor=>true}}
     def config
       @config
     end
@@ -48,13 +50,21 @@ module Hirb
       args << options[:options] if options[:options] && !options[:options].empty?
       if options[:method]
         new_output = send(options[:method],*args)
-      elsif options[:class] && (view_class = Util.any_const_get(options[:class]))
-        new_output = view_class.render(*args, &block)
+      elsif options[:class] && (helper_class = determine_helper_class(options[:class]))
+        new_output = helper_class.render(*args, &block)
       end
       new_output
     end
 
     #:stopdoc:
+
+    def determine_helper_class(klass)
+      if klass.is_a?(Symbol) && (helper_class = Helpers.constants.find {|e| e == Util.camelize(klass.to_s)})
+        klass = "Hirb::Helpers::#{helper_class}"
+      end
+      Util.any_const_get(klass)
+    end
+
     def determine_output_class(output)
       if output.is_a?(Array)
         output[0].class

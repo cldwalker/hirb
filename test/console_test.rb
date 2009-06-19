@@ -10,8 +10,8 @@ class Hirb::ConsoleTest < Test::Unit::TestCase
     end
 
     test "convert symbol to :class option" do
-      Hirb::View.expects(:render_output).with('blah', :class=>"Hirb::Helpers::Table", :options=>{})
-      Hirb::Console.render_output('blah', :table)
+      Hirb::View.expects(:render_output).with('blah', :class=>:table, :options=>{})
+      Hirb::Console.render_output('blah', :class=>:table)
     end
 
     test "passes all options except for formatter options into :options" do

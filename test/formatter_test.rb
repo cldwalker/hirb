@@ -106,6 +106,12 @@ class FormatterTest < Test::Unit::TestCase
       view_output('dude')
     end
     
+    test "formats with class option as symbol" do
+      enable_with_output "String"=>{:class=>:auto_table}
+      Helpers::AutoTable.expects(:render)
+      view_output('dude')
+    end
+
     test "formats output array" do
       enable_with_output "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
