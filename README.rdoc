@@ -14,11 +14,24 @@ Install the gem with:
 
     sudo gem install cldwalker-hirb --source http://gems.github.com
 
+== Pager
+
+Hirb has both pager and formatter functionality enabled by default.
+If you want to turn off the functionality of either you can pass that in at startup:
+
+  Hirb.enable :pager=>false
+  Hirb.enable :formatter=>false
+
+or toggle their state at runtime:
+
+  Hirb::View.toggle_pager
+  Hirb::View.toggle_formatter
+
 == Create and Configure Views
 
 If you'd like to learn how to create and configure views, {read the docs}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
 
-== Rails Example
+== Rails Formatter Example
 
 Let's load and enable the view framework:
   bash> script/console
@@ -142,6 +155,7 @@ Please report them {on github}[http://github.com/cldwalker/hirb/issues].
 == Links
 * http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html
 * http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html
+* http://tagaholic.me/2009/06/19/page-irb-output-and-improve-ri-with-hirb.html
 
 == Todo
 * Consider applying multiple views/filters to output.
