@@ -1,3 +1,6 @@
+== 0.2.1
+* Fixed typo in Hirb::Console.view
+
 == 0.2.0
 * Major refactoring with bug fixes and better tests.
 * Improved table algorithm to ensure that tables don't wrap.
