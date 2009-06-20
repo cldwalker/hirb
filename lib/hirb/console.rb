@@ -32,7 +32,7 @@ module Hirb
 
     # Renders any specified view for the given object. Takes same options as Hirb::View.render_output.
     def view(output, options={})
-      Console.render_output(*args)
+      Console.render_output(output, options)
     end
 
     # Renders a menu given an array using Hirb::Menu.render.
