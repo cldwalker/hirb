@@ -6,11 +6,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Tagaholic - hirb</title>
     
-      <meta name="keywords" content="hirb, irb, console, automated views, trees, tables, view framework" />
+      <meta name="keywords" content="hirb, ruby irb, console, automated views, trees, tables, view framework, menu, pager" />
       <meta name="description" content="<p>
 Hirb currently provides a mini view framework for console applications,
-designed with irb in mind. Given the output of a console application, it
-renders a v" />
+designed to improve irb&#8217;s default output. Hirb improves console
+output by prov" />
     
     <link rel="stylesheet" href="http://tagaholic.me/stylesheets/master.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="http://tagaholic.me/stylesheets/syntax.css" type="text/css" />
@@ -48,7 +48,7 @@ renders a v" />
   #install { font-size: 1.2em}
   hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
   .footer { text-align:center; padding-top:30px; font-style: italic; }
-/*  #documentation_link {font-weight: bold;}*/
+  #documentation_link {font-weight: bold;}
 </style>
 
 <a href="http://github.com/cldwalker/hirb"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
@@ -65,7 +65,7 @@ renders a v" />
   <span class="small">by <a href="http://github.com/cldwalker">cldwalker</a></small></h1>
 
 <div class="summary">
-  A mini view framework for console/irb that's easy to use, even while under its influence.
+  A mini view framework for console/irb that's easy to use, even while under its influence. Console goodies include a no-wrap table, auto-pager, tree and menu.
 </div>
 
 
@@ -77,13 +77,16 @@ renders a v" />
 <p>
   <p>
 Hirb currently provides a mini view framework for console applications,
-designed with irb in mind. Given the output of a console application, it
-renders a view if there is one configured, based on the output&#8217;s
-class. The framework encourages reusing views by letting you package them
-in classes and associate them with any number of output classes. Hirb comes
-with tree views (see Hirb::Helpers::Tree) and table views (see
-Hirb::Helpers::Table). By default Hirb displays Rails&#8217; model classes
-as tables.
+designed to improve irb&#8217;s default output. Hirb improves console
+output by providing a smart pager and auto-formatting output. The smart
+pager detects when an output exceeds a screenful and thus only pages output
+as needed. Auto-formatting adds a view to an output&#8217;s class. This is
+helpful in separating views from content (MVC anyone?). The framework
+encourages reusing views by letting you package them in classes and
+associate them with any number of output classes. Hirb comes with tree
+views (see Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table).
+By default Hirb displays Rails&#8217; model classes as tables. Hirb also
+sports a nice selection menu, Hirb::Menu.
 </p>
 
   

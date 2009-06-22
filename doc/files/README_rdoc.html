@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Fri Jun 19 18:36:11 -0400 2009</span>
+          <span class='datetime'>Sat Jun 20 19:01:26 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -61,13 +61,24 @@
             Install the gem with:
             </p>
             <pre>sudo gem install cldwalker-hirb --source http://gems.github.com</pre>
+            <h2>Pager</h2>
+            <p>
+            <a href="../classes/Hirb.html">Hirb</a> has both pager and formatter
+            functionality enabled by default. If you want to turn off the functionality
+            of either you can pass that in at startup:
+            </p>
+            <pre>Hirb.enable :pager=&gt;false&#x000A;Hirb.enable :formatter=&gt;false</pre>
+            <p>
+            or toggle their state at runtime:
+            </p>
+            <pre>Hirb::View.toggle_pager&#x000A;Hirb::View.toggle_formatter</pre>
             <h2>Create and Configure Views</h2>
             <p>
             If you&#8217;d like to learn how to create and configure views, <a
             href="http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html">read the
             docs</a>.
             </p>
-            <h2>Rails Example</h2>
+            <h2>Rails Formatter Example</h2>
             <p>
             Let&#8217;s load and enable the view framework:
             </p>
@@ -142,6 +153,10 @@
             </li>
             <li><a
             href="http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html">tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html</a>
+            
+            </li>
+            <li><a
+            href="http://tagaholic.me/2009/06/19/page-irb-output-and-improve-ri-with-hirb.html">tagaholic.me/2009/06/19/page-irb-output-and-improve-ri-with-hirb.html</a>
             
             </li>
             </ul>
