@@ -314,6 +314,23 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     end
   end
 
+  context "auto table" do
+    test "converts nonarrays to arrays and renders" do
+      require 'set'
+      expected_table = <<-TABLE.unindent
+      +-------+
+      | value |
+      +-------+
+      | 1     |
+      | 2     |
+      | 3     |
+      +-------+
+      3 rows in set
+      TABLE
+      Hirb::Helpers::AutoTable.render(::Set.new([1,2,3])).should == expected_table
+    end
+  end
+
   test "restrict_field_lengths ensures columns total doesn't exceed max width" do
     @table = Hirb::Helpers::Table.new([{:f1=>'f1', :f2=>'2', :f3=>'3', :f4=>'4'}])
     field_lengths = {:f1=>135, :f2=>45, :f3=>4, :f4=>55}
