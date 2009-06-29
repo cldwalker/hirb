@@ -43,6 +43,7 @@ class Hirb::Helpers::Table
     # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
     #            a given proc or an array containing a method and optional arguments to it.
+    # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -50,7 +51,7 @@ class Hirb::Helpers::Table
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
-      new(rows,options).render
+      options.delete(:vertical) ? Hirb::Helpers::VerticalTable.new(rows, options).render : new(rows, options).render
     end
   end
   
@@ -90,15 +91,23 @@ class Hirb::Helpers::Table
     body = []
     unless @rows.length == 0
       setup_field_lengths
-      body += @headers ? render_header : [render_border]
+      body += render_header
       body += render_rows
-      body << render_border
+      body += render_footer
     end
     body << render_table_description
     body.join("\n")
   end
-  
+
   def render_header
+    @headers ? render_table_header : [render_border]
+  end
+
+  def render_footer
+    [render_border]
+  end
+
+  def render_table_header
     title_row = '| ' + @fields.map {|f|
       format_cell(@headers[f], @field_lengths[f])
     }.join(' | ') + ' |'

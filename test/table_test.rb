@@ -248,6 +248,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([['a','b'], ['c', 'd']], :number=>true).should == expected_table
     end
+
+    test "vertical option renders vertical table" do
+      expected_table = <<-TABLE.unindent
+      *** 1. row ***
+      a: 1
+      b: 2
+      *** 2. row ***
+      a: 3
+      b: 4
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :vertical=>true).should == expected_table
+    end
   end
   
   test "restrict_field_lengths ensures columns total doesn't exceed max width" do

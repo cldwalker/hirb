@@ -149,6 +149,9 @@ If using Wirble, you should call Hirb after it since they both override irb's de
 Table code from http://gist.github.com/72234 and {my console
 app's needs}[http://github.com/cldwalker/tag-tree].
 
+== Credits
+Chrononaut for vertical table helper.
+
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
 
