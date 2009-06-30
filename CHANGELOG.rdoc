@@ -1,3 +1,9 @@
+== 0.2.2
+* Added a friendlier default (a vertical table) to incorrectly configured tables.
+* Added vertical table helper thanks to chrononaut.
+* Added detection of :select option from ActiveRecord queries in ActiveRecordTable helper.
+* Added handling anything that responds to :to_a in AutoTable helper.
+
 == 0.2.1
 * Fixed typo in Hirb::Console.view
 
