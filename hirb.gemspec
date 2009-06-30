@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hirb}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Gabriel Horner"]
-  s.date = %q{2009-06-20}
+  s.date = %q{2009-06-29}
   s.description = %q{Hirb currently provides a mini view framework for console applications, designed to improve irb's default output.  Hirb improves console output by providing a smart pager and auto-formatting output. The smart pager detects when an output exceeds a screenful and thus only pages output as needed. Auto-formatting adds a view to an output's class. This is helpful in separating views from content (MVC anyone?). The framework encourages reusing views by letting you package them in classes and associate them with any number of output classes.}
   s.email = %q{gabriel.horner@gmail.com}
   s.extra_rdoc_files = [
@@ -30,17 +30,21 @@ Gem::Specification.new do |s|
     "lib/hirb/helpers/parent_child_tree.rb",
     "lib/hirb/helpers/table.rb",
     "lib/hirb/helpers/tree.rb",
+    "lib/hirb/helpers/vertical_table.rb",
     "lib/hirb/import_object.rb",
     "lib/hirb/menu.rb",
     "lib/hirb/pager.rb",
     "lib/hirb/util.rb",
     "lib/hirb/view.rb",
     "lib/hirb/views/activerecord_base.rb",
+    "test/active_record_table_test.rb",
+    "test/auto_table_test.rb",
     "test/console_test.rb",
     "test/formatter_test.rb",
     "test/hirb_test.rb",
     "test/import_test.rb",
     "test/menu_test.rb",
+    "test/object_table_test.rb",
     "test/pager_test.rb",
     "test/table_test.rb",
     "test/test_helper.rb",
@@ -56,11 +60,14 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{A mini view framework for console/irb that's easy to use, even while under its influence.}
   s.test_files = [
+    "test/active_record_table_test.rb",
+    "test/auto_table_test.rb",
     "test/console_test.rb",
     "test/formatter_test.rb",
     "test/hirb_test.rb",
     "test/import_test.rb",
     "test/menu_test.rb",
+    "test/object_table_test.rb",
     "test/pager_test.rb",
     "test/table_test.rb",
     "test/test_helper.rb",
