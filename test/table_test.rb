@@ -42,7 +42,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
     end
-    
+
     test "with array only rows renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -55,11 +55,13 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([[1,2], [3,4]]).should == expected_table
     end
-    
-    test "with too many fields raises error" do
-      assert_raises(Hirb::Helpers::Table::TooManyFieldsForWidthError) { table([Array.new(70, 'AAA')]) }
+
+    test "with too many fields defaults to vertical table" do
+      rows = [Array.new(25, "A"* 10)]
+      Hirb::Helpers::VerticalTable.expects(:render).with(rows, anything)
+      capture_stderr { table(rows)}.should =~ /Error/
     end
-    
+
     test "with no rows renders" do
       table([]).should == "0 rows in set"
     end
