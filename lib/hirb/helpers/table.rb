@@ -24,7 +24,8 @@
 # By default, the fields/columns are the keys of the first hash.
 #--
 # derived from http://gist.github.com/72234
-class Hirb::Helpers::Table
+module Hirb
+ class Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
 
@@ -52,11 +53,11 @@ class Hirb::Helpers::Table
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
-      options.delete(:vertical) ? Hirb::Helpers::VerticalTable.render(rows, options) : new(rows, options).render
+      options.delete(:vertical) ? Helpers::VerticalTable.render(rows, options) : new(rows, options).render
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Error: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
-      Hirb::Helpers::VerticalTable.render(rows, options)
+      Helpers::VerticalTable.render(rows, options)
     end
   end
   
@@ -136,11 +137,11 @@ class Hirb::Helpers::Table
   end
   
   def format_cell(value, cell_width)
-    text = Hirb::String.size(value) > cell_width ?
+    text = String.size(value) > cell_width ?
       (
-      (cell_width < 5) ? Hirb::String.slice(value, 0, cell_width) : Hirb::String.slice(value, 0, cell_width - 3) + '...'
+      (cell_width < 5) ? String.slice(value, 0, cell_width) : String.slice(value, 0, cell_width - 3) + '...'
       ) : value
-    Hirb::String.ljust(text, cell_width)
+    String.ljust(text, cell_width)
   end
 
   def render_rows
@@ -161,7 +162,7 @@ class Hirb::Helpers::Table
     if @options[:field_lengths]
       @field_lengths.merge!(@options[:field_lengths])
     else
-      table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : Hirb::View.width
+      table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
       restrict_field_lengths(@field_lengths, table_max_width) if table_max_width
     end
   end
@@ -213,10 +214,10 @@ class Hirb::Helpers::Table
 
   # find max length for each field; start with the headers
   def default_field_lengths
-    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = Hirb::String.size(v); h} : {}
+    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = String.size(v); h} : {}
     @rows.each do |row|
       @fields.each do |field|
-        len = Hirb::String.size(row[field])
+        len = String.size(row[field])
         field_lengths[field] = len if len > field_lengths[field].to_i
       end
     end
@@ -251,4 +252,5 @@ class Hirb::Helpers::Table
     array.inject({}) {|hash,e|  hash[hash.size] = e; hash }
   end
   #:startdoc:
+end
 end
