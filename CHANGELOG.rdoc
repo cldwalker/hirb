@@ -1,3 +1,7 @@
+== 0.2.3
+* Added UTF-8 support for Ruby 1.8.x
+* Added :all_fields option to Table helper.
+
 == 0.2.2
 * Added a friendlier default (a vertical table) to incorrectly configured tables.
 * Added vertical table helper thanks to chrononaut.
