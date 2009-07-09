@@ -1,3 +1,6 @@
+== 0.2.4
+* Bug fix on UTF-8 support.
+
 == 0.2.3
 * Added UTF-8 support for Ruby 1.8.x
 * Added :all_fields option to Table helper.

@@ -35,6 +35,7 @@ module Hirb
       end
 
       def slice(*args)
+        string = args.shift
         string.slice(*args)
       end
     end
