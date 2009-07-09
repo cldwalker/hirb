@@ -44,6 +44,7 @@ class Hirb::Helpers::Table
     # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
     #            a given proc or an array containing a method and optional arguments to it.
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
+    # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -63,8 +64,7 @@ class Hirb::Helpers::Table
   def initialize(rows, options={})
     @options = options
     @options[:filters] ||= {}
-    @fields = @options[:fields] ? @options[:fields].dup : ((rows[0].is_a?(Hash)) ? rows[0].keys.sort {|a,b| a.to_s <=> b.to_s} :
-      rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : [])
+    @fields = set_fields(rows)
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
     if @options.has_key?(:headers)
@@ -76,7 +76,20 @@ class Hirb::Helpers::Table
       @fields.unshift :hirb_number
     end
   end
-  
+
+  def set_fields(rows)
+    if @options[:fields]
+      @options[:fields].dup
+    else
+      if rows[0].is_a?(Hash)
+        keys = @options[:all_fields] ? rows.map {|e| e.keys}.flatten.uniq : rows[0].keys
+        keys.sort {|a,b| a.to_s <=> b.to_s}
+      else
+        rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
+      end
+    end
+  end
+
   def setup_rows(rows)
     rows ||= []
     rows = [rows] unless rows.is_a?(Array)

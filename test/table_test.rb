@@ -278,6 +278,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :vertical=>true).should == expected_table
     end
+
+    test "all_fields option renders all fields" do
+      expected_table = <<-TABLE.unindent
+      +---+---+---+
+      | a | b | c |
+      +---+---+---+
+      | 1 | 2 |   |
+      | 3 |   | 4 |
+      +---+---+---+
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :c=>4}], :all_fields=>true).should == expected_table
+    end
   end
   
   test "restrict_field_lengths ensures columns total doesn't exceed max width" do
