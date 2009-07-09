@@ -123,13 +123,13 @@ class Hirb::Helpers::Table
   end
   
   def format_cell(value, cell_width)
-    text = value.length > cell_width ? 
+    text = Hirb::String.size(value) > cell_width ?
       (
-      (cell_width < 5) ? value.slice(0,cell_width) : value.slice(0, cell_width - 3) + '...'
+      (cell_width < 5) ? Hirb::String.slice(value, 0, cell_width) : Hirb::String.slice(value, 0, cell_width - 3) + '...'
       ) : value
-    sprintf("%-#{cell_width}s", text)
+    Hirb::String.ljust(text, cell_width)
   end
-  
+
   def render_rows
     @rows.map do |row|
       row = '| ' + @fields.map {|f|
@@ -200,10 +200,10 @@ class Hirb::Helpers::Table
 
   # find max length for each field; start with the headers
   def default_field_lengths
-    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = v.length; h} : {}
+    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = Hirb::String.size(v); h} : {}
     @rows.each do |row|
       @fields.each do |field|
-        len = row[field].length
+        len = Hirb::String.size(row[field])
         field_lengths[field] = len if len > field_lengths[field].to_i
       end
     end

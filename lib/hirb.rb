@@ -1,6 +1,11 @@
 current_dir = File.dirname(__FILE__)
 $:.unshift(current_dir) unless $:.include?(current_dir) || $:.include?(File.expand_path(current_dir))
+
+# Needed by Hirb::String to handle multibyte characters
+$KCODE = 'u' if RUBY_VERSION < '1.9'
+
 require 'hirb/util'
+require 'hirb/string'
 require 'hirb/hash_struct'
 require 'hirb/helpers'
 require 'hirb/view'

@@ -65,6 +65,21 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     test "with no rows renders" do
       table([]).should == "0 rows in set"
     end
+
+    test "renders utf8" do
+      expected_table = <<-TABLE.unindent
+      +--------------------+
+      | name               |
+      +--------------------+
+      | ｱｲｳｴｵｶｷ            |
+      | ｸｹｺｻｼｽｾｿﾀﾁﾂﾃ       |
+      | Tata l'asticote    |
+      | toto létoile PAOLI |
+      +--------------------+
+      4 rows in set
+      TABLE
+      table([{:name=>"ｱｲｳｴｵｶｷ"}, {:name=>"ｸｹｺｻｼｽｾｿﾀﾁﾂﾃ"}, {:name=>"Tata l'asticote"}, {:name=>"toto létoile PAOLI"}]).should == expected_table
+    end
   end
 
   context "table with" do

@@ -12,17 +12,17 @@ class FormatterTest < Test::Unit::TestCase
     test "klass_config merges ancestor options" do
       set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output, :ancestor=>true}, "Kernel"=>{:method=>:default_output}
       expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true}
-      @formatter.klass_config(String).should == expected_result
+      @formatter.klass_config(::String).should == expected_result
     end
 
     test "klass_config doesn't merge ancestor options" do
       set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}
       expected_result = {:args=>[1, 2]}
-      @formatter.klass_config(String).should == expected_result
+      @formatter.klass_config(::String).should == expected_result
     end
 
     test "klass_config returns hash when nothing found" do
-      set_formatter.klass_config(String).should == {}
+      set_formatter.klass_config(::String).should == {}
     end
 
     test "reload detects new Hirb::Views" do

@@ -16,12 +16,12 @@ class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
 
   def render_rows
     i = 0
-    longest_header = @headers.values.sort_by {|e| e.length}.last.length
+    longest_header = Hirb::String.size @headers.values.sort_by {|e| Hirb::String.size(e) }.last
     stars = "*" * [(longest_header + (longest_header / 2)), 3].max
     @rows.map do |row|
       row = "#{stars} #{i+1}. row #{stars}\n" +
       @fields.map {|f|
-        "#{@headers[f].rjust(longest_header)}: #{row[f]}"
+        "#{Hirb::String.rjust(@headers[f], longest_header)}: #{row[f]}"
       }.join("\n")
       i+= 1
       row
