@@ -14,25 +14,23 @@ module Hirb
       # In addition to the config keys mentioned in Hirb, the options also take the following keys:
       # Options:
       # * config_file: Name of config file to read.
+      # * output_method: Specify an object's class and instance method (separated by a period) to be realiased with
+      #   hirb's view system. The instance method should take a string to be output. Default is IRB::Irb.output_value
+      #   if using irb.
       # Examples:
       #   Hirb::View.enable
-      #   Hirb::View.enable :formatter=>false
+      #   Hirb::View.enable :formatter=>false, :output_method=>"Mini.output"
       #   Hirb::View.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
         return puts("Already enabled.") if @enabled
         @enabled = true
         Hirb.config_file = options.delete(:config_file) if options[:config_file]
+        output_method = "IRB::Irb.output_value" if Object.const_defined?(:IRB)
+        output_method = options.delete(:output_method) if options[:output_method]
         load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
-        if Object.const_defined?(:IRB)
-          ::IRB::Irb.class_eval do
-            alias :non_hirb_view_output  :output_value
-            def output_value #:nodoc:
-              Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
-                non_hirb_view_output
-            end
-          end
-        end
+        alias_output_method(output_method) if output_method
+        true
       end
 
       # Indicates if Hirb::View is enabled.
@@ -113,6 +111,26 @@ module Hirb
       end
 
       #:stopdoc:
+      def alias_output_method(output_method)
+        klass, klass_method = output_method.split(".")
+        eval %[
+          ::#{klass}.class_eval do
+            alias :non_hirb_view_output :#{klass_method}
+            if '#{klass}' == "IRB::Irb"
+              def #{klass_method} #:nodoc:
+                Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
+                  non_hirb_view_output
+              end
+            else
+              def #{klass_method}(output_string) #:nodoc:
+                Hirb::View.view_output(output_string) || Hirb::View.page_output(output_string.inspect, true) ||
+                  non_hirb_view_output(output_string)
+              end
+            end
+          end
+        ]
+      end
+
       def render_output(output, options={})
         if (formatted_output = formatter.format_output(output, options))
           render_method.call(formatted_output)

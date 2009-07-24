@@ -47,6 +47,13 @@ module Hirb
         Hirb.enable :config_file=> 'test_file'
         Hirb.config_file.should == 'test_file'
       end
+
+      test "with output_method option realiases output_method" do
+        eval %[module ::Mini; extend self; def output(str); puts(str.inspect); end; end]
+        Hirb.enable :output_method=>"Mini.output", :output=>{"Symbol"=>{:output_method=>lambda {|e| e.to_s }}}
+        capture_stdout { ::Mini.output(:yoyo) }.should == "yoyo\n"
+        capture_stdout { ::Mini.output('blah') }.should == "\"blah\"\n"
+      end
     end
 
     context "resize" do
