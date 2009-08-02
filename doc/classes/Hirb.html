@@ -37,6 +37,9 @@
             <a href="../files/lib/hirb/formatter_rb.html">lib/hirb/formatter.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/hirb/helpers/table_rb.html">lib/hirb/helpers/table.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/hirb/helpers_rb.html">lib/hirb/helpers.rb</a>
           </li>
           <li class='other'>
@@ -47,6 +50,9 @@
           </li>
           <li class='other'>
             <a href="../files/lib/hirb/pager_rb.html">lib/hirb/pager.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/hirb/string_rb.html">lib/hirb/string.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/hirb/util_rb.html">lib/hirb/util.rb</a>
@@ -66,6 +72,27 @@
         <div id='text'>
           <div id='description'>
             <p>
+            Base Table class from which other table classes inherit. By default, a
+            table is constrained to a default width but this can be adjusted via the
+            max_width option or <a href="Hirb/View.html#M000034">Hirb::View.width</a>.
+            Rows can be an array of arrays or an array of hashes.
+            </p>
+            <p>
+            An array of arrays ie [[1,2], [2,3]], would render:
+            </p>
+            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
+            <p>
+            By default, the fields/columns are the numerical indices of the array.
+            </p>
+            <p>
+            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
+            would render:
+            </p>
+            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
+            <p>
+            By default, the fields/columns are the keys of the first hash.
+            </p>
+            <hr size="1"></hr><p>
             Most of Hirb&#8217;s functionality currently resides in <a
             href="Hirb/View.html">Hirb::View</a>. For an in-depth tutorial on creating
             and configuring views see <a
@@ -76,7 +103,7 @@
             </p>
             <dl>
             <dt>:output</dt><dd>This hash is used by the formatter object. See <a
-            href="Hirb/Formatter.html#M000044">Hirb::Formatter.config</a> for its
+            href="Hirb/Formatter.html#M000045">Hirb::Formatter.config</a> for its
             format.
             
             </dd>
@@ -115,6 +142,7 @@
               <h2>Classes and Modules</h2>
               Module <a href="Hirb/Console.html" class="link">Hirb::Console</a><br />
               Module <a href="Hirb/ObjectMethods.html" class="link">Hirb::ObjectMethods</a><br />
+              Module <a href="Hirb/String.html" class="link">Hirb::String</a><br />
               Module <a href="Hirb/Util.html" class="link">Hirb::Util</a><br />
               Module <a href="Hirb/View.html" class="link">Hirb::View</a><br />
               Module <a href="Hirb/Views.html" class="link">Hirb::Views</a><br />
@@ -139,7 +167,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 38</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-ivar">@config_file</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>],<span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 43</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-ivar">@config_file</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>],<span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000002'>
@@ -151,14 +179,14 @@
                 <div class='description'>
                   <p>
                   Disables view functionality. See <a
-                  href="Hirb/View.html#M000025">Hirb::View.disable</a> for details.
+                  href="Hirb/View.html#M000026">Hirb::View.disable</a> for details.
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 34</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">disable</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 39</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">disable</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000001'>
@@ -170,14 +198,14 @@
                 <div class='description'>
                   <p>
                   Enables view functionality. See <a
-                  href="Hirb/View.html#M000023">Hirb::View.enable</a> for details.
+                  href="Hirb/View.html#M000024">Hirb::View.enable</a> for details.
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000001-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 29</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 34</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

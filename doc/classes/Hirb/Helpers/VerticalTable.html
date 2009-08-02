@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>: Hirb::ObjectMethods [RDoc Documentation]</title>
+    <title>: Hirb::Helpers::VerticalTable [RDoc Documentation]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -26,43 +26,49 @@
     <div class='class' id='wrapper'>
       <div class='header'>
         <h1 class='name'>
-          <span class='type'>Module</span>
-          Hirb::ObjectMethods
+          <span class='type'>Class</span>
+          Hirb::Helpers::VerticalTable
         </h1>
         <ol class='paths'>
           <li>
-            <a href="../../files/lib/hirb/import_object_rb.html">lib/hirb/import_object.rb</a>
+            <a href="../../../files/lib/hirb/helpers/vertical_table_rb.html">lib/hirb/helpers/vertical_table.rb</a>
           </li>
         </ol>
+        <div class='parent'>
+          Parent:
+          <strong><a href="Table.html">Hirb::Helpers::Table</a></strong>
+        </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='method-list'>
             <h2>Methods</h2>
-            <h3>public instance</h3>
+            <h3>public class</h3>
             <ol>
-              <li><a href="#M000023">view</a></li>
+              <li><a href="#M000005">render</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
-              <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000023'>
-                <a name='M000023'>      </a>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000005'>
+                <a name='M000005'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>view</span>
-                  <span class='arguments'>(*args)</span>
+                  <span class='name'>render</span>
+                  <span class='arguments'>(rows, options={})</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Takes same options as Hirb::View.render_output.
+                  Renders a vertical table using the same options as <a
+                  href="Table.html#M000007">Hirb::Helpers::Table.render</a> except for
+                  :field_lengths, :vertical and :max_width which aren&#8217;t used.
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000023-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000023-source'><span class="ruby-comment cmt"># File lib/hirb/import_object.rb, line 4</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">view</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">View</span>.<span class="ruby-identifier">console_render_output</span>(<span class="ruby-operator">*</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">unshift</span>(<span class="ruby-keyword kw">self</span>)))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/vertical_table.rb, line 5</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

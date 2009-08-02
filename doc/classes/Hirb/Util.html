@@ -47,20 +47,20 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000015">any_const_get</a></li>
-              <li><a href="#M000017">camelize</a></li>
-              <li><a href="#M000021">capture_stdout</a></li>
-              <li><a href="#M000018">choose_from_array</a></li>
-              <li><a href="#M000019">command_exists?</a></li>
-              <li><a href="#M000020">detect_terminal_size</a></li>
-              <li><a href="#M000016">recursive_hash_merge</a></li>
+              <li><a href="#M000016">any_const_get</a></li>
+              <li><a href="#M000018">camelize</a></li>
+              <li><a href="#M000022">capture_stdout</a></li>
+              <li><a href="#M000019">choose_from_array</a></li>
+              <li><a href="#M000020">command_exists?</a></li>
+              <li><a href="#M000021">detect_terminal_size</a></li>
+              <li><a href="#M000017">recursive_hash_merge</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000015'>
-                <a name='M000015'>      </a>
+              <div class='public-instance method' id='method-M000016'>
+                <a name='M000016'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any_const_get</span>
                   <span class='arguments'>(name)</span>
@@ -72,14 +72,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000015-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000015-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 7</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any_const_get</span>(<span class="ruby-identifier">name</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Module</span>)&#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-identifier">klass</span> = <span class="ruby-constant">Object</span>&#x000A;        <span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">'::'</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">e</span>)&#x000A;        }&#x000A;        <span class="ruby-identifier">klass</span>&#x000A;      <span class="ruby-keyword kw">rescue</span>&#x000A;         <span class="ruby-keyword kw">nil</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000016-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 7</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any_const_get</span>(<span class="ruby-identifier">name</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Module</span>)&#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-identifier">klass</span> = <span class="ruby-constant">Object</span>&#x000A;        <span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">'::'</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>&#x000A;          <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">e</span>)&#x000A;        }&#x000A;        <span class="ruby-identifier">klass</span>&#x000A;      <span class="ruby-keyword kw">rescue</span>&#x000A;         <span class="ruby-keyword kw">nil</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000017'>
-                <a name='M000017'>      </a>
+              <div class='public-instance method' id='method-M000018'>
+                <a name='M000018'>      </a>
                 <div class='synopsis'>
                   <span class='name'>camelize</span>
                   <span class='arguments'>(string)</span>
@@ -91,14 +91,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000017-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 26</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">camelize</span>(<span class="ruby-identifier">string</span>)&#x000A;      <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\/(.?)/</span>) { <span class="ruby-node">&quot;::#{$1.upcase}&quot;</span> }.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/(?:^|_)(.)/</span>) { <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">upcase</span> }&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000018-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 26</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">camelize</span>(<span class="ruby-identifier">string</span>)&#x000A;      <span class="ruby-identifier">string</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\/(.?)/</span>) { <span class="ruby-node">&quot;::#{$1.upcase}&quot;</span> }.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/(?:^|_)(.)/</span>) { <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">upcase</span> }&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000021'>
-                <a name='M000021'>      </a>
+              <div class='public-instance method' id='method-M000022'>
+                <a name='M000022'>      </a>
                 <div class='synopsis'>
                   <span class='name'>capture_stdout</span>
                   <span class='arguments'>() {|| ...}</span>
@@ -109,14 +109,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000021-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000022-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000021-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 69</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">capture_stdout</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">original_stdout</span> = <span class="ruby-identifier">$stdout</span>&#x000A;      <span class="ruby-identifier">$stdout</span> = <span class="ruby-identifier">fake</span> = <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>&#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-keyword kw">yield</span>&#x000A;      <span class="ruby-keyword kw">ensure</span>&#x000A;        <span class="ruby-identifier">$stdout</span> = <span class="ruby-identifier">original_stdout</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">fake</span>.<span class="ruby-identifier">string</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000022-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 69</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">capture_stdout</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">original_stdout</span> = <span class="ruby-identifier">$stdout</span>&#x000A;      <span class="ruby-identifier">$stdout</span> = <span class="ruby-identifier">fake</span> = <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>&#x000A;      <span class="ruby-keyword kw">begin</span>&#x000A;        <span class="ruby-keyword kw">yield</span>&#x000A;      <span class="ruby-keyword kw">ensure</span>&#x000A;        <span class="ruby-identifier">$stdout</span> = <span class="ruby-identifier">original_stdout</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">fake</span>.<span class="ruby-identifier">string</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000018'>
-                <a name='M000018'>      </a>
+              <div class='public-instance method' id='method-M000019'>
+                <a name='M000019'>      </a>
                 <div class='synopsis'>
                   <span class='name'>choose_from_array</span>
                   <span class='arguments'>(array, input, options={})</span>
@@ -132,14 +132,14 @@
                   <pre>1-3,5-6 -&gt; [1,2,3,5,6]&#x000A;*   -&gt; all elements in array&#x000A;''  -&gt; []</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000019-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000018-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 36</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">choose_from_array</span>(<span class="ruby-identifier">array</span>, <span class="ruby-identifier">input</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span> = {<span class="ruby-identifier">:splitter=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;,&quot;</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">array</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">input</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'*'</span>&#x000A;      <span class="ruby-identifier">result</span> = []&#x000A;      <span class="ruby-identifier">input</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:splitter</span>]).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/-|\.\./</span>&#x000A;          <span class="ruby-identifier">min</span>,<span class="ruby-identifier">max</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/-|\.\./</span>)&#x000A;          <span class="ruby-identifier">slice_min</span> = <span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;          <span class="ruby-identifier">result</span>.<span class="ruby-identifier">push</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">array</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">slice_min</span>, <span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>))&#x000A;        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/\s*(\d+)\s*/</span>&#x000A;          <span class="ruby-identifier">index</span> = <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;          <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>&#x000A;          <span class="ruby-identifier">result</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">array</span>[<span class="ruby-identifier">index</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">array</span>[<span class="ruby-identifier">index</span>]&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000019-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 36</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">choose_from_array</span>(<span class="ruby-identifier">array</span>, <span class="ruby-identifier">input</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span> = {<span class="ruby-identifier">:splitter=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;,&quot;</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">array</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">input</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'*'</span>&#x000A;      <span class="ruby-identifier">result</span> = []&#x000A;      <span class="ruby-identifier">input</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:splitter</span>]).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>&#x000A;        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/-|\.\./</span>&#x000A;          <span class="ruby-identifier">min</span>,<span class="ruby-identifier">max</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/-|\.\./</span>)&#x000A;          <span class="ruby-identifier">slice_min</span> = <span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;          <span class="ruby-identifier">result</span>.<span class="ruby-identifier">push</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">array</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">slice_min</span>, <span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>))&#x000A;        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/\s*(\d+)\s*/</span>&#x000A;          <span class="ruby-identifier">index</span> = <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>&#x000A;          <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>&#x000A;          <span class="ruby-identifier">result</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">array</span>[<span class="ruby-identifier">index</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">array</span>[<span class="ruby-identifier">index</span>]&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000019'>
-                <a name='M000019'>      </a>
+              <div class='public-instance method' id='method-M000020'>
+                <a name='M000020'>      </a>
                 <div class='synopsis'>
                   <span class='name'>command_exists?</span>
                   <span class='arguments'>(command)</span>
@@ -151,14 +151,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000019-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000020-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000019-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 55</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">command_exists?</span>(<span class="ruby-identifier">command</span>)&#x000A;      <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'PATH'</span>].<span class="ruby-identifier">split</span>(<span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">PATH_SEPARATOR</span>).<span class="ruby-identifier">any?</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">d</span>, <span class="ruby-identifier">command</span>) }&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000020-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 55</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">command_exists?</span>(<span class="ruby-identifier">command</span>)&#x000A;      <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'PATH'</span>].<span class="ruby-identifier">split</span>(<span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">PATH_SEPARATOR</span>).<span class="ruby-identifier">any?</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">d</span>, <span class="ruby-identifier">command</span>) }&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000020'>
-                <a name='M000020'>      </a>
+              <div class='public-instance method' id='method-M000021'>
+                <a name='M000021'>      </a>
                 <div class='synopsis'>
                   <span class='name'>detect_terminal_size</span>
                   <span class='arguments'>()</span>
@@ -171,14 +171,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000020-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000021-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000020-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 61</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">detect_terminal_size</span>&#x000A;      (<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'COLUMNS'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\d+$/</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'LINES'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\d+$/</span>) <span class="ruby-operator">?</span> [<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'COLUMNS'</span>].<span class="ruby-identifier">to_i</span>, <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'LINES'</span>].<span class="ruby-identifier">to_i</span>] <span class="ruby-operator">:</span>&#x000A;        ( <span class="ruby-identifier">command_exists?</span>(<span class="ruby-value str">'stty'</span>) <span class="ruby-operator">?</span> <span class="ruby-value">`stty size`</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\d+/</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">to_i</span> }.<span class="ruby-identifier">reverse</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span> )&#x000A;    <span class="ruby-keyword kw">rescue</span>&#x000A;      <span class="ruby-keyword kw">nil</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000021-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 61</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">detect_terminal_size</span>&#x000A;      (<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'COLUMNS'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\d+$/</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'LINES'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\d+$/</span>) <span class="ruby-operator">?</span> [<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'COLUMNS'</span>].<span class="ruby-identifier">to_i</span>, <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'LINES'</span>].<span class="ruby-identifier">to_i</span>] <span class="ruby-operator">:</span>&#x000A;        ( <span class="ruby-identifier">command_exists?</span>(<span class="ruby-value str">'stty'</span>) <span class="ruby-operator">?</span> <span class="ruby-value">`stty size`</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp re">/\d+/</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">to_i</span> }.<span class="ruby-identifier">reverse</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span> )&#x000A;    <span class="ruby-keyword kw">rescue</span>&#x000A;      <span class="ruby-keyword kw">nil</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000016'>
-                <a name='M000016'>      </a>
+              <div class='public-instance method' id='method-M000017'>
+                <a name='M000017'>      </a>
                 <div class='synopsis'>
                   <span class='name'>recursive_hash_merge</span>
                   <span class='arguments'>(hash1, hash2)</span>
@@ -189,10 +189,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000016-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 21</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">hash1</span>, <span class="ruby-identifier">hash2</span>)&#x000A;      <span class="ruby-identifier">hash1</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">hash2</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">k</span>,<span class="ruby-identifier">o</span>,<span class="ruby-identifier">n</span><span class="ruby-operator">|</span> (<span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)) <span class="ruby-operator">?</span> <span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">o</span>,<span class="ruby-identifier">n</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">n</span>}&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000017-source'><span class="ruby-comment cmt"># File lib/hirb/util.rb, line 21</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">hash1</span>, <span class="ruby-identifier">hash2</span>)&#x000A;      <span class="ruby-identifier">hash1</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">hash2</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">k</span>,<span class="ruby-identifier">o</span>,<span class="ruby-identifier">n</span><span class="ruby-operator">|</span> (<span class="ruby-identifier">o</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)) <span class="ruby-operator">?</span> <span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">o</span>,<span class="ruby-identifier">n</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">n</span>}&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

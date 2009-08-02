@@ -46,7 +46,7 @@
             This class is format an output into a string using Hirb::Helpers::*,
             Hirb::Views::* or any user-created views. The formatter object looks for an
             output&#8217;s class config in <a
-            href="Formatter.html#M000044">Hirb::Formatter.config</a> and if found
+            href="Formatter.html#M000045">Hirb::Formatter.config</a> and if found
             applies a helper to the output.
             </p>
             <h2>Create and Configure <a href="Views.html">Views</a></h2>
@@ -83,35 +83,35 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000043">new</a></li>
+              <li><a href="#M000044">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000044">config</a></li>
-              <li><a href="#M000045">format_class</a></li>
-              <li><a href="#M000047">format_output</a></li>
-              <li><a href="#M000046">reload</a></li>
+              <li><a href="#M000045">config</a></li>
+              <li><a href="#M000046">format_class</a></li>
+              <li><a href="#M000048">format_output</a></li>
+              <li><a href="#M000047">reload</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000043'>
-                <a name='M000043'>      </a>
+              <div class='public-class method' id='method-M000044'>
+                <a name='M000044'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(additional_config={})</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000044-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000043-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 87</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">additional_config</span>={})&#x000A;      <span class="ruby-ivar">@klass_config</span> = {}&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-identifier">additional_config</span> <span class="ruby-operator">||</span> {}&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000044-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 87</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">additional_config</span>={})&#x000A;      <span class="ruby-ivar">@klass_config</span> = {}&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-identifier">additional_config</span> <span class="ruby-operator">||</span> {}&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000044'>
-                <a name='M000044'>      </a>
+              <div class='public-instance method' id='method-M000045'>
+                <a name='M000045'>      </a>
                 <div class='synopsis'>
                   <span class='name'>config</span>
                   <span class='arguments'>()</span>
@@ -149,14 +149,14 @@
                   <pre>Examples:&#x000A;  {'WWW::Delicious::Element'=&gt;{:class=&gt;'Hirb::Helpers::ObjectTable', :ancestor=&gt;true, :options=&gt;{:max_width=&gt;180}}}&#x000A;  {'Date'=&gt;{:class=&gt;:auto_table, :ancestor=&gt;true}}</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000044-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000044-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 106</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config</span>&#x000A;      <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000045-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 106</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config</span>&#x000A;      <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000045'>
-                <a name='M000045'>      </a>
+              <div class='public-instance method' id='method-M000046'>
+                <a name='M000046'>      </a>
                 <div class='synopsis'>
                   <span class='name'>format_class</span>
                   <span class='arguments'>(klass, helper_config)</span>
@@ -167,14 +167,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000046-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000045-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 111</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;      <span class="ruby-ivar">@klass_config</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">klass</span>)&#x000A;      <span class="ruby-ivar">@config</span>[<span class="ruby-identifier">klass</span>.<span class="ruby-identifier">to_s</span>] = <span class="ruby-identifier">helper_config</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000046-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 111</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;      <span class="ruby-ivar">@klass_config</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">klass</span>)&#x000A;      <span class="ruby-ivar">@config</span>[<span class="ruby-identifier">klass</span>.<span class="ruby-identifier">to_s</span>] = <span class="ruby-identifier">helper_config</span>&#x000A;      <span class="ruby-keyword kw">true</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000047'>
-                <a name='M000047'>      </a>
+              <div class='public-instance method' id='method-M000048'>
+                <a name='M000048'>      </a>
                 <div class='synopsis'>
                   <span class='name'>format_output</span>
                   <span class='arguments'>(output, options={}, &amp;block)</span>
@@ -191,14 +191,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000047-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000048-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000047-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 126</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">output_class</span> = <span class="ruby-identifier">determine_output_class</span>(<span class="ruby-identifier">output</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">parse_console_options</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:console</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">klass_config</span>(<span class="ruby-identifier">output_class</span>), <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>] <span class="ruby-operator">?</span> (<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">e</span>) } <span class="ruby-operator">:</span> &#x000A;        <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">output</span>) ) <span class="ruby-operator">:</span> <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">output</span>]&#x000A;      <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>].<span class="ruby-identifier">empty?</span>&#x000A;      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>],<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>] <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">helper_class</span> = <span class="ruby-identifier">determine_helper_class</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>]))&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">helper_class</span>.<span class="ruby-identifier">render</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">new_output</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000048-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 126</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">output_class</span> = <span class="ruby-identifier">determine_output_class</span>(<span class="ruby-identifier">output</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">parse_console_options</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:console</span>)&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span>(<span class="ruby-identifier">klass_config</span>(<span class="ruby-identifier">output_class</span>), <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>] <span class="ruby-operator">?</span> (<span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">e</span>) } <span class="ruby-operator">:</span> &#x000A;        <span class="ruby-identifier">call_output_method</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>], <span class="ruby-identifier">output</span>) ) <span class="ruby-operator">:</span> <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">output</span>]&#x000A;      <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:options</span>].<span class="ruby-identifier">empty?</span>&#x000A;      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:method</span>],<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>] <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">helper_class</span> = <span class="ruby-identifier">determine_helper_class</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:class</span>]))&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">helper_class</span>.<span class="ruby-identifier">render</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:output_method</span>]&#x000A;        <span class="ruby-identifier">new_output</span> = <span class="ruby-identifier">output</span>&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-identifier">new_output</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000046'>
-                <a name='M000046'>      </a>
+              <div class='public-instance method' id='method-M000047'>
+                <a name='M000047'>      </a>
                 <div class='synopsis'>
                   <span class='name'>reload</span>
                   <span class='arguments'>()</span>
@@ -209,10 +209,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000046-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000047-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000046-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 118</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reload</span>&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000047-source'><span class="ruby-comment cmt"># File lib/hirb/formatter.rb, line 118</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reload</span>&#x000A;      <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Util</span>.<span class="ruby-identifier">recursive_hash_merge</span> <span class="ruby-identifier">default_config</span>, <span class="ruby-ivar">@config</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

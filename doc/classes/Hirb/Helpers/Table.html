@@ -41,35 +41,11 @@
       </div>
       <div id='content'>
         <div id='text'>
-          <div id='description'>
-            <p>
-            Base <a href="Table.html">Table</a> class from which other table classes
-            inherit. By default, a table is constrained to a default width but this can
-            be adjusted via the max_width option or <a
-            href="../View.html#M000033">Hirb::View.width</a>. Rows can be an array of
-            arrays or an array of hashes.
-            </p>
-            <p>
-            An array of arrays ie [[1,2], [2,3]], would render:
-            </p>
-            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
-            <p>
-            By default, the fields/columns are the numerical indices of the array.
-            </p>
-            <p>
-            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
-            would render:
-            </p>
-            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
-            <p>
-            By default, the fields/columns are the keys of the first hash.
-            </p>
-          </div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000006">render</a></li>
+              <li><a href="#M000007">render</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -91,8 +67,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000006'>
-                <a name='M000006'>      </a>
+              <div class='public-class method' id='method-M000007'>
+                <a name='M000007'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(rows, options={})</span>
@@ -132,6 +108,15 @@
                   proc or an array containing a method and optional arguments to it.
                   
                   </dd>
+                  <dt>:vertical</dt><dd>When set to true, renders a vertical table using <a
+                  href="VerticalTable.html">Hirb::Helpers::VerticalTable</a>. Default is
+                  false.
+                  
+                  </dd>
+                  <dt>:all_fields</dt><dd>When set to true, renders fields in all rows. Valid only in rows that are
+                  hashes. Default is false.
+                  
+                  </dd>
                   </dl>
                   <p>
                   Examples:
@@ -139,10 +124,10 @@
                   <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000006-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 52</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>,<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 55</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:vertical</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

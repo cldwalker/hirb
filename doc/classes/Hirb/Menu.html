@@ -51,14 +51,14 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000042">render</a></li>
+              <li><a href="#M000043">render</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000042'>
-                <a name='M000042'>      </a>
+              <div class='public-class method' id='method-M000043'>
+                <a name='M000043'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(output, options={}) {|chosen| ...}</span>
@@ -67,7 +67,7 @@
                   <p>
                   <a href="Menu.html">Menu</a> which asks to select from the given array and
                   returns the selected menu items as an array. See <a
-                  href="Util.html#M000018">Hirb::Util.choose_from_array</a> for the syntax
+                  href="Util.html#M000019">Hirb::Util.choose_from_array</a> for the syntax
                   for specifying selections. All options except for the ones below are passed
                   to render the menu.
                   </p>
@@ -79,7 +79,8 @@
                   href="Helpers/AutoTable.html">Hirb::Helpers::AutoTable</a>.
                   
                   </dd>
-                  <dt>:prompt</dt><dd>String for menu prompt. Defaults to &#8220;Choose: &#8220;.
+                  <dt>:prompt</dt><dd><a href="String.html">String</a> for menu prompt. Defaults to
+                  &#8220;Choose: &#8220;.
                   
                   </dd>
                   <dt>:validate_one</dt><dd>Validates that only one item in array is chosen and returns just that item.
@@ -96,10 +97,10 @@
                   <pre>extend Hirb::Console&#x000A;menu([1,2,3], :fields=&gt;[:field1, :field2], :validate_one=&gt;true)&#x000A;menu([1,2,3], :helper_class=&gt;Hirb::Helpers::Table)</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000042-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000042-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 17</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">default_options</span> = {<span class="ruby-identifier">:helper_class=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">AutoTable</span>, <span class="ruby-identifier">:prompt=</span><span class="ruby-operator">&gt;</span><span class="ruby-node">&quot;Choose #{options[:validate_one] ? 'one' : ''}: &quot;</span>, <span class="ruby-identifier">:ask=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>}&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = [<span class="ruby-identifier">output</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;      <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">choose_from_menu</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">chosen</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;      <span class="ruby-identifier">chosen</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000043-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 17</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">default_options</span> = {<span class="ruby-identifier">:helper_class=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">AutoTable</span>, <span class="ruby-identifier">:prompt=</span><span class="ruby-operator">&gt;</span><span class="ruby-node">&quot;Choose #{options[:validate_one] ? 'one' : ''}: &quot;</span>, <span class="ruby-identifier">:ask=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>}&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = [<span class="ruby-identifier">output</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;      <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">choose_from_menu</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">chosen</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;      <span class="ruby-identifier">chosen</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

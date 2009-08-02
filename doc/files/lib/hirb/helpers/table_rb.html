@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Fri Jun 19 17:02:01 -0400 2009</span>
+          <span class='datetime'>Thu Jul 09 05:55:14 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -41,7 +41,7 @@
             Base Table class from which other table classes inherit. By default, a
             table is constrained to a default width but this can be adjusted via the
             max_width option or <a
-            href="../../../../classes/Hirb/View.html#M000033">Hirb::View.width</a>.
+            href="../../../../classes/Hirb/View.html#M000034">Hirb::View.width</a>.
             Rows can be an array of arrays or an array of hashes.
             </p>
             <p>
@@ -59,6 +59,43 @@
             <p>
             By default, the fields/columns are the keys of the first hash.
             </p>
+            <hr size="1"></hr><p>
+            Most of Hirb&#8217;s functionality currently resides in <a
+            href="../../../../classes/Hirb/View.html">Hirb::View</a>. For an in-depth
+            tutorial on creating and configuring views see <a
+            href="../../../../classes/Hirb/Formatter.html">Hirb::Formatter</a>. <a
+            href="../../../../classes/Hirb.html">Hirb</a> has an optional yaml config
+            file defined by config_file(). This config file has the following top level
+            keys:
+            </p>
+            <dl>
+            <dt>:output</dt><dd>This hash is used by the formatter object. See <a
+            href="../../../../classes/Hirb/Formatter.html#M000045">Hirb::Formatter.config</a>
+            for its format.
+            
+            </dd>
+            <dt>:width</dt><dd>Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly
+            autodetected when <a href="../../../../classes/Hirb.html">Hirb</a> is
+            enabled.
+            
+            </dd>
+            <dt>:height</dt><dd>Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly
+            autodetected when <a href="../../../../classes/Hirb.html">Hirb</a> is
+            enabled.
+            
+            </dd>
+            <dt>:formatter</dt><dd>Boolean which determines if the formatter is enabled. Defaults to true.
+            
+            </dd>
+            <dt>:pager</dt><dd>Boolean which determines if the pager is enabled. Defaults to true.
+            
+            </dd>
+            <dt>:pager_command</dt><dd>Command to be used for paging. Command can have options after it i.e.
+            &#8216;less -r&#8217;. Defaults to common pagers i.e. less and more if
+            detected.
+            
+            </dd>
+            </dl>
           </div>
           <div id='section'>
           </div>
