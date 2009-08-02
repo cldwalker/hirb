@@ -9,9 +9,11 @@ class FormatterTest < Test::Unit::TestCase
 
     before(:all) { eval "module ::Dooda; end" }
 
-    test "klass_config merges ancestor options" do
-      set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output, :ancestor=>true}, "Kernel"=>{:method=>:default_output}
-      expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true}
+    test "klass_config recursively merges ancestor options" do
+      set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
+        "Object"=>{:method=>:object_output, :ancestor=>true, :options=>{:vertical=>true}},
+        "Kernel"=>{:method=>:default_output}
+      expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true, :options=>{:fields=>[:to_s], :vertical=>true}}
       @formatter.klass_config(::String).should == expected_result
     end
 

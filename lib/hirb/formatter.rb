@@ -175,7 +175,7 @@ module Hirb
       @klass_config[output_class] ||= begin
         output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| @config.has_key?(e)}
         @klass_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
-          (klass == output_class.to_s || @config[klass][:ancestor]) ? h.update(@config[klass]) : h
+          (klass == output_class.to_s || @config[klass][:ancestor]) ? Util.recursive_hash_merge(h, @config[klass]) : h
         }
       end
     end
