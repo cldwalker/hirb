@@ -279,6 +279,21 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :vertical=>true).should == expected_table
     end
 
+    test "vertical option renders vertical table successively" do
+      expected_table = <<-TABLE.unindent
+      *** 1. row ***
+      a: 1
+      b: 2
+      *** 2. row ***
+      a: 3
+      b: 4
+      2 rows in set
+      TABLE
+      options = {:vertical=>true}
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], options).should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], options).should == expected_table
+    end
+
     test "all_fields option renders all fields" do
       expected_table = <<-TABLE.unindent
       +---+---+---+
