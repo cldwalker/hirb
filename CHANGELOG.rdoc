@@ -1,3 +1,7 @@
+== 0.2.5
+* Added ability to use Hirb.enable with non-irb ruby shells.
+* Helper configs now recursively merge when inheriting from others via :ancestor option.
+
 == 0.2.4
 * Bug fix on UTF-8 support.
 
