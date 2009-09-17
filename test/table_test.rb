@@ -266,6 +266,18 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([['a','b'], ['c', 'd']], :number=>true).should == expected_table
     end
 
+    test "description option false renders" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | 0 | 1 |
+      +---+---+
+      | a | b |
+      | c | d |
+      +---+---+
+      TABLE
+      table([['a','b'], ['c', 'd']], :description=>false).should == expected_table
+    end
+
     test "vertical option renders vertical table" do
       expected_table = <<-TABLE.unindent
       *** 1. row ***

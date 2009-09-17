@@ -46,6 +46,7 @@ module Hirb
     #            a given proc or an array containing a method and optional arguments to it.
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
+    # [:description] When set to true, renders row count description at bottom. Default is true.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -63,8 +64,7 @@ module Hirb
   
   #:stopdoc:
   def initialize(rows, options={})
-    @options = options
-    @options[:filters] ||= {}
+    @options = {:description=>true, :filters=>{}}.merge(options)
     @fields = set_fields(rows)
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
@@ -113,7 +113,7 @@ module Hirb
       body += render_rows
       body += render_footer
     end
-    body << render_table_description
+    body << render_table_description if @options[:description]
     body.join("\n")
   end
 
