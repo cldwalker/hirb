@@ -1,3 +1,9 @@
+== 0.2.6
+* Added :description option and added proc ability to :children_method option for helpers.
+* Bug fix for no ENV['HOME'] on Windows.
+* Bug fix on unaliasing output_method.
+* Bug fix on multiple renders of vertical table.
+
 == 0.2.5
 * Added ability to use Hirb.enable with non-irb ruby shells.
 * Helper configs now recursively merge when inheriting from others via :ancestor option.
