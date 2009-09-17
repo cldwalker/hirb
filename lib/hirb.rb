@@ -41,7 +41,8 @@ module Hirb
     end
     # Default is config/hirb.yml or ~/hirb.yml in that order.
     def config_file
-      @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' : File.expand_path(File.join(ENV["HOME"],".hirb.yml"))
+      @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' :
+        File.expand_path(File.join(ENV["HOME"] || ".", ".hirb.yml"))
     end
 
     #:stopdoc:
