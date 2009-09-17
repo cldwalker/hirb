@@ -25,11 +25,11 @@ module Hirb
         return puts("Already enabled.") if @enabled
         @enabled = true
         Hirb.config_file = options.delete(:config_file) if options[:config_file]
-        output_method = "IRB::Irb.output_value" if Object.const_defined?(:IRB)
-        output_method = options.delete(:output_method) if options[:output_method]
+        @output_method = "IRB::Irb.output_value" if Object.const_defined?(:IRB)
+        @output_method = options.delete(:output_method) if options[:output_method]
         load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
-        alias_output_method(output_method) if output_method
+        alias_output_method(@output_method) if @output_method
         true
       end
 
@@ -41,11 +41,8 @@ module Hirb
       # Disable's Hirb's output and revert's irb's output method if irb exists.
       def disable
         @enabled = false
-        if Object.const_defined?(:IRB)
-          ::IRB::Irb.class_eval do
-            alias :output_value :non_hirb_view_output
-          end
-        end
+        unalias_output_method(@output_method) if @output_method
+        false
       end
 
       # Toggles pager on or off. The pager only works while Hirb::View is enabled.
@@ -111,11 +108,20 @@ module Hirb
       end
 
       #:stopdoc:
+      def unalias_output_method(output_method)
+        klass, klass_method = output_method.split(".")
+        eval %[
+          ::#{klass}.class_eval do
+            alias_method :#{klass_method}, :non_hirb_view_output
+          end
+        ]
+      end
+
       def alias_output_method(output_method)
         klass, klass_method = output_method.split(".")
         eval %[
           ::#{klass}.class_eval do
-            alias :non_hirb_view_output :#{klass_method}
+            alias_method :non_hirb_view_output, :#{klass_method}
             if '#{klass}' == "IRB::Irb"
               def #{klass_method} #:nodoc:
                 Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
