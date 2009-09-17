@@ -151,6 +151,18 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :blah)
       Hirb::Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
+
+    test "with children_method proc option renders" do
+      expected_tree = <<-TREE.unindent
+      1
+      |-- 2
+      |-- 3
+      |-- 4
+      `-- 5
+      TREE
+      Hirb::Helpers::ParentChildTree.render(1, :type=>:directory,
+        :children_method=>lambda {|e| e == 1 ? (2..5).to_a : []}, :value_method=>:to_s)
+    end
   end
 
   test "tree with parentless nodes renders ParentlessNodeError" do

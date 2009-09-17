@@ -5,7 +5,7 @@ class Hirb::Helpers::ParentChildTree < Hirb::Helpers::Tree
     # ==== Options:
     # [:value_method] Method to call to display as a node's value. If not given, uses :name if node
     #                 responds to :name or defaults to :object_id.
-    # [:children_method] Method to call to obtain a node's children. Default is :children.
+    # [:children_method] Method or proc to call to obtain a node's children. Default is :children.
     def render(root_node, options={})
       @value_method = options[:value_method] || (root_node.respond_to?(:name) ? :name : :object_id)
       @children_method = options[:children_method] || :children
@@ -16,7 +16,8 @@ class Hirb::Helpers::ParentChildTree < Hirb::Helpers::Tree
 
     def build_node(node, level) #:nodoc:
       @nodes << {:value=>node.send(@value_method), :level=>level}
-      node.send(@children_method).each {|e| build_node(e, level + 1)}
+      children = @children_method.is_a?(Proc) ? @children_method.call(node) : node.send(@children_method)
+      children.each {|e| build_node(e, level + 1)}
     end
   end
 end
