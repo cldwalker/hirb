@@ -21,7 +21,7 @@ begin
     s.summary = "A mini view framework for console/irb that's easy to use, even while under its influence."
     s.description = "Hirb currently provides a mini view framework for console applications, designed to improve irb's default output.  Hirb improves console output by providing a smart pager and auto-formatting output. The smart pager detects when an output exceeds a screenful and thus only pages output as needed. Auto-formatting adds a view to an output's class. This is helpful in separating views from content (MVC anyone?). The framework encourages reusing views by letting you package them in classes and associate them with any number of output classes."
     s.email = "gabriel.horner@gmail.com"
-    s.homepage = "http://github.com/cldwalker/hirb"
+    s.homepage = "http://tagaholic.me/hirb/"
     s.authors = ["Gabriel Horner"]
     s.rubyforge_project = 'tagaholic'
     s.has_rdoc = true
