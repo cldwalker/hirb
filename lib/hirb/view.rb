@@ -12,7 +12,7 @@ module Hirb
       # method with Hirb::View.view_output. If using Wirble, you should call this after it. The view configuration
       # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
       # In addition to the config keys mentioned in Hirb, the options also take the following keys:
-      # Options:
+      # ==== Options:
       # * config_file: Name of config file to read.
       # * output_method: Specify an object's class and instance method (separated by a period) to be realiased with
       #   hirb's view system. The instance method should take a string to be output. Default is IRB::Irb.output_value

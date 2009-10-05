@@ -1,3 +1,4 @@
+module Hirb
 # Base Table class from which other table classes inherit.
 # By default, a table is constrained to a default width but this can be adjusted
 # via the max_width option or Hirb::View.width.
@@ -24,7 +25,6 @@
 # By default, the fields/columns are the keys of the first hash.
 #--
 # derived from http://gist.github.com/72234
-module Hirb
  class Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
