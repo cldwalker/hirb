@@ -151,7 +151,7 @@ module Hirb
     end
 
     def determine_helper_class(klass)
-      if klass.is_a?(Symbol) && (helper_class = Helpers.constants.find {|e| e == Util.camelize(klass.to_s)})
+      if klass.is_a?(Symbol) && (helper_class = Helpers.constants.find {|e| e.to_s == Util.camelize(klass.to_s)})
         klass = "Hirb::Helpers::#{helper_class}"
       end
       Util.any_const_get(klass)
