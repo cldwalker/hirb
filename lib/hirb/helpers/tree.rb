@@ -164,7 +164,7 @@ class Hirb::Helpers::Tree
     def render_parent_characters
       parent_chars = []
       get_parents_character(parent_chars)
-      parent_chars.reverse.map {|level| level + ' ' * 3 }.join(" ")
+      parent_chars.reverse.map {|level| level + ' ' * 3 }.join('')
     end
 
     def get_parents_character(parent_chars)
