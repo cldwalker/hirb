@@ -41,6 +41,30 @@
       </div>
       <div id='content'>
         <div id='text'>
+          <div id='description'>
+            <p>
+            Base <a href="Table.html">Table</a> class from which other table classes
+            inherit. By default, a table is constrained to a default width but this can
+            be adjusted via the max_width option or <a
+            href="../View.html#M000034">Hirb::View.width</a>. Rows can be an array of
+            arrays or an array of hashes.
+            </p>
+            <p>
+            An array of arrays ie [[1,2], [2,3]], would render:
+            </p>
+            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
+            <p>
+            By default, the fields/columns are the numerical indices of the array.
+            </p>
+            <p>
+            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
+            would render:
+            </p>
+            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
+            <p>
+            By default, the fields/columns are the keys of the first hash.
+            </p>
+          </div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>public class</h3>
@@ -117,6 +141,9 @@
                   hashes. Default is false.
                   
                   </dd>
+                  <dt>:description</dt><dd>When set to true, renders row count description at bottom. Default is true.
+                  
+                  </dd>
                   </dl>
                   <p>
                   Examples:
@@ -127,7 +154,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 55</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:vertical</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 56</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:vertical</span>] <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

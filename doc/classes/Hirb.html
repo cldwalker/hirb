@@ -72,27 +72,6 @@
         <div id='text'>
           <div id='description'>
             <p>
-            Base Table class from which other table classes inherit. By default, a
-            table is constrained to a default width but this can be adjusted via the
-            max_width option or <a href="Hirb/View.html#M000034">Hirb::View.width</a>.
-            Rows can be an array of arrays or an array of hashes.
-            </p>
-            <p>
-            An array of arrays ie [[1,2], [2,3]], would render:
-            </p>
-            <pre>+---+---+&#x000A;| 0 | 1 |&#x000A;+---+---+&#x000A;| 1 | 2 |&#x000A;| 2 | 3 |&#x000A;+---+---+</pre>
-            <p>
-            By default, the fields/columns are the numerical indices of the array.
-            </p>
-            <p>
-            An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}],
-            would render:
-            </p>
-            <pre>+-----+--------+&#x000A;| age | weight |&#x000A;+-----+--------+&#x000A;| 10  | 100    |&#x000A;| 80  | 500    |&#x000A;+-----+--------+</pre>
-            <p>
-            By default, the fields/columns are the keys of the first hash.
-            </p>
-            <hr size="1"></hr><p>
             Most of Hirb&#8217;s functionality currently resides in <a
             href="Hirb/View.html">Hirb::View</a>. For an in-depth tutorial on creating
             and configuring views see <a
@@ -167,7 +146,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 43</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-ivar">@config_file</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>],<span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 43</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_file</span>&#x000A;      <span class="ruby-ivar">@config_file</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'config/hirb.yml'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">'config/hirb.yml'</span> <span class="ruby-operator">:</span>&#x000A;        <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;.&quot;</span>, <span class="ruby-value str">&quot;.hirb.yml&quot;</span>))&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000002'>
