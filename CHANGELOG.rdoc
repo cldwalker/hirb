@@ -1,3 +1,8 @@
+== 0.2.7
+* 2 ruby 1.9 bug fixes.
+* Bug fix in :fields of Hirb::Helpers::ObjectTable.
+* Made :class option in Hirb::Formatter friendlier to external apps.
+
 == 0.2.6
 * Added :description option and added proc ability to :children_method option for helpers.
 * Bug fix for no ENV['HOME'] on Windows.

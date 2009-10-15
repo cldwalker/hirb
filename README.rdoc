@@ -150,7 +150,8 @@ Table code from http://gist.github.com/72234 and {my console
 app's needs}[http://github.com/cldwalker/tag-tree].
 
 == Credits
-Chrononaut for vertical table helper.
+* Chrononaut for vertical table helper.
+* crafterm and spastorino for bug fixes.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
