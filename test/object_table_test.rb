@@ -45,5 +45,12 @@ class Hirb::Helpers::ObjectTableTest < Test::Unit::TestCase
       TABLE
       Hirb::Helpers::ObjectTable.render([1,2,3,4]).should == expected_table
     end
-  end  
+
+    test "with empty fields" do
+      expected_table = <<-TABLE.unindent
+      0 rows in set
+      TABLE
+      Hirb::Helpers::ObjectTable.render(@pets, :fields => []).should == expected_table
+    end
+  end
 end
