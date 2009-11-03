@@ -68,6 +68,10 @@ module Hirb
       # Hirb::Formatter.format_output(). Returns true if successful and false if no formatting is done or if not enabled.
       def view_output(output, options={})
         enabled? && config[:formatter] && render_output(output, options)
+      rescue Exception=>e
+        index = (obj = e.backtrace.find {|f| f =~ /^\(eval\)/}) ? e.backtrace.index(obj) : e.backtrace.length
+        $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|e| "    " + e }
+        true
       end
 
       # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.

@@ -22,6 +22,13 @@ module Hirb
       View.page_output('blah').should be(false)
     end
 
+    test "view_output catches unexpected errors and prints them" do
+      Hirb.enable
+      View.expects(:render_output).raises('blah')
+      capture_stderr { View.view_output([1,2,3]) }.should =~ /Hirb Error: blah/
+      Hirb.disable
+    end
+
     context "enable" do
       before(:each) { reset_config }
       after(:each) { Hirb.disable }

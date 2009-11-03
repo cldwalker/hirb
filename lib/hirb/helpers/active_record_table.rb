@@ -1,5 +1,5 @@
 class Hirb::Helpers::ActiveRecordTable < Hirb::Helpers::ObjectTable
-  # Rows are Rails' ActiveRecord::Base objects.
+  # Rows are Rails' ActiveRecord::Base objects. These objects should all be from one class.
   # Takes same options as Hirb::Helpers::Table.render except as noted below.
   #
   # Options:
