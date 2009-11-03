@@ -38,6 +38,7 @@ module Hirb
           save_stdout = STDOUT.clone
           STDOUT.reopen(pager)
           STDOUT.puts output
+        rescue Errno::EPIPE
         ensure
          STDOUT.reopen(save_stdout)
          save_stdout.close
