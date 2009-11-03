@@ -59,11 +59,12 @@ module Hirb
     # Returns [width, height] of terminal when detected, nil if not detected.
     # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
     def detect_terminal_size
-      if RUBY_PLATFORM =~ /java/ && command_exists?('tput')
+      if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
+        [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
+      elsif RUBY_PLATFORM =~ /java/ && command_exists?('tput')
         [`tput cols`.to_i, `tput lines`.to_i]
       else
-        (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/) ? [ENV['COLUMNS'].to_i, ENV['LINES'].to_i] :
-         ( command_exists?('stty') ? `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse : nil )
+        command_exists?('stty') ? `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse : nil
       end
     rescue
       nil
