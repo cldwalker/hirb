@@ -318,8 +318,28 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :c=>4}], :all_fields=>true).should == expected_table
     end
+
   end
   
+  test "table can detect and run callbacks" do
+    Hirb::Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
+      obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }
+      obj
+    end
+
+    expected_table = <<-TABLE.unindent
+    +---+---+
+    | a | b |
+    +---+---+
+    | 2 | 3 |
+    | 4 | 5 |
+    +---+---+
+    2 rows in set
+    TABLE
+    table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}], :add=>1).should == expected_table
+    Hirb::Helpers::Table.send(:remove_method, :and_one_callback)
+  end
+
   test "restrict_field_lengths ensures columns total doesn't exceed max width" do
     @table = Hirb::Helpers::Table.new([{:f1=>'f1', :f2=>'2', :f3=>'3', :f4=>'4'}])
     field_lengths = {:f1=>135, :f2=>45, :f3=>4, :f4=>55}
