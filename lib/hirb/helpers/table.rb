@@ -42,6 +42,8 @@ module Hirb
     # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
     #              This doesn't count field borders as part of the total.
     # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
+    # [:change_fields] A hash to change old field names to new field names. This is useful when wanting to change auto-generated keys to
+    #                  more user-friendly names i.e. for array of arrays.
     # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
     #            a given proc or an array containing a method and optional arguments to it.
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
@@ -64,7 +66,7 @@ module Hirb
   
   #:stopdoc:
   def initialize(rows, options={})
-    @options = {:description=>true, :filters=>{}}.merge(options)
+    @options = {:description=>true, :filters=>{}, :change_fields=>{}}.merge(options)
     @fields = set_fields(rows)
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
@@ -79,7 +81,7 @@ module Hirb
   end
 
   def set_fields(rows)
-    if @options[:fields]
+    fields = if @options[:fields]
       @options[:fields].dup
     else
       if rows[0].is_a?(Hash)
@@ -89,15 +91,21 @@ module Hirb
         rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
       end
     end
+    @options[:change_fields].each do |oldf, newf|
+      (index = fields.index(oldf)) ? fields[index] = newf : fields << newf
+    end
+    fields
   end
 
   def setup_rows(rows)
-    rows ||= []
-    rows = [rows] unless rows.is_a?(Array)
+    rows = Array(rows)
     if rows[0].is_a?(Array)
       rows = rows.inject([]) {|new_rows, row|
         new_rows << array_to_indices_hash(row)
       }
+    end
+    @options[:change_fields].each do |oldf, newf|
+      rows.each {|e| e[newf] = e.delete(oldf) if e.key?(oldf) }
     end
     rows = filter_values(rows)
     rows.each_with_index {|e,i| e[:hirb_number] = (i + 1).to_s} if @options[:number]

@@ -319,6 +319,18 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=>1, :b=>2}, {:a=>3, :c=>4}], :all_fields=>true).should == expected_table
     end
 
+    test "change_fields option renders" do
+      expected_table = <<-TABLE.unindent
+      +------+-------+
+      | name | value |
+      +------+-------+
+      | 1    | 2     |
+      | 2    | 3     |
+      +------+-------+
+      2 rows in set
+      TABLE
+      table([[1,2],[2,3]], :change_fields=>{0=>'name', 1=>'value'}).should == expected_table
+    end
   end
   
   test "table can detect and run callbacks" do
