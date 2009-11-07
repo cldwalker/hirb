@@ -1,3 +1,10 @@
+== 0.2.8
+* Added callbacks to Hirb::Helper::Table.
+* Added :change_fields option to Hirb::Helpers::Table.
+* Added terminal size detection for jruby.
+* Bug fix for paging long outputs.
+* Bug fix to make unexpected hirb rendering errors more clear.
+
 == 0.2.7
 * 2 ruby 1.9 bug fixes.
 * Bug fix in :fields of Hirb::Helpers::ObjectTable.

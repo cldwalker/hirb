@@ -12,7 +12,7 @@ model classes as tables. Hirb also sports a nice selection menu, Hirb::Menu.
 
 Install the gem with:
 
-    sudo gem install cldwalker-hirb --source http://gems.github.com
+    sudo gem install hirb
 
 == Pager
 
@@ -151,7 +151,7 @@ app's needs}[http://github.com/cldwalker/tag-tree].
 
 == Credits
 * Chrononaut for vertical table helper.
-* crafterm and spastorino for bug fixes.
+* crafterm, spastorino and joshua for bug fixes.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
