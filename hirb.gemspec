@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hirb}
-  s.version = "0.2.7"
+  s.version = "0.2.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Gabriel Horner"]
-  s.date = %q{2009-10-14}
+  s.date = %q{2009-11-07}
   s.description = %q{Hirb currently provides a mini view framework for console applications, designed to improve irb's default output.  Hirb improves console output by providing a smart pager and auto-formatting output. The smart pager detects when an output exceeds a screenful and thus only pages output as needed. Auto-formatting adds a view to an output's class. This is helpful in separating views from content (MVC anyone?). The framework encourages reusing views by letting you package them in classes and associate them with any number of output classes.}
   s.email = %q{gabriel.horner@gmail.com}
   s.extra_rdoc_files = [
