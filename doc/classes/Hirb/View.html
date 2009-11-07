@@ -120,7 +120,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000031-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000031-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 74</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">capture_and_render</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;        <span class="ruby-identifier">render_method</span>.<span class="ruby-identifier">call</span> <span class="ruby-constant">Util</span>.<span class="ruby-identifier">capture_stdout</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000031-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 78</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">capture_and_render</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;        <span class="ruby-identifier">render_method</span>.<span class="ruby-identifier">call</span> <span class="ruby-constant">Util</span>.<span class="ruby-identifier">capture_stdout</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000026'>
@@ -216,7 +216,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000037-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000037-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 106</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;        <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000037-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 110</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;        <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">format_class</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">helper_config</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000036'>
@@ -234,7 +234,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000036-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000036-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 101</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">formatter_config</span>&#x000A;        <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">config</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000036-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 105</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">formatter_config</span>&#x000A;        <span class="ruby-identifier">formatter</span>.<span class="ruby-identifier">config</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000035'>
@@ -252,7 +252,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000035-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000035-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 96</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">height</span>&#x000A;        <span class="ruby-identifier">config</span> <span class="ruby-value">? </span><span class="ruby-identifier">config</span>[<span class="ruby-identifier">:height</span>] <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_HEIGHT</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000035-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 100</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">height</span>&#x000A;        <span class="ruby-identifier">config</span> <span class="ruby-value">? </span><span class="ruby-identifier">config</span>[<span class="ruby-identifier">:height</span>] <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_HEIGHT</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000032'>
@@ -272,7 +272,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000032-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000032-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 81</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render_method</span>&#x000A;        <span class="ruby-ivar">@render_method</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">default_render_method</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000032-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 85</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render_method</span>&#x000A;        <span class="ruby-ivar">@render_method</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">default_render_method</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000033'>
@@ -290,7 +290,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000033-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000033-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 86</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset_render_method</span>&#x000A;        <span class="ruby-ivar">@render_method</span> = <span class="ruby-identifier">default_render_method</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000033-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 90</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset_render_method</span>&#x000A;        <span class="ruby-ivar">@render_method</span> = <span class="ruby-identifier">default_render_method</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000029'>
@@ -373,7 +373,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000030-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000030-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 69</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">view_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;        <span class="ruby-identifier">enabled?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>[<span class="ruby-identifier">:formatter</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000030-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 69</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">view_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;        <span class="ruby-identifier">enabled?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>[<span class="ruby-identifier">:formatter</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">render_output</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">e</span>&#x000A;        <span class="ruby-identifier">index</span> = (<span class="ruby-identifier">obj</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">find</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\(eval\)/</span>}) <span class="ruby-operator">?</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">obj</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">length</span>&#x000A;        <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Hirb Error: #{e.message}&quot;</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">index</span>).<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-value str">&quot;    &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">e</span> }&#x000A;        <span class="ruby-keyword kw">true</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000034'>
@@ -391,7 +391,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000034-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000034-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 91</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">width</span>&#x000A;        <span class="ruby-identifier">config</span> <span class="ruby-value">? </span><span class="ruby-identifier">config</span>[<span class="ruby-identifier">:width</span>] <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_WIDTH</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000034-source'><span class="ruby-comment cmt"># File lib/hirb/view.rb, line 95</span>&#x000A;      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">width</span>&#x000A;        <span class="ruby-identifier">config</span> <span class="ruby-value">? </span><span class="ruby-identifier">config</span>[<span class="ruby-identifier">:width</span>] <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_WIDTH</span>&#x000A;      <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
