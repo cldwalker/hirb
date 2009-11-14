@@ -42,8 +42,8 @@ module Hirb
     # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
     #              This doesn't count field borders as part of the total.
     # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
-    # [:change_fields] A hash to change old field names to new field names. This is useful when wanting to change auto-generated keys to
-    #                  more user-friendly names i.e. for array of arrays.
+    # [:change_fields] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
+    #                  This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
     # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
     #            a given proc or an array containing a method and optional arguments to it.
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
@@ -52,6 +52,7 @@ module Hirb
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
+    #    Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=>%w{letters numbers}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
@@ -67,6 +68,7 @@ module Hirb
   #:stopdoc:
   def initialize(rows, options={})
     @options = {:description=>true, :filters=>{}, :change_fields=>{}}.merge(options)
+    @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
     @fields = set_fields(rows)
     @rows = setup_rows(rows)
     @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
