@@ -3,7 +3,7 @@ class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
   # Renders a vertical table using the same options as Hirb::Helpers::Table.render except for :field_lengths,
   # :vertical and :max_width which aren't used.
   def self.render(rows, options={})
-    new(rows, options).render
+    new(rows, {:no_newlines=>false}.merge(options)).render
   end
 
   #:stopdoc:

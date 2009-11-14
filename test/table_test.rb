@@ -80,6 +80,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{:name=>"ｱｲｳｴｵｶｷ"}, {:name=>"ｸｹｺｻｼｽｾｿﾀﾁﾂﾃ"}, {:name=>"Tata l'asticote"}, {:name=>"toto létoile PAOLI"}]).should == expected_table
     end
+
+    test "with newlines renders with newlines stringified" do
+      expected_table = <<-TABLE.unindent
+      +-----+---+
+      | a   | b |
+      +-----+---+
+      | 1#{'\n'} | 2 |
+      | 3   | 4 |
+      +-----+---+
+      2 rows in set
+      TABLE
+      table([{'a'=>"1\n", 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
+    end
   end
 
   context "table with" do
@@ -289,6 +302,20 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       2 rows in set
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :vertical=>true).should == expected_table
+    end
+
+    test "vertical option renders vertical table with newlines" do
+      expected_table = <<-TABLE.unindent
+      *** 1. row ***
+      a: 1
+      b: 2
+      *** 2. row ***
+      a: 3
+      b: 4
+      and one
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>"4\nand one"}], :vertical=>true).should == expected_table
     end
 
     test "vertical option renders vertical table successively" do

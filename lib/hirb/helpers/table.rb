@@ -49,6 +49,8 @@ module Hirb
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [:description] When set to true, renders row count description at bottom. Default is true.
+    # [:no_newlines] When set to true, stringifies newlines so they don't disrupt tables. Default is false for vertical tables
+    #                and true for anything else.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -67,7 +69,7 @@ module Hirb
   
   #:stopdoc:
   def initialize(rows, options={})
-    @options = {:description=>true, :filters=>{}, :change_fields=>{}}.merge(options)
+    @options = {:description=>true, :filters=>{}, :change_fields=>{}, :no_newlines=>true}.merge(options)
     @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
     @fields = set_fields(rows)
     @rows = setup_rows(rows)
@@ -256,6 +258,7 @@ module Hirb
     rows.each {|row|
       @fields.each {|f|
         row[f] = row[f].to_s || ''
+        row[f].gsub!("\n", '\n') if @options[:no_newlines]
       }
     }
   end
