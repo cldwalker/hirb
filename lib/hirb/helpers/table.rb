@@ -23,6 +23,35 @@ module Hirb
 #   +-----+--------+
 #
 # By default, the fields/columns are the keys of the first hash.
+#
+# === Custom Callbacks
+# Callback methods can be defined to add your own options that modify rows right before they are rendered.
+# Here's an example that allows for searching with a :query option:
+#   module Query
+#     # Searches fields given a query hash
+#     def query_callback(rows, options)
+#       return rows unless options[:query]
+#       options[:query].map {|field,query|
+#         rows.select {|e| e[field].to_s =~ /#{query}/i }
+#       }.flatten.uniq
+#     end
+#   end
+#   Hirb::Helpers::Table.send :include, Query
+#
+#   >> puts Hirb::Helpers::Table.render [{:name=>'batman'}, {:name=>'robin'}], :query=>{:name=>'rob'}
+#   +-------+
+#   | name  |
+#   +-------+
+#   | robin |
+#   +-------+
+#   1 row in set
+#
+# Callback methods:
+# * must be defined in Helpers::Table and end in '_callback'.
+# * should expect rows and a hash of render options. Rows will be an array of hashes.
+# * are expected to return an array of hashes.
+# * are invoked in alphabetical order.
+# For a thorough example, see {Boson::Pipe}[http://github.com/cldwalker/boson/blob/master/lib/boson/pipe.rb].
 #--
 # derived from http://gist.github.com/72234
  class Helpers::Table
