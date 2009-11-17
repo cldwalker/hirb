@@ -2,6 +2,7 @@
 class Hirb::Helpers::AutoTable
   # Same options as Hirb::Helpers::Table.render.
   def self.render(output, options={})
+    options[:_original_class] = output.class
     output = Array(output)
     klass = if (output[0].is_a?(ActiveRecord::Base) rescue false)
       Hirb::Helpers::ActiveRecordTable

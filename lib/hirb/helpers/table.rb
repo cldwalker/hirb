@@ -239,7 +239,14 @@ module Hirb
     field_lengths
   end
 
+  def set_filter_defaults(rows)
+    if @options[:_original_class] == Hash && @fields[1] && rows.any? {|e| e[@fields[1]].is_a?(Hash) }
+      (@options[:filters] ||= {})[@fields[1]] ||= :inspect
+    end
+  end
+
   def filter_values(rows)
+    set_filter_defaults(rows)
     rows.map {|row|
       new_row = {}
       @fields.each {|f|
