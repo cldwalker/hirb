@@ -1,5 +1,10 @@
+== 0.2.9
+* Added newline filtering and :no_newlines option for table helper.
+* Added default filters for hashes that have hash values.
+* Bug fix for deprecated to_a call.
+
 == 0.2.8
-* Added callbacks to Hirb::Helper::Table.
+* Added callbacks to Hirb::Helpers::Table.
 * Added :change_fields option to Hirb::Helpers::Table.
 * Added terminal size detection for jruby.
 * Bug fix for paging long outputs.
