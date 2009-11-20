@@ -68,7 +68,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/vertical_table.rb, line 5</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/vertical_table.rb, line 5</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;    <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, {<span class="ruby-identifier">:no_newlines=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>}.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)).<span class="ruby-identifier">render</span>&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

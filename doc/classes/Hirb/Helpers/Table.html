@@ -64,6 +64,36 @@
             <p>
             By default, the fields/columns are the keys of the first hash.
             </p>
+            <h3>Custom Callbacks</h3>
+            <p>
+            Callback methods can be defined to add your own options that modify rows
+            right before they are rendered. Here&#8217;s an example that allows for
+            searching with a :query option:
+            </p>
+            <pre>module Query&#x000A;  # Searches fields given a query hash&#x000A;  def query_callback(rows, options)&#x000A;    return rows unless options[:query]&#x000A;    options[:query].map {|field,query|&#x000A;      rows.select {|e| e[field].to_s =~ /#{query}/i }&#x000A;    }.flatten.uniq&#x000A;  end&#x000A;end&#x000A;Hirb::Helpers::Table.send :include, Query&#x000A;&#x000A;&gt;&gt; puts Hirb::Helpers::Table.render [{:name=&gt;'batman'}, {:name=&gt;'robin'}], :query=&gt;{:name=&gt;'rob'}&#x000A;+-------+&#x000A;| name  |&#x000A;+-------+&#x000A;| robin |&#x000A;+-------+&#x000A;1 row in set</pre>
+            <p>
+            Callback methods:
+            </p>
+            <ul>
+            <li>must be defined in <a href="Table.html">Helpers::Table</a> and end in
+            &#8216;_callback&#8217;.
+            
+            </li>
+            <li>should expect rows and a hash of render options. Rows will be an array of
+            hashes.
+            
+            </li>
+            <li>are expected to return an array of hashes.
+            
+            </li>
+            <li>are invoked in alphabetical order.
+            
+            </li>
+            </ul>
+            <p>
+            For a thorough example, see <a
+            href="http://github.com/cldwalker/boson/blob/master/lib/boson/pipe.rb">Boson::Pipe</a>.
+            </p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -127,9 +157,9 @@
                   column. Default is false.
                   
                   </dd>
-                  <dt>:change_fields</dt><dd>A hash to change old field names to new field names. This is useful when
-                  wanting to change auto-generated keys to more user-friendly names i.e. for
-                  array of arrays.
+                  <dt>:change_fields</dt><dd>A hash to change old field names to new field names. This can also be an
+                  array of new names but only for array rows. This is useful when wanting to
+                  change auto-generated keys to more user-friendly names i.e. for array rows.
                   
                   </dd>
                   <dt>:filters</dt><dd>A hash of fields and the filters that each row in the field must run
@@ -149,17 +179,21 @@
                   <dt>:description</dt><dd>When set to true, renders row count description at bottom. Default is true.
                   
                   </dd>
+                  <dt>:no_newlines</dt><dd>When set to true, stringifies newlines so they don&#8217;t disrupt tables.
+                  Default is false for vertical tables and true for anything else.
+                  
+                  </dd>
                   </dl>
                   <p>
                   Examples:
                   </p>
-                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
+                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=&gt;%w{letters numbers}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 58</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:vertical</span>] <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 90</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:vertical</span>] <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
