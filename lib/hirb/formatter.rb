@@ -135,6 +135,8 @@ module Hirb
         new_output = send(options[:method],*args)
       elsif options[:class] && (helper_class = determine_helper_class(options[:class]))
         new_output = helper_class.render(*args, &block)
+      elsif options[:template]
+        Template.render(options[:template], *args, &block)
       elsif options[:output_method]
         new_output = output
       end
