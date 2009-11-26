@@ -61,7 +61,7 @@ module Hirb
     def detect_terminal_size
       if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
         [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
-      elsif RUBY_PLATFORM =~ /java/ && command_exists?('tput')
+      elsif (RUBY_PLATFORM =~ /java/ || !STDIN.tty?) && command_exists?('tput')
         [`tput cols`.to_i, `tput lines`.to_i]
       else
         command_exists?('stty') ? `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse : nil
