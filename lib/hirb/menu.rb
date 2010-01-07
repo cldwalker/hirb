@@ -19,7 +19,7 @@ module Hirb
       options = default_options.merge(options)
       output = [output] unless output.is_a?(Array)
       chosen = choose_from_menu(output, options)
-      yield(chosen) if block_given? && chosen.is_a?(Array) && chosen.size > 0
+      yield(chosen) if block_given? && (chosen.is_a?(Array) && chosen.size > 0 || options[:return_input])
       chosen
     end
 
@@ -32,6 +32,7 @@ module Hirb
       end
       print options[:prompt]
       input = $stdin.gets.chomp.strip
+      return input if options[:return_input]
       chosen = Util.choose_from_array(output, input)
       if options[:validate_one]
         if chosen.size != 1
