@@ -358,6 +358,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([[1,2],[2,3]], :change_fields=>{0=>'name', 1=>'value'}).should == expected_table
     end
+
+    test "return_rows returns rows" do
+      table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
+    end
   end
   
   test "table can detect and run callbacks" do

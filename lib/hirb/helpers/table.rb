@@ -80,6 +80,7 @@ module Hirb
     # [:description] When set to true, renders row count description at bottom. Default is true.
     # [:no_newlines] When set to true, stringifies newlines so they don't disrupt tables. Default is false for vertical tables
     #                and true for anything else.
+    # [:return_rows] When set to true, returns rows that have been initialized but not rendered. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
@@ -88,7 +89,8 @@ module Hirb
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
-      options[:vertical] ? Helpers::VerticalTable.render(rows, options) : new(rows, options).render
+      options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
+      options[:return_rows] ? new(rows, options).instance_variable_get("@rows") : new(rows, options).render
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Error: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
