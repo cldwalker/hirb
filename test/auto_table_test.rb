@@ -22,12 +22,11 @@ class Hirb::Helpers::AutoTableTest < Test::Unit::TestCase
       +---+---------+
       | 0 | 1       |
       +---+---------+
-      | c | "ok"    |
       | a | {:b=>1} |
       +---+---------+
-      2 rows in set
+      1 row in set
       TABLE
-      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}, :c=>'ok'}).should == expected_table
+      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}}).should == expected_table
     end
 
     test "doesn't convert hash with value hashes if filter exists for value" do
@@ -35,12 +34,11 @@ class Hirb::Helpers::AutoTableTest < Test::Unit::TestCase
       +------+-------+
       | name | value |
       +------+-------+
-      | c    | ok    |
       | a    | b1    |
       +------+-------+
-      2 rows in set
+      1 row in set
       TABLE
-      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}, :c=>'ok'}, :change_fields=>['name', 'value'],
+      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}}, :change_fields=>['name', 'value'],
        :filters=>{'value'=>:to_s}).should == expected_table
     end
   end

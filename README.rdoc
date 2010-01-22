@@ -151,7 +151,7 @@ app's needs}[http://github.com/cldwalker/tag-tree].
 
 == Credits
 * Chrononaut for vertical table helper.
-* crafterm, spastorino and joshua for bug fixes.
+* crafterm, spastorino, xaviershay and joshua for bug fixes.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
