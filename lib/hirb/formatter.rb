@@ -158,11 +158,7 @@ module Hirb
     end
 
     def determine_output_class(output)
-      if output.is_a?(Array)
-        output[0].class
-      else
-        output.class
-      end
+      output.is_a?(Array) ? output[0].class : output.class
     end
 
     def call_output_method(output_method, output)

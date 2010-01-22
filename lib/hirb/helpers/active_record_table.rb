@@ -5,7 +5,7 @@ class Hirb::Helpers::ActiveRecordTable < Hirb::Helpers::ObjectTable
   # Options:
   #   :fields- Can be any attribute, column or not. If not given, this defaults to the database table's columns.
   def self.render(rows, options={})
-    rows = [rows] unless rows.is_a?(Array)
+    rows = Array(rows)
     options[:fields] ||= 
       begin
         fields = rows.first.class.column_names
