@@ -41,11 +41,11 @@ class Hirb::MenuTest < Test::Unit::TestCase
 
     test "with block and no chosen doesn't call block" do
       menu_input ""
-      block = lambda {|e| }
-      block.expects(:call).never
+      block = lambda {|e| @called = true }
       capture_stdout {
         menu([1,2,3], &block).should == []
       }
+      assert !@called
     end
 
     test "with valid helper_class option renders" do
@@ -86,9 +86,14 @@ class Hirb::MenuTest < Test::Unit::TestCase
       menu([1], :ask=>false).should == [1]
     end
 
+    test "with no items to choose from always return without asking" do
+      $stdin.expects(:gets).never
+      menu([], :ask=>false).should == []
+      menu([], :ask=>true).should == []
+    end
+
     test "with return_input option returns input" do
-      Hirb::Helpers::AutoTable.expects(:render)
-      $stdin.expects(:gets).returns('blah')
+      menu_input('blah')
       capture_stdout { menu([1], :return_input=>true).should == 'blah' }
     end
 

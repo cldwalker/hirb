@@ -48,7 +48,7 @@ module Hirb
           result.push(array[index]) if array[index]
         end
       end
-      return result
+      result
     end
 
     # Determines if a shell command exists by searching for it in ENV['PATH'].

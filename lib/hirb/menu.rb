@@ -2,7 +2,8 @@ module Hirb
   # This class provides a selection menu using Hirb's table helpers by default to display choices.
   class Menu
     # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
-    # for the syntax for specifying selections. All options except for the ones below are passed to render the menu.
+    # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
+    # All options except for the ones below are passed to render the menu.
     #
     # ==== Options:
     # [:helper_class]  Helper class to render menu. Helper class is expected to implement numbering given a :number option.
@@ -19,9 +20,9 @@ module Hirb
     def self.render(output, options={})
       default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ", :ask=>true}
       options = default_options.merge(options)
-      output = [output] unless output.is_a?(Array)
+      return [] if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output, options)
-      yield(chosen) if block_given? && (chosen.is_a?(Array) && chosen.size > 0 || options[:return_input])
+      yield(chosen) if block_given? && Array(chosen).size > 0
       chosen
     end
 
