@@ -10,6 +10,8 @@ module Hirb
     # [:prompt]  String for menu prompt. Defaults to "Choose: ".
     # [:validate_one] Validates that only one item in array is chosen and returns just that item. Default is false.
     # [:ask] Always ask for input, even if there is only one choice. Default is true.
+    # [:return_input] Returns input string without selecting menu items. Default is false
+    # [:readline] Uses readline to get user input if available. Input strings are added to readline history. Default is false.
     # Examples:
     #     extend Hirb::Console
     #     menu([1,2,3], :fields=>[:field1, :field2], :validate_one=>true)
@@ -23,6 +25,13 @@ module Hirb
       chosen
     end
 
+    def self.readline_loads? #:nodoc:
+      require 'readline'
+      true
+    rescue LoadError
+      false
+    end
+
     def self.choose_from_menu(output, options) #:nodoc:
       return output if output.size == 1 && !options[:ask]
       if (helper_class = Util.any_const_get(options[:helper_class]))
@@ -30,8 +39,13 @@ module Hirb
       else
         output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
-      print options[:prompt]
-      input = $stdin.gets.chomp.strip
+      if options[:readline] && readline_loads?
+        input = Readline.readline options[:prompt]
+        Readline::HISTORY << input
+      else
+        print options[:prompt]
+        input = $stdin.gets.chomp.strip
+      end
       return input if options[:return_input]
       chosen = Util.choose_from_array(output, input)
       if options[:validate_one]

@@ -86,6 +86,12 @@ class Hirb::MenuTest < Test::Unit::TestCase
       menu([1], :ask=>false).should == [1]
     end
 
+    test "with return_input option returns input" do
+      Hirb::Helpers::AutoTable.expects(:render)
+      $stdin.expects(:gets).returns('blah')
+      capture_stdout { menu([1], :return_input=>true).should == 'blah' }
+    end
+
     test "with validate_one option returns chosen one" do
       menu_input '2'
       capture_stdout { menu([1,2,3], :validate_one=> true).should == 2 }
