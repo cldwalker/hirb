@@ -57,6 +57,14 @@ module Hirb
  class Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
+  # Contains filter methods used by :filters option. To define a custom filter, simply open this module and create a method
+  # that take one argument, the value you will be filtering.
+  module Filters
+    extend self
+    def comma_join(arr) #:nodoc:
+      arr.join(', ')
+    end
+  end
 
   class << self
     
@@ -73,8 +81,8 @@ module Hirb
     # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # [:change_fields] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
     #                  This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
-    # [:filters] A hash of fields and the filters that each row in the field must run through. The filter converts the cell's value by applying
-    #            a given proc or an array containing a method and optional arguments to it.
+    # [:filters] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
+    #            applied to the field value or a Filters method.
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [:description] When set to true, renders row count description at bottom. Default is true.
@@ -281,9 +289,9 @@ module Hirb
     rows.map {|row|
       new_row = {}
       @fields.each {|f|
-        if @options[:filters][f]
-          new_row[f] = @options[:filters][f].is_a?(Proc) ? @options[:filters][f].call(row[f]) :
-            row[f].send(*@options[:filters][f])
+        if (filter = @options[:filters][f])
+          new_row[f] = filter.is_a?(Proc) ? filter.call(row[f]) :
+            row[f].respond_to?(Array(filter)[0]) ? row[f].send(*filter) : Filters.send(filter, row[f])
         else
           new_row[f] = row[f]
         end

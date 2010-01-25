@@ -266,6 +266,22 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
         1=>[:[], :num]}).should == expected_table
     end
 
+    test "filters option calls Filters method and renders" do
+      module ::Hirb::Helpers::Table::Filters
+        def semicolon_join(arr); arr.join('; '); end
+      end
+
+      expected_table = <<-TABLE.unindent
+      +------+------------------------------+
+      | 0    | 1                            |
+      +------+------------------------------+
+      | some | unsightly; unreadable; array |
+      +------+------------------------------+
+      1 row in set
+      TABLE
+      table([[['some'], %w{unsightly unreadable array}]], :filters=>{1=>:semicolon_join}).should == expected_table
+    end
+
     test "number option renders" do
       expected_table = <<-TABLE.unindent
       +--------+---+---+
