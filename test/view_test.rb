@@ -23,6 +23,7 @@ module Hirb
     end
 
     test "view_output catches unexpected errors and prints them" do
+      reset_config
       Hirb.enable
       View.expects(:render_output).raises('blah')
       capture_stderr { View.view_output([1,2,3]) }.should =~ /Hirb Error: blah/

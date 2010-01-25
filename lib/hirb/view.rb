@@ -22,15 +22,12 @@ module Hirb
       #   Hirb::View.enable :formatter=>false, :output_method=>"Mini.output"
       #   Hirb::View.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
-        return puts("Already enabled.") if @enabled
-        @enabled = true
+        # return puts("Already enabled.") if @enabled
         Hirb.config_file = options.delete(:config_file) if options[:config_file]
-        @output_method = "IRB::Irb.output_value" if Object.const_defined?(:IRB)
-        @output_method = options.delete(:output_method) if options[:output_method]
-        load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
+        enable_output_method(options.delete(:output_method))
+        merge_or_load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
-        alias_output_method(@output_method) if @output_method
-        true
+        @enabled = true
       end
 
       # Indicates if Hirb::View is enabled.
@@ -112,6 +109,13 @@ module Hirb
       end
 
       #:stopdoc:
+      def enable_output_method(meth)
+        if (meth ||= Object.const_defined?(:IRB) ? "IRB::Irb.output_value" : false) && !@output_method
+          @output_method = meth
+          alias_output_method(@output_method)
+        end
+      end
+
       def unalias_output_method(output_method)
         klass, klass_method = output_method.split(".")
         eval %[
@@ -119,6 +123,7 @@ module Hirb
             alias_method :#{klass_method}, :non_hirb_view_output
           end
         ]
+        @output_method = nil
       end
 
       def alias_output_method(output_method)
@@ -175,6 +180,15 @@ module Hirb
       end
 
       def formatter=(value); @formatter = value; end
+
+      def merge_or_load_config(additional_config={})
+        if @config
+          @config = Util.recursive_hash_merge default_config, Util.recursive_hash_merge(@config, additional_config)
+          formatter(true)
+        else
+          load_config(additional_config)
+        end
+      end
 
       def load_config(additional_config={})
         @config = Util.recursive_hash_merge default_config, additional_config
