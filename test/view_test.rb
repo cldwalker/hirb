@@ -13,7 +13,7 @@ module Hirb
       View.page_output('blah').should be(true)
       Hirb.disable
     end
-    
+
     test "page_output doesn't page when view is disabled" do
       Hirb.enable
       Hirb.disable
@@ -39,9 +39,38 @@ module Hirb
         context_stub = stub(:last_value=>'')
         ::IRB::Irb.new(context_stub).output_value
       end
+
       test "is enabled?" do
         Hirb.enable
         assert View.enabled?
+      end
+
+      def output_class_config(klass)
+        { :output=>{klass=>{:class=>:auto_table}} }
+      end
+
+      test "when called multiple times merges configs" do
+        Hirb.config = nil
+        # default config + config_file
+        Hirb.expects(:read_config_file).returns(output_class_config('Regexp'))
+        Hirb.enable output_class_config('String')
+
+        # add config file and explicit config
+        [{:config_file=>'ok'}, output_class_config('Struct')].each do |config|
+          Hirb.expects(:read_config_file).times(2).returns(
+            output_class_config('ActiveRecord::Base'), output_class_config('Array'))
+          Hirb.enable config
+        end
+
+        Hirb.config_files.include?('ok').should == true
+        output_keys = %w{ActiveRecord::Base Array Regexp String Struct}
+        Hirb::View.config[:output].keys.sort.should == output_keys
+      end
+
+      test "when called multiple times without config doesn't reset config" do
+        Hirb.enable
+        Hirb.expects(:read_config_file).never
+        Hirb.enable
       end
 
       test "works without irb" do
@@ -50,10 +79,10 @@ module Hirb
         assert formatter_config.size > 0
       end
 
-      test "with config_file option sets config_file" do
+      test "with config_file option adds to config_file" do
         Hirb.config_file.should_not == 'test_file'
         Hirb.enable :config_file=> 'test_file'
-        Hirb.config_file.should == 'test_file'
+        Hirb.config_files.include?('test_file').should == true
       end
 
       test "with output_method option realiases output_method" do

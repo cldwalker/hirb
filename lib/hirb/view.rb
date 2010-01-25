@@ -13,7 +13,7 @@ module Hirb
       # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
       # In addition to the config keys mentioned in Hirb, the options also take the following keys:
       # ==== Options:
-      # * config_file: Name of config file to read.
+      # * config_file: Name of config file(s) that are merged into existing config
       # * output_method: Specify an object's class and instance method (separated by a period) to be realiased with
       #   hirb's view system. The instance method should take a string to be output. Default is IRB::Irb.output_value
       #   if using irb.
@@ -22,8 +22,10 @@ module Hirb
       #   Hirb::View.enable :formatter=>false, :output_method=>"Mini.output"
       #   Hirb::View.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
-        # return puts("Already enabled.") if @enabled
-        Hirb.config_file = options.delete(:config_file) if options[:config_file]
+        Array(options.delete(:config_file)).each {|e|
+          @new_config_file = true
+          Hirb.config_files << e
+        }
         enable_output_method(options.delete(:output_method))
         merge_or_load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
@@ -182,9 +184,11 @@ module Hirb
       def formatter=(value); @formatter = value; end
 
       def merge_or_load_config(additional_config={})
-        if @config
+        if @config && (@new_config_file || !additional_config.empty?)
+          Hirb.config = nil
           @config = Util.recursive_hash_merge default_config, Util.recursive_hash_merge(@config, additional_config)
           formatter(true)
+          @new_config_file = false
         else
           load_config(additional_config)
         end

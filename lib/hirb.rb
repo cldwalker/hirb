@@ -30,7 +30,7 @@ require 'hirb/menu'
 
 module Hirb
   class <<self
-    attr_accessor :config_files
+    attr_accessor :config_files, :config, :config_file
 
     # Enables view functionality. See Hirb::View.enable for details.
     def enable(options={}, &block)
@@ -42,7 +42,7 @@ module Hirb
       View.disable
     end
 
-    # Main config file. Default is config/hirb.yml or ~/hirb.yml in that order.
+    # Default config file, either config/hirb.yml or ~/hirb.yml
     def config_file
       @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' :
         File.join(Util.find_home, ".hirb.yml")
@@ -55,10 +55,6 @@ module Hirb
     end
 
     #:stopdoc:
-    def config_file=(value)
-      @config_file = value
-    end
-
     def read_config_file(file=config_file)
       File.exists?(file) ? YAML::load_file(file) : {}
     end
