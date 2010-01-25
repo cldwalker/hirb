@@ -17,8 +17,15 @@ class HirbTest < Test::Unit::TestCase
   
   test "config reloads if given explicit reload" do
     Hirb.config
-    Hirb.expects(:read_config_file)
+    Hirb.expects(:read_config_file).returns({})
     Hirb.config(true)
+  end
+
+  test "config reads multiple config files and merges them" do
+    Hirb.config_files = %w{one two}
+    Hirb.expects(:read_config_file).times(2).returns({:output=>{"String"=>:auto_table}}, {:output=>{"Array"=>:auto_table}})
+    Hirb.config.should == {:output=>{"Array"=>:auto_table, "String"=>:auto_table}}
+    Hirb.config_files = nil
   end
 
   test "config_file sets correctly when no ENV['HOME']" do

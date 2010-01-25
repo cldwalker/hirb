@@ -30,6 +30,8 @@ require 'hirb/menu'
 
 module Hirb
   class <<self
+    attr_accessor :config_files
+
     # Enables view functionality. See Hirb::View.enable for details.
     def enable(options={}, &block)
       View.enable(options, &block)
@@ -40,10 +42,16 @@ module Hirb
       View.disable
     end
 
-    # Default is config/hirb.yml or ~/hirb.yml in that order.
+    # Main config file. Default is config/hirb.yml or ~/hirb.yml in that order.
     def config_file
       @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' :
         File.join(Util.find_home, ".hirb.yml")
+    end
+
+    # Array of config files which are merged sequentially to produce config.
+    # Default is just config_file().
+    def config_files
+      @config_files ||= [config_file]
     end
 
     #:stopdoc:
@@ -56,7 +64,12 @@ module Hirb
     end
 
     def config(reload=false)
-      @config = (@config.nil? || reload) ? read_config_file : @config
+      if (@config.nil? || reload)
+        @config = config_files.inject({}) {|acc,e|
+          Util.recursive_hash_merge(acc,read_config_file(e))
+        }
+      end
+      @config
     end
     #:startdoc:
   end
