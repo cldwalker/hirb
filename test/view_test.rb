@@ -80,7 +80,6 @@ module Hirb
       end
 
       test "with config_file option adds to config_file" do
-        Hirb.config_file.should_not == 'test_file'
         Hirb.enable :config_file=> 'test_file'
         Hirb.config_files.include?('test_file').should == true
       end

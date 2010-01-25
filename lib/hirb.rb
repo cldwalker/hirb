@@ -17,8 +17,8 @@ require 'hirb/menu'
 
 # Most of Hirb's functionality currently resides in Hirb::View.
 # For an in-depth tutorial on creating and configuring views see Hirb::Formatter.
-# Hirb has an optional yaml config file defined by config_file(). This config file
-# has the following top level keys:
+# Hirb can have multiple config files defined by config_files(). These config files
+# have the following top level keys:
 # [:output] This hash is used by the formatter object. See Hirb::Formatter.config for its format.
 # [:width]  Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
 # [:height]  Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
@@ -30,7 +30,7 @@ require 'hirb/menu'
 
 module Hirb
   class <<self
-    attr_accessor :config_files, :config, :config_file
+    attr_accessor :config_files, :config
 
     # Enables view functionality. See Hirb::View.enable for details.
     def enable(options={}, &block)
@@ -42,19 +42,18 @@ module Hirb
       View.disable
     end
 
-    # Default config file, either config/hirb.yml or ~/hirb.yml
-    def config_file
-      @config_file ||= File.exists?('config/hirb.yml') ? 'config/hirb.yml' :
-        File.join(Util.find_home, ".hirb.yml")
-    end
-
     # Array of config files which are merged sequentially to produce config.
-    # Default is just config_file().
+    # Defaults to config/hirb.yml and ~/.hirb_yml
     def config_files
-      @config_files ||= [config_file]
+      @config_files ||= default_config_files
     end
 
     #:stopdoc:
+    def default_config_files
+      [File.join(Util.find_home, ".hirb.yml")] +
+        (File.exists?('config/hirb.yml') ? ['config/hirb.yml'] : [])
+    end
+
     def read_config_file(file=config_file)
       File.exists?(file) ? YAML::load_file(file) : {}
     end

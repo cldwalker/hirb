@@ -9,7 +9,8 @@ module Hirb
       attr_reader :config
 
       # This activates view functionality i.e. the formatter, pager and size detection. If irb exists, it overrides irb's output
-      # method with Hirb::View.view_output. If using Wirble, you should call this after it. The view configuration
+      # method with Hirb::View.view_output. When called multiple times, new configs are merged into the existing config.
+      # If using Wirble, you should call this after it. The view configuration
       # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
       # In addition to the config keys mentioned in Hirb, the options also take the following keys:
       # ==== Options:

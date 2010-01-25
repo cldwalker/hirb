@@ -7,6 +7,7 @@ class HirbTest < Test::Unit::TestCase
   test "config converts yaml when config file exists" do
     yaml_data = {:blah=>'blah'}
     File.stubs('exists?').returns(true)
+    Hirb.config_files = ['ok']
     YAML::expects(:load_file).returns(yaml_data)
     Hirb.config.should == yaml_data
   end
@@ -30,9 +31,9 @@ class HirbTest < Test::Unit::TestCase
   end
 
   test "config_file sets correctly when no ENV['HOME']" do
-    Hirb.config_file = nil
+    Hirb.config_files = nil
     home = ENV.delete('HOME')
-    Hirb.config_file.class.should == String
+    Hirb.config_files[0].class.should == String
     ENV["HOME"] = home
   end
 end
