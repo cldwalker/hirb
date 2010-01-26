@@ -187,10 +187,9 @@ module Hirb
       def merge_or_load_config(additional_config={})
         if @config && (@new_config_file || !additional_config.empty?)
           Hirb.config = nil
-          @config = Util.recursive_hash_merge default_config, Util.recursive_hash_merge(@config, additional_config)
-          formatter(true)
+          load_config Util.recursive_hash_merge(@config, additional_config)
           @new_config_file = false
-        else
+        elsif !@enabled
           load_config(additional_config)
         end
       end

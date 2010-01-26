@@ -67,10 +67,13 @@ module Hirb
         Hirb::View.config[:output].keys.sort.should == output_keys
       end
 
-      test "when called multiple times without config doesn't reset config" do
+      test "when called multiple times without config doesn't affect config" do
         Hirb.enable
+        old_config = Hirb::View.config
         Hirb.expects(:read_config_file).never
+        Hirb::View.expects(:load_config).never
         Hirb.enable
+        Hirb::View.config.should == old_config
       end
 
       test "works without irb" do
