@@ -27,7 +27,7 @@ module Hirb
     end
 
     context "default_pager" do
-      before(:all) { reset_config; Hirb.enable {|c| c.pager = true}}
+      before(:all) { reset_config; Hirb.enable :pager=>true }
       before(:each) { View.pager = nil; Pager.stubs(:pager_command).returns(nil) }
       after(:all) { Hirb.disable }
 

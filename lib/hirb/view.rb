@@ -28,6 +28,7 @@ module Hirb
           Hirb.config_files << e
         }
         enable_output_method(options.delete(:output_method))
+        puts "Using a block with View.enable will be *deprecated* in the next release" if block_given?
         merge_or_load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
         resize(config[:width], config[:height])
         @enabled = true

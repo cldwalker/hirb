@@ -75,9 +75,9 @@ class FormatterTest < Test::Unit::TestCase
       formatter_config["Blah"].should == {:class=>"Hirb::Views::Blah", :ancestor=>true}
     end
   
-    test "with block sets formatter config" do
+    test "sets formatter config" do
       class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
-      Hirb.enable {|c| c.output = class_hash }
+      Hirb.enable :output=>class_hash
       formatter_config['Something::Base'].should == class_hash['Something::Base']
     end
   end

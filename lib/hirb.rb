@@ -49,6 +49,10 @@ module Hirb
     end
 
     #:stopdoc:
+    def config_file
+      puts "Hirb.config_file is *deprecated*. Use Hirb.config_files"
+    end
+
     def default_config_files
       [File.join(Util.find_home, ".hirb.yml")] +
         (File.exists?('config/hirb.yml') ? ['config/hirb.yml'] : [])
