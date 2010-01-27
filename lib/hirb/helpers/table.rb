@@ -147,7 +147,8 @@ module Hirb
     end
     rows = filter_values(rows)
     rows.each_with_index {|e,i| e[:hirb_number] = (i + 1).to_s} if @options[:number]
-    methods.grep(/_callback$/).sort.each do |meth|
+    deleted_callbacks = Array(@options[:delete_callbacks]).map {|e| "#{e}_callback" }
+    (methods.grep(/_callback$/) - deleted_callbacks).sort.each do |meth|
       rows = send(meth, rows, @options.dup)
     end
     validate_values(rows)
