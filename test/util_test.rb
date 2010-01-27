@@ -2,6 +2,11 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 module Hirb
   class UtilTest < Test::Unit::TestCase
+    test "camelize converts underscore lowercase to camelcase" do
+      Util.camelize('hirb/util').should == "Hirb::Util"
+      Util.camelize('hirb_hash').should == "HirbHash"
+    end
+
     test "any_const_get returns nested class" do
       Util.any_const_get("Test::Unit").should == ::Test::Unit
     end
