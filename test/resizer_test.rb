@@ -7,7 +7,7 @@ module Hirb::Helpers
       field_lengths = {:f1=>135, :f2=>45, :f3=>4, :f4=>55}
       width = 195
 
-      Table::Resizer.resize(field_lengths, width)
+      Table::Resizer.resize!(field_lengths, width)
       field_lengths.values.inject {|a,e| a+=e}.should <= width
     end
 
@@ -16,7 +16,7 @@ module Hirb::Helpers
       field_lengths = {:a=>30, :b=>30, :c=>40}
       width = 60
 
-      Table::Resizer.resize(field_lengths, width)
+      Table::Resizer.resize!(field_lengths, width)
       field_lengths.values.inject {|a,e| a+=e}.should <= width
       field_lengths.values.uniq.size.should_not == 1
     end
@@ -26,7 +26,7 @@ module Hirb::Helpers
       field_lengths = {:field1=>10, :field2=>15, :field3=>100}
       width = 20
 
-      Table::Resizer.resize(field_lengths, width)
+      Table::Resizer.resize!(field_lengths, width)
       field_lengths.values.inject {|a,e| a+=e}.should <= width
       field_lengths.values.uniq.size.should == 1
     end

@@ -1,13 +1,15 @@
 class Hirb::Helpers::Table
   # Resizes a table's fields to the width if it exceeds that width
   class Resizer
-    attr_reader :field_lengths
-    def self.resize(field_lengths, width)
+    # Modifies field_lengths to fit within width
+    def self.resize!(field_lengths, width)
       obj = new(field_lengths, width)
       obj.resize
       obj.field_lengths
     end
 
+    #:stopdoc:
+    attr_reader :field_lengths
     def initialize(field_lengths, width)
       @width = width
       @field_lengths = field_lengths
@@ -57,5 +59,6 @@ class Hirb::Helpers::Table
     def sum(arr)
       arr.inject {|t,e| t += e }
     end
+    #:startdoc:
   end
 end

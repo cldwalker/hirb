@@ -60,6 +60,7 @@ module Hirb
  class Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
   class TooManyFieldsForWidthError < StandardError; end
+
   class << self
     
     # Main method which returns a formatted table.
@@ -212,7 +213,7 @@ module Hirb
     else
       table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
       # Resizer assumes @field_lengths and @fields are the same size
-      Resizer.resize(@field_lengths, table_max_width) if table_max_width
+      Resizer.resize!(@field_lengths, table_max_width) if table_max_width
     end
   end
 
