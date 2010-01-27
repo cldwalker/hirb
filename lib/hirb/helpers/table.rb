@@ -211,7 +211,8 @@ module Hirb
       @field_lengths.merge!(@options[:field_lengths])
     else
       table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
-      Resizer.resize(@field_lengths, table_max_width, @fields) if table_max_width
+      # Resizer assumes @field_lengths and @fields are the same size
+      Resizer.resize(@field_lengths, table_max_width) if table_max_width
     end
   end
 
