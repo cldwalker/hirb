@@ -1,6 +1,6 @@
 The MIT LICENSE
 
-Copyright (c) 2009 Gabriel Horner
+Copyright (c) 2010 Gabriel Horner
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
