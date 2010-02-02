@@ -97,6 +97,11 @@ class Hirb::MenuTest < Test::Unit::TestCase
       capture_stdout { menu([1], :return_input=>true).should == 'blah' }
     end
 
+    test "with directions option turns off directions" do
+      menu_input('blah')
+      capture_stdout { menu([1], :directions=>false) }.should_not =~ /range.*all/
+    end
+
     test "with validate_one option returns chosen one" do
       menu_input '2'
       capture_stdout { menu([1,2,3], :validate_one=> true).should == 2 }

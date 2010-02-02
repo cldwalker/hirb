@@ -11,6 +11,7 @@ module Hirb
     # [:prompt]  String for menu prompt. Defaults to "Choose: ".
     # [:validate_one] Validates that only one item in array is chosen and returns just that item. Default is false.
     # [:ask] Always ask for input, even if there is only one choice. Default is true.
+    # [:directions] Display directions before prompt. Default is true.
     # [:return_input] Returns input string without selecting menu items. Default is false
     # [:readline] Uses readline to get user input if available. Input strings are added to readline history. Default is false.
     # Examples:
@@ -18,7 +19,8 @@ module Hirb
     #     menu([1,2,3], :fields=>[:field1, :field2], :validate_one=>true)
     #     menu([1,2,3], :helper_class=>Hirb::Helpers::Table)
     def self.render(output, options={})
-      default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ", :ask=>true}
+      default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ",
+        :ask=>true, :directions=>true}
       options = default_options.merge(options)
       return [] if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output, options)
@@ -26,27 +28,34 @@ module Hirb
       chosen
     end
 
-    def self.readline_loads? #:nodoc:
+    #:stopdoc:
+    def self.readline_loads?
       require 'readline'
       true
     rescue LoadError
       false
     end
 
-    def self.choose_from_menu(output, options) #:nodoc:
+    def self.get_input(options)
+      directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
+      prompt = options[:directions] ? directions+options[:prompt] : options[:prompt]
+      if options[:readline] && readline_loads?
+        input = Readline.readline prompt
+        Readline::HISTORY << input
+      else
+        print prompt
+        input = $stdin.gets.chomp.strip
+      end
+    end
+
+    def self.choose_from_menu(output, options)
       return output if output.size == 1 && !options[:ask]
       if (helper_class = Util.any_const_get(options[:helper_class]))
         View.render_output(output, :class=>options[:helper_class], :options=>options.merge(:number=>true))
       else
         output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
-      if options[:readline] && readline_loads?
-        input = Readline.readline options[:prompt]
-        Readline::HISTORY << input
-      else
-        print options[:prompt]
-        input = $stdin.gets.chomp.strip
-      end
+      input = get_input(options)
       return input if options[:return_input]
       chosen = Util.choose_from_array(output, input)
       if options[:validate_one]
@@ -59,5 +68,6 @@ module Hirb
       end
       chosen
     end
+    #:startdoc:
   end
 end
