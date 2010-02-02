@@ -349,6 +349,17 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], options).should == expected_table
     end
 
+    test "hide_empty and vertical options renders" do
+      expected_table = <<-TABLE.unindent
+      *** 1. row ***
+      b: 2
+      *** 2. row ***
+      a: 3
+      2 rows in set
+      TABLE
+      table([{:a=>'', :b=>2}, {:a=>3, :b=>nil}], :hide_empty=>true, :vertical=>true).should == expected_table
+    end
+
     test "all_fields option renders all fields" do
       expected_table = <<-TABLE.unindent
       +---+---+---+

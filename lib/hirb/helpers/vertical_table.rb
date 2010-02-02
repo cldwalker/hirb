@@ -1,7 +1,9 @@
 class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
 
-  # Renders a vertical table using the same options as Hirb::Helpers::Table.render except for :field_lengths,
-  # :vertical and :max_width which aren't used.
+  # Renders a vertical table using the same options as Hirb::Helpers::Table.render except for the ones below
+  # and :field_lengths, :vertical and :max_width which aren't used.
+  # ==== Options:
+  # [:hide_empty] Boolean which hides empty values (nil or '') from being displayed. Default is false.
   def self.render(rows, options={})
     new(rows, {:no_newlines=>false}.merge(options)).render
   end
@@ -21,8 +23,12 @@ class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
     @rows.map do |row|
       row = "#{stars} #{i+1}. row #{stars}\n" +
       @fields.map {|f|
-        "#{Hirb::String.rjust(@headers[f], longest_header)}: #{row[f]}"
-      }.join("\n")
+        if !@options[:hide_empty] || (@options[:hide_empty] && !row[f].empty?)
+          "#{Hirb::String.rjust(@headers[f], longest_header)}: #{row[f]}"
+        else
+          nil
+        end
+      }.compact.join("\n")
       i+= 1
       row
     end
