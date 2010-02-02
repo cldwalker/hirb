@@ -441,6 +441,18 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{:a=>{:b=>1}}, {:a=>2}], :filter_values=>true).should == expected_table
     end
+
+    test "filter_classes option overrides class-wide filter_classes" do
+      expected_table = <<-TABLE.unindent
+      +----+
+      | a  |
+      +----+
+      | b1 |
+      +----+
+      1 row in set
+      TABLE
+      table([{:a=>{:b=>1}}], :filter_classes=>{Hash=>:to_s}).should == expected_table
+    end
   end
 
   context "table with callbacks" do

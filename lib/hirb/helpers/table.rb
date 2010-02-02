@@ -79,7 +79,8 @@ module Hirb
     # [*:filters*] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
     #              applied to the field value or a Filters method. Also see the filter_classes attribute below.
     # [*:header_filter*] A filter, like one in :filters, that is applied to all headers after the :headers option.
-    # [*:filter_values*] When set to true, cell values default to being filtered by their classes in filter_classes(). Default is false.
+    # [*:filter_values*] When set to true, cell values default to being filtered by their classes in :filter_classes. Default is false.
+    # [*:filter_classes*] Hash which maps classes to filters. Default is Hirb::Helpers::Table.filter_classes().
     # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [*:description*] When set to true, renders row count description at bottom. Default is true.
@@ -249,7 +250,7 @@ module Hirb
   end
 
   def set_filter_defaults(rows)
-    Helpers::Table.filter_classes.each do |klass, filter|
+    @filter_classes.each do |klass, filter|
       @fields.each {|field|
         if rows.all? {|r| r[field].class == klass }
           @options[:filters][field] ||= filter
@@ -259,10 +260,11 @@ module Hirb
   end
 
   def filter_values(rows)
+    @filter_classes = Helpers::Table.filter_classes.merge @options[:filter_classes] || {}
     set_filter_defaults(rows)
     rows.map {|row|
       @fields.inject({}) {|new_row,f|
-        (filter = @options[:filters][f]) || (@options[:filter_values] && (filter = Helpers::Table.filter_classes[row[f].class]))
+        (filter = @options[:filters][f]) || (@options[:filter_values] && (filter = @filter_classes[row[f].class]))
         new_row[f] = filter ? call_filter(filter, row[f]) : row[f]
         new_row
       }
