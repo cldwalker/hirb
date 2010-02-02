@@ -136,7 +136,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | 4 |   |
       +---+---+
       2 rows in set
-  TABLE
+      TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :c]).should == expected_table
     end
   
@@ -148,7 +148,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AAAAAAA... | 2 |
       +------------+---+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>10,:c=>10}).should == expected_table
     end
   
@@ -160,7 +160,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AA | 2 |
       +----+---+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>2}).should == expected_table
     end
   
@@ -172,7 +172,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AAAAAAA... | 2 |
       +------------+---+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>10}).should == expected_table
     end
   
@@ -184,7 +184,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AAAAAA... | 2 | CCCCCC... |
       +-----------+---+-----------+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>30).should == expected_table
     end
 
@@ -196,7 +196,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA | 2 | CCCCCCCCCC |
       +----------------------------------------------------+---+------------+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>nil).should == expected_table
     end
     
@@ -208,7 +208,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | AAAAAA... | 2 | CCCCCC... |
       +-----------+---+-----------+
       1 row in set
-  TABLE
+      TABLE
       Hirb::View.load_config
       Hirb::View.resize(30)
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
@@ -223,7 +223,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | A | 2       | C       |
       +---+---------+---------+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A", :b=>2, :c=>"C"}], :headers=>{:b=>"field B", :c=>"field C"}).should == expected_table
     end
   
@@ -235,7 +235,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       | A     | 2 |
       +-------+---+
       1 row in set
-  TABLE
+      TABLE
       table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :field_lengths=>{:a=>5}).should == expected_table
     end
     
@@ -251,7 +251,19 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([[1,2], [3,4]], :headers=>['A', 'B']).should == expected_table
     end
-    
+
+    test "header_filter option renders" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | A | B |
+      +---+---+
+      | 2 | 3 |
+      +---+---+
+      1 row in set
+      TABLE
+      table([{:a=> 2, :b=>3}], :header_filter=>:capitalize).should == expected_table
+    end
+
     test "filters option renders" do
       expected_table = <<-TABLE.unindent
       +-----------+---+

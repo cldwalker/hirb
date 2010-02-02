@@ -78,6 +78,7 @@ module Hirb
     #                  This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
     # [:filters] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
     #            applied to the field value or a Filters method.
+    # [:header_filter] A filter, like one in :filters, that is applied to all headers after the :headers option
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [:description] When set to true, renders row count description at bottom. Default is true.
@@ -86,7 +87,7 @@ module Hirb
     # [:return_rows] When set to true, returns rows that have been initialized but not rendered. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
-    #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}
+    #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}, :header_filter=>:capitalize
     #    Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=>%w{letters numbers}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
@@ -104,14 +105,9 @@ module Hirb
   #:stopdoc:
   def initialize(rows, options={})
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :no_newlines=>true}.merge(options)
-    @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
     @fields = set_fields(rows)
-    @rows = setup_rows(rows)
-    @headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
-    if @options.has_key?(:headers)
-      @headers = @options[:headers].is_a?(Hash) ? @headers.merge(@options[:headers]) :
-        (@options[:headers].is_a?(Array) ? array_to_indices_hash(@options[:headers]) : @options[:headers])
-    end
+    @rows = set_rows(rows)
+    @headers = set_headers
     if @options[:number]
       @headers[:hirb_number] = "number"
       @fields.unshift :hirb_number
@@ -129,13 +125,14 @@ module Hirb
         rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
       end
     end
+    @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
     @options[:change_fields].each do |oldf, newf|
       (index = fields.index(oldf)) ? fields[index] = newf : fields << newf
     end
     fields
   end
 
-  def setup_rows(rows)
+  def set_rows(rows)
     rows = Array(rows)
     if rows[0].is_a?(Array)
       rows = rows.inject([]) {|new_rows, row|
@@ -154,7 +151,21 @@ module Hirb
     validate_values(rows)
     rows
   end
-  
+
+  def set_headers
+    headers = @fields.inject({}) {|h,e| h[e] = e.to_s; h}
+    if @options.has_key?(:headers)
+      headers = @options[:headers].is_a?(Hash) ? headers.merge(@options[:headers]) :
+        (@options[:headers].is_a?(Array) ? array_to_indices_hash(@options[:headers]) : @options[:headers])
+    end
+    if @options[:header_filter]
+      headers.each {|k,v|
+        headers[k] = call_filter(@options[:header_filter], v)
+      }
+    end
+    headers
+  end
+
   def render
     body = []
     unless @rows.length == 0
@@ -239,17 +250,16 @@ module Hirb
   def filter_values(rows)
     set_filter_defaults(rows)
     rows.map {|row|
-      new_row = {}
-      @fields.each {|f|
-        if (filter = @options[:filters][f])
-          new_row[f] = filter.is_a?(Proc) ? filter.call(row[f]) :
-            row[f].respond_to?(Array(filter)[0]) ? row[f].send(*filter) : Filters.send(filter, row[f])
-        else
-          new_row[f] = row[f]
-        end
+      @fields.inject({}) {|new_row,f|
+        new_row[f] = (filter = @options[:filters][f]) ? call_filter(filter, row[f]) : row[f]
+        new_row
       }
-      new_row
     }
+  end
+
+  def call_filter(filter, val)
+    filter.is_a?(Proc) ? filter.call(val) :
+      val.respond_to?(Array(filter)[0]) ? val.send(*filter) : Filters.send(filter, val)
   end
 
   def validate_values(rows)
