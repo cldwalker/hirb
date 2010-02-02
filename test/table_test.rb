@@ -107,6 +107,18 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       # depends on 1.8 Array#to_s
       table([{:a=>[1,2], :b=>[1,2]}, {:a=>'ok', :b=>[3,4]}]).should == expected_table
     end
+
+    test "with filter class default doesn't override explicit filters" do
+      expected_table = <<-TABLE.unindent
+      +------+-------+
+      | name | value |
+      +------+-------+
+      | a    | b1    |
+      +------+-------+
+      1 row in set
+      TABLE
+      table([{:name=>'a', :value=>{:b=>1}}], :filters=>{:value=>:to_s}).should == expected_table
+    end
   end
 
   context "table with" do
@@ -410,10 +422,24 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       2 rows in set
       TABLE
       table([[1,2],[2,3]], :change_fields=>{0=>'name', 1=>'value'}).should == expected_table
+      table([[1,2],[2,3]], :change_fields=>['name', 'value']).should == expected_table
     end
 
     test "return_rows option returns rows" do
       table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
+    end
+
+    test "filter_values option filters values per value" do
+      expected_table = <<-TABLE.unindent
+      +---------+
+      | a       |
+      +---------+
+      | {:b=>1} |
+      | 2       |
+      +---------+
+      2 rows in set
+      TABLE
+      table([{:a=>{:b=>1}}, {:a=>2}], :filter_values=>true).should == expected_table
     end
   end
 

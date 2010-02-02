@@ -17,29 +17,16 @@ class Hirb::Helpers::AutoTableTest < Test::Unit::TestCase
       Hirb::Helpers::AutoTable.render(::Set.new([1,2,3])).should == expected_table
     end
 
-    test "converts hash with any value hashes to inspected values" do
+    test "renders hash" do
       expected_table = <<-TABLE.unindent
-      +---+---------+
-      | 0 | 1       |
-      +---+---------+
-      | a | {:b=>1} |
-      +---+---------+
+      +---+-------+
+      | 0 | 1     |
+      +---+-------+
+      | a | 12345 |
+      +---+-------+
       1 row in set
       TABLE
-      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}}).should == expected_table
-    end
-
-    test "doesn't convert hash with value hashes if filter exists for value" do
-      expected_table = <<-TABLE.unindent
-      +------+-------+
-      | name | value |
-      +------+-------+
-      | a    | b1    |
-      +------+-------+
-      1 row in set
-      TABLE
-      Hirb::Helpers::AutoTable.render({:a=>{:b=>1}}, :change_fields=>['name', 'value'],
-       :filters=>{'value'=>:to_s}).should == expected_table
+      Hirb::Helpers::AutoTable.render({:a=>12345}).should == expected_table
     end
   end
 end
