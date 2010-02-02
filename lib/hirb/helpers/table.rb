@@ -65,26 +65,26 @@ module Hirb
     
     # Main method which returns a formatted table.
     # ==== Options:
-    # [:fields] An array which overrides the default fields and can be used to indicate field order.
-    # [:headers] A hash of fields and their header names. Fields that aren't specified here default to their name.
-    #            This option can also be an array but only for array rows.
-    # [:field_lengths] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum
-    #                  length than it's truncated and has a ... appended to it. Fields that aren't specified here have no maximum allowed
-    #                  length.
-    # [:max_width] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
-    #              This doesn't count field borders as part of the total.
-    # [:number]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
-    # [:change_fields] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
-    #                  This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
-    # [:filters] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
-    #            applied to the field value or a Filters method. Also see the filter_classes attribute below.
-    # [:header_filter] A filter, like one in :filters, that is applied to all headers after the :headers option
-    # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
-    # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
-    # [:description] When set to true, renders row count description at bottom. Default is true.
-    # [:no_newlines] When set to true, stringifies newlines so they don't disrupt tables. Default is false for vertical tables
-    #                and true for anything else.
-    # [:return_rows] When set to true, returns rows that have been initialized but not rendered. Default is false.
+    # [*:fields*] An array which overrides the default fields and can be used to indicate field order.
+    # [*:headers*] A hash of fields and their header names. Fields that aren't specified here default to their name.
+    #              This option can also be an array but only for array rows.
+    # [*:field_lengths*] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum
+    #                    length than it's truncated and has a ... appended to it. Fields that aren't specified here have no maximum allowed
+    #                    length.
+    # [*:max_width*] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
+    #                This doesn't count field borders as part of the total.
+    # [*:number*]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
+    # [*:change_fields*] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
+    #                    This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
+    # [*:filters*] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
+    #              applied to the field value or a Filters method. Also see the filter_classes attribute below.
+    # [*:header_filter*] A filter, like one in :filters, that is applied to all headers after the :headers option.
+    # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
+    # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
+    # [*:description*] When set to true, renders row count description at bottom. Default is true.
+    # [*:no_newlines*] When set to true, stringifies newlines so they don't disrupt tables. Default is false for vertical tables
+    #                  and true for anything else.
+    # [*:return_rows*] When set to true, returns rows that have been initialized but not rendered. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}, :header_filter=>:capitalize
