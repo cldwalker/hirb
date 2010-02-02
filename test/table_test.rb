@@ -386,27 +386,51 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2],[2,3]], :change_fields=>{0=>'name', 1=>'value'}).should == expected_table
     end
 
-    test "return_rows returns rows" do
+    test "return_rows option returns rows" do
       table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
     end
   end
-  
-  test "table can detect and run callbacks" do
-    Hirb::Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
-      obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }
-      obj
+
+  context "table with callbacks" do
+    before(:all) {
+      Hirb::Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
+        obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }
+        obj
+      end
+    }
+    after(:all) { Hirb::Helpers::Table.send(:remove_method, :and_one_callback) }
+
+    test "detects and runs them" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | a | b |
+      +---+---+
+      | 2 | 3 |
+      | 4 | 5 |
+      +---+---+
+      2 rows in set
+      TABLE
+      table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}], :add=>1).should == expected_table
     end
 
-    expected_table = <<-TABLE.unindent
-    +---+---+
-    | a | b |
-    +---+---+
-    | 2 | 3 |
-    | 4 | 5 |
-    +---+---+
-    2 rows in set
-    TABLE
-    table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}], :add=>1).should == expected_table
-    Hirb::Helpers::Table.send(:remove_method, :and_one_callback)
+    test "doesn't run callbacks in delete_callbacks option" do
+      Hirb::Helpers::Table.send(:define_method, :and_two_callback) do |obj, opt|
+        obj.each {|row| row.each {|k,v| row[k] = row[k] * 2 } }
+        obj
+      end
+
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | a | b |
+      +---+---+
+      | 2 | 3 |
+      | 4 | 5 |
+      +---+---+
+      2 rows in set
+      TABLE
+      table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}], :add=>1, :delete_callbacks=>[:and_two]).should == expected_table
+
+      Hirb::Helpers::Table.send(:remove_method, :and_two_callback)
+    end
   end
 end
