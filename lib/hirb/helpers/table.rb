@@ -77,7 +77,7 @@ module Hirb
     # [:change_fields] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
     #                  This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
     # [:filters] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
-    #            applied to the field value or a Filters method.
+    #            applied to the field value or a Filters method. Also see the filter_classes attribute below.
     # [:header_filter] A filter, like one in :filters, that is applied to all headers after the :headers option
     # [:vertical] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [:all_fields] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
@@ -100,8 +100,14 @@ module Hirb
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
       Helpers::VerticalTable.render(rows, options)
     end
+
+    # A hash which maps classes to filters. If all the values for a field have a class which is in this hash, then
+    # the corresponding filter is set as a default filter for the field in :filters. By default, this is used to comma join
+    # fields with Array values.
+    attr_accessor :filter_classes
   end
-  
+  self.filter_classes = { Array=>:comma_join }
+
   #:stopdoc:
   def initialize(rows, options={})
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :no_newlines=>true}.merge(options)
@@ -243,7 +249,14 @@ module Hirb
 
   def set_filter_defaults(rows)
     if @options[:_original_class] == Hash && @fields[1] && rows.any? {|e| e[@fields[1]].is_a?(Hash) }
-      (@options[:filters] ||= {})[@fields[1]] ||= :inspect
+      @options[:filters][@fields[1]] ||= :inspect
+    end
+    Helpers::Table.filter_classes.each do |klass, filter|
+      @fields.each {|field|
+        if rows.all? {|r| r[field].is_a?(klass) }
+          @options[:filters][field] ||= filter
+        end
+      }
     end
   end
 

@@ -93,6 +93,20 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{'a'=>"1\n", 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
     end
+
+    test "with a field of only array values renders values comma joined" do
+      expected_table = <<-TABLE.unindent
+      +----+------+
+      | a  | b    |
+      +----+------+
+      | 12 | 1, 2 |
+      | ok | 3, 4 |
+      +----+------+
+      2 rows in set
+      TABLE
+      # depends on 1.8 Array#to_s
+      table([{:a=>[1,2], :b=>[1,2]}, {:a=>'ok', :b=>[3,4]}]).should == expected_table
+    end
   end
 
   context "table with" do
