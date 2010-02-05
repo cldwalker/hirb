@@ -81,17 +81,17 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:name=>"ｱｲｳｴｵｶｷ"}, {:name=>"ｸｹｺｻｼｽｾｿﾀﾁﾂﾃ"}, {:name=>"Tata l'asticote"}, {:name=>"toto létoile PAOLI"}]).should == expected_table
     end
 
-    test "with newlines renders with newlines stringified" do
+    test "stringifies newlines and tabs and renders" do
       expected_table = <<-TABLE.unindent
       +-----+---+
       | a   | b |
       +-----+---+
       | 1#{'\n'} | 2 |
-      | 3   | 4 |
+      | 3#{'\t'} | 4 |
       +-----+---+
       2 rows in set
       TABLE
-      table([{'a'=>"1\n", 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
+      table([{'a'=>"1\n", 'b'=>2}, {'a'=>"3\t", 'b'=>4}]).should == expected_table
     end
 
     test "with a field of only array values renders values comma joined" do
