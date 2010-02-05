@@ -42,9 +42,10 @@ module Hirb
       if options[:readline] && readline_loads?
         input = Readline.readline prompt
         Readline::HISTORY << input
+        input
       else
         print prompt
-        input = $stdin.gets.chomp.strip
+        $stdin.gets.chomp.strip
       end
     end
 
