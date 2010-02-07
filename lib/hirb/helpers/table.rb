@@ -76,10 +76,11 @@ module Hirb
     # [*:number*]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # [*:change_fields*] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
     #                    This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
-    # [*:filters*] A hash of fields and the filters that each row in the field must run through. A filter can be a proc, an instance method
+    # [*:filters*] A hash of fields and their filters, applied to every row in a field. A filter can be a proc, an instance method
     #              applied to the field value or a Filters method. Also see the filter_classes attribute below.
     # [*:header_filter*] A filter, like one in :filters, that is applied to all headers after the :headers option.
-    # [*:filter_values*] When set to true, cell values default to being filtered by their classes in :filter_classes. Default is false.
+    # [*:filter_any*] When set to true, any cell defaults to being filtered by its class in :filter_classes.
+    #                 Default Hirb::Helpers::Table.filter_any().
     # [*:filter_classes*] Hash which maps classes to filters. Default is Hirb::Helpers::Table.filter_classes().
     # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
@@ -105,14 +106,17 @@ module Hirb
 
     # A hash which maps a cell value's class to a filter. This serves to set a default filter per field if all of its
     # values are a class in this hash. By default, Array values are comma joined and Hashes are inspected.
-    # See the :filter_values option to apply this filter per value.
+    # See the :filter_any option to apply this filter per value.
     attr_accessor :filter_classes
+    # Boolean which sets the default for :filter_any option.
+    attr_accessor :filter_any
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
 
   #:stopdoc:
   def initialize(rows, options={})
-    @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true}.merge(options)
+    @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
+      :filter_any=>Helpers::Table.filter_any}.merge(options)
     @fields = set_fields(rows)
     @rows = set_rows(rows)
     @headers = set_headers
@@ -261,10 +265,10 @@ module Hirb
 
   def filter_values(rows)
     @filter_classes = Helpers::Table.filter_classes.merge @options[:filter_classes] || {}
-    set_filter_defaults(rows)
+    set_filter_defaults(rows) unless @options[:filter_any]
     rows.map {|row|
       @fields.inject({}) {|new_row,f|
-        (filter = @options[:filters][f]) || (@options[:filter_values] && (filter = @filter_classes[row[f].class]))
+        (filter = @options[:filters][f]) || (@options[:filter_any] && (filter = @filter_classes[row[f].class]))
         new_row[f] = filter ? call_filter(filter, row[f]) : row[f]
         new_row
       }

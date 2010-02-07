@@ -429,7 +429,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
     end
 
-    test "filter_values option filters values per value" do
+    test "filter_any option filters any value" do
       expected_table = <<-TABLE.unindent
       +---------+
       | a       |
@@ -439,7 +439,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +---------+
       2 rows in set
       TABLE
-      table([{:a=>{:b=>1}}, {:a=>2}], :filter_values=>true).should == expected_table
+      table([{:a=>{:b=>1}}, {:a=>2}], :filter_any=>true).should == expected_table
     end
 
     test "filter_classes option overrides class-wide filter_classes" do
