@@ -22,7 +22,7 @@ module Hirb
       default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ",
         :ask=>true, :directions=>true}
       options = default_options.merge(options)
-      return [] if (output = Array(output)).size.zero?
+      return (options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output, options)
       yield(chosen) if block_given? && Array(chosen).size > 0
       chosen
@@ -50,7 +50,7 @@ module Hirb
     end
 
     def self.choose_from_menu(output, options)
-      return output if output.size == 1 && !options[:ask]
+      return (options[:return_input] ? '1' : output) if output.size == 1 && !options[:ask]
       if (helper_class = Util.any_const_get(options[:helper_class]))
         View.render_output(output, :class=>options[:helper_class], :options=>options.merge(:number=>true))
       else
