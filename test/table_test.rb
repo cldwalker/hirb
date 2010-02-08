@@ -204,11 +204,11 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   
     test "max_width option renders" do
       expected_table = <<-TABLE.unindent
-      +-----------+---+-----------+
-      | a         | b | c         |
-      +-----------+---+-----------+
-      | AAAAAA... | 2 | CCCCCC... |
-      +-----------+---+-----------+
+      +-----------+---+------------+
+      | a         | b | c          |
+      +-----------+---+------------+
+      | AAAAAA... | 2 | CCCCCCCCCC |
+      +-----------+---+------------+
       1 row in set
       TABLE
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>30).should == expected_table
@@ -228,11 +228,11 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     
     test "global width renders" do
       expected_table = <<-TABLE.unindent
-      +-----------+---+-----------+
-      | a         | b | c         |
-      +-----------+---+-----------+
-      | AAAAAA... | 2 | CCCCCC... |
-      +-----------+---+-----------+
+      +-----------+---+------------+
+      | a         | b | c          |
+      +-----------+---+------------+
+      | AAAAAA... | 2 | CCCCCCCCCC |
+      +-----------+---+------------+
       1 row in set
       TABLE
       Hirb::View.load_config

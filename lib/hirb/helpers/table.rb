@@ -232,12 +232,12 @@ module Hirb
   
   def setup_field_lengths
     @field_lengths = default_field_lengths
+    table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
+    # Resizer assumes @field_lengths and @fields are the same size
+    Resizer.resize!(@field_lengths, table_max_width, :max_fields=>@options[:max_fields]) if table_max_width
+
     if @options[:field_lengths]
       @field_lengths.merge!(@options[:field_lengths])
-    else
-      table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
-      # Resizer assumes @field_lengths and @fields are the same size
-      Resizer.resize!(@field_lengths, table_max_width) if table_max_width
     end
   end
 

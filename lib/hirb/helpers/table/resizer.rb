@@ -2,25 +2,51 @@ class Hirb::Helpers::Table
   # Resizes a table's fields to the width if it exceeds that width
   class Resizer
     # Modifies field_lengths to fit within width
-    def self.resize!(field_lengths, width)
-      obj = new(field_lengths, width)
+    def self.resize!(field_lengths, width, options={})
+      obj = new(field_lengths, width, options)
       obj.resize
       obj.field_lengths
     end
 
     #:stopdoc:
     attr_reader :field_lengths
-    def initialize(field_lengths, width)
+    def initialize(field_lengths, width, options)
       @width = width
       @field_lengths = field_lengths
       @field_size = field_lengths.size
       @width -= @field_size * BORDER_LENGTH + 1
       @min_field_length = BORDER_LENGTH
       @original_field_lengths = field_lengths.dup
+      @max_fields = options[:max_fields] || {}
     end
 
     def resize
       adjust_long_fields || default_restrict_field_lengths
+      enforce_constraints
+      add_extra_width
+    end
+
+    def enforce_constraints
+      @max_fields.each do |k,max|
+        @field_lengths[k] = max if @field_lengths[k] > max
+      end
+    end
+
+    def add_extra_width
+      added_width = 0
+      extra_width = @width - sum(@field_lengths.values)
+      unmaxed_fields = @field_lengths.keys - @max_fields.keys.select {|e| @field_lengths[e] == @max_fields[e] }
+      # order matters so let's keep it consistent
+      unmaxed_fields = unmaxed_fields.sort_by {|e| e.to_s}
+
+      unmaxed_fields.each_with_index do |f, i|
+        extra_per_field = (extra_width - added_width) / (unmaxed_fields.size - i)
+        remaining = (@max_fields[f] || @original_field_lengths[f]) - @field_lengths[f]
+        add_to_field = remaining < extra_per_field ? remaining : extra_per_field
+        # puts "Added #{add_to_field} to #{f}"
+        added_width += add_to_field
+        @field_lengths[f] += add_to_field
+      end
     end
 
     # Simple algorithm which given a max width, allows smaller fields to be displayed while
