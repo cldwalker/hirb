@@ -29,22 +29,29 @@ class Hirb::Helpers::Table
     end
 
     context "add_extra_width and max_fields" do
-      # td: adds to unrestricted field
-      before(:all) {
-        table :field_lengths=>{:f1=>135, :f2=>30, :f3=>4, :f4=>100}, :width=>195
+      def table_and_resize(options={})
+        table({:field_lengths=>{:f1=>135, :f2=>30, :f3=>4, :f4=>100}, :width=>195}.merge(options))
         Resizer.resize!(@field_lengths, @width, :max_fields=>{:f1=>80, :f4=>30})
-      }
+      end
 
       test "doesn't add to already maxed out field" do
+        table_and_resize
         @field_lengths[:f3].should == 4
       end
 
       test "restricted before adding width" do
+        table_and_resize
         @field_lengths[:f4].should <= 30
       end
 
       test "adds to restricted field" do
+        table_and_resize
         @field_lengths[:f1].should <= 80
+      end
+
+      test "adds to unrestricted field" do
+        table_and_resize :field_lengths=>{:f1=>135, :f2=>70, :f3=>4, :f4=>100}
+        @field_lengths[:f2].should == 70
       end
     end
   end

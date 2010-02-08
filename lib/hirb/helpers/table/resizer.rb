@@ -35,17 +35,22 @@ class Hirb::Helpers::Table
     def add_extra_width
       added_width = 0
       extra_width = @width - sum(@field_lengths.values)
-      unmaxed_fields = @field_lengths.keys - @max_fields.keys.select {|e| @field_lengths[e] == @max_fields[e] }
-      # order matters so let's keep it consistent
+      unmaxed_fields = @field_lengths.keys.select {|f| !remaining_width(f).zero? }
+      # order can affect which one gets the remainder so let's keep it consistent
       unmaxed_fields = unmaxed_fields.sort_by {|e| e.to_s}
 
       unmaxed_fields.each_with_index do |f, i|
         extra_per_field = (extra_width - added_width) / (unmaxed_fields.size - i)
-        remaining = (@max_fields[f] || @original_field_lengths[f]) - @field_lengths[f]
-        add_to_field = remaining < extra_per_field ? remaining : extra_per_field
+        add_to_field = remaining_width(f) < extra_per_field ? remaining_width(f) : extra_per_field
         # puts "Added #{add_to_field} to #{f}"
         added_width += add_to_field
         @field_lengths[f] += add_to_field
+      end
+    end
+
+    def remaining_width(field)
+      (@remaining_width ||= {})[field] ||= begin
+        (@max_fields[field] || @original_field_lengths[field]) - @field_lengths[field]
       end
     end
 

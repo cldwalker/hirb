@@ -68,9 +68,8 @@ module Hirb
     # [*:fields*] An array which overrides the default fields and can be used to indicate field order.
     # [*:headers*] A hash of fields and their header names. Fields that aren't specified here default to their name.
     #              This option can also be an array but only for array rows.
-    # [*:field_lengths*] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum
-    #                    length than it's truncated and has a ... appended to it. Fields that aren't specified here have no maximum allowed
-    #                    length.
+    # [*:max_fields*] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum then it's
+    #                 truncated and has a ... appended to it. Fields that aren't specified have no maximum.
     # [*:max_width*] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
     #                This doesn't count field borders as part of the total.
     # [*:number*]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
