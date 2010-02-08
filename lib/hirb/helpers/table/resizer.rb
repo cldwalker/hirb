@@ -28,7 +28,7 @@ class Hirb::Helpers::Table
 
     def enforce_constraints
       @max_fields.each do |k,max|
-        @field_lengths[k] = max if @field_lengths[k] > max
+        @field_lengths[k] = max if @field_lengths[k].to_i > max
       end
     end
 
