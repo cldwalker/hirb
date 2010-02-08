@@ -1,6 +1,8 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 class Hirb::MenuTest < Test::Unit::TestCase
+  before(:all) { Hirb::View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
+
   def menu(*args, &block)
     # testing via menu's main use case (through console) instead of Hirb::Menu.render
     @console ||= Object.new.extend(Hirb::Console)

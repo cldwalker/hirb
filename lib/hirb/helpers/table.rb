@@ -70,9 +70,11 @@ module Hirb
     #              This option can also be an array but only for array rows.
     # [*:max_fields*] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum then it's
     #                 truncated and has a ... appended to it. Fields that aren't specified have no maximum.
-    # [*:max_width*] The maximum allowed width of all fields put together. This option is enforced except when the field_lengths option is set.
-    #                This doesn't count field borders as part of the total.
-    # [*:number*]  When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
+    # [*:max_width*] The maximum allowed width of all fields put together including field borders. Only valid when :resize is true.
+    #                Default is Hirb::View.width.
+    # [*:resize*] Resizes table to display all columns in allowed :max_width. Default is true. Setting this false will display the full
+    #             length of each field.
+    # [*:number*] When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # [*:change_fields*] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
     #                    This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
     # [*:filters*] A hash of fields and their filters, applied to every row in a field. A filter can be a proc, an instance method
@@ -89,7 +91,7 @@ module Hirb
     # [*:return_rows*] When set to true, returns rows that have been initialized but not rendered. Default is false.
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
-    #    Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=>{0=>10}, :header_filter=>:capitalize
+    #    Hirb::Helpers::Table.render [[1,2], [2,3]], :max_fields=>{0=>10}, :header_filter=>:capitalize
     #    Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=>%w{letters numbers}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
@@ -115,7 +117,7 @@ module Hirb
   #:stopdoc:
   def initialize(rows, options={})
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
-      :filter_any=>Helpers::Table.filter_any}.merge(options)
+      :filter_any=>Helpers::Table.filter_any, :resize=>true}.merge(options)
     @fields = set_fields(rows)
     @rows = set_rows(rows)
     @headers = set_headers
@@ -231,10 +233,10 @@ module Hirb
   
   def setup_field_lengths
     @field_lengths = default_field_lengths
-    table_max_width = @options.has_key?(:max_width) ? @options[:max_width] : View.width
-    # Resizer assumes @field_lengths and @fields are the same size
-    Resizer.resize!(@field_lengths, table_max_width, :max_fields=>@options[:max_fields]) if table_max_width
-
+    if @options[:resize]
+      # Resizer assumes @field_lengths and @fields are the same size
+      Resizer.resize!(@field_lengths,  @options[:max_width] || View.width, :max_fields=>@options[:max_fields])
+    end
     if @options[:field_lengths]
       @field_lengths.merge!(@options[:field_lengths])
     end

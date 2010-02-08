@@ -214,7 +214,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>30).should == expected_table
     end
 
-    test "max_width option nil renders full table" do
+    test "resize option false renders full table" do
       expected_table = <<-TABLE.unindent
       +----------------------------------------------------+---+------------+
       | a                                                  | b | c          |
@@ -223,7 +223,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +----------------------------------------------------+---+------------+
       1 row in set
       TABLE
-      table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :max_width=>nil).should == expected_table
+      table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :resize=>false).should == expected_table
     end
     
     test "global width renders" do
