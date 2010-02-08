@@ -3,13 +3,11 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 class Hirb::Helpers::Table
   class ResizerTest < Test::Unit::TestCase
     def table(options)
-      @field_lengths = options[:field_lengths]
-      @table = Hirb::Helpers::Table.new [@field_lengths.keys.inject({}) {|t,e| t[e] = '1'; t}]
-      @table.field_lengths = @field_lengths
-      @field_lengths = @table.field_lengths
+      @table = Hirb::Helpers::Table.new [options[:field_lengths].keys.inject({}) {|t,e| t[e] = '1'; t}]
+      @table.field_lengths = options[:field_lengths]
       @table.width = options[:width]
       @table.max_fields = options[:max_fields] if options[:max_fields]
-      @width = @table.width
+      @width, @field_lengths = @table.width, @table.field_lengths
     end
 
     test "resize ensures columns total doesn't exceed max width" do
