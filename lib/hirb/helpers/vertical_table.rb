@@ -5,7 +5,7 @@ class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
   # ==== Options:
   # [:hide_empty] Boolean which hides empty values (nil or '') from being displayed. Default is false.
   def self.render(rows, options={})
-    new(rows, {:escape_special_chars=>false}.merge(options)).render
+    new(rows, {:escape_special_chars=>false, :resize=>false}.merge(options)).render
   end
 
   #:stopdoc:
@@ -32,6 +32,6 @@ class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
       i+= 1
       row
     end
-  #:startdoc:
   end
+  #:startdoc:
 end
