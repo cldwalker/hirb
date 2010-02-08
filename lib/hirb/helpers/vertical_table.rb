@@ -1,7 +1,7 @@
 class Hirb::Helpers::VerticalTable < Hirb::Helpers::Table
 
   # Renders a vertical table using the same options as Hirb::Helpers::Table.render except for the ones below
-  # and :field_lengths, :vertical and :max_width which aren't used.
+  # and :max_fields, :vertical and :max_width which aren't used.
   # ==== Options:
   # [:hide_empty] Boolean which hides empty values (nil or '') from being displayed. Default is false.
   def self.render(rows, options={})

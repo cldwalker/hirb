@@ -236,9 +236,11 @@ module Hirb
     if @options[:resize]
       # Resizer assumes @field_lengths and @fields are the same size
       Resizer.resize!(@field_lengths,  @options[:max_width] || View.width, :max_fields=>@options[:max_fields])
-    end
-    if @options[:field_lengths]
-      @field_lengths.merge!(@options[:field_lengths])
+    else
+      @max_fields = @options[:max_fields] || {}
+      @max_fields.each do |k,max|
+        @field_lengths[k] = max if @field_lengths[k].to_i > max
+      end
     end
   end
 

@@ -53,11 +53,6 @@ class Hirb::Helpers::Table
         table_and_resize :field_lengths=>{:f1=>135, :f2=>70, :f3=>4, :f4=>100}
         @field_lengths[:f2].should == 70
       end
-
-      test "handles invalid max_field" do
-        table :field_lengths=>{:f1=>130, :f2=>30}, :width=>100
-        Resizer.resize!(@field_lengths, @width, :max_fields=>{:f3=>30})
-      end
     end
   end
 end

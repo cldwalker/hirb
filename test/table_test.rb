@@ -166,7 +166,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :c]).should == expected_table
     end
   
-    test "invalid fields in field_lengths option renders" do
+    test "invalid field in max_fields option renders" do
       expected_table = <<-TABLE.unindent
       +------------+---+
       | a          | b |
@@ -175,10 +175,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +------------+---+
       1 row in set
       TABLE
-      table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>10,:c=>10}).should == expected_table
+      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>10,:c=>10}).should == expected_table
     end
   
-    test "field_lengths option and field_lengths less than 3 characters renders" do
+    test "max_fields option with fields less than 3 characters renders" do
       expected_table = <<-TABLE.unindent
       +----+---+
       | a  | b |
@@ -187,10 +187,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +----+---+
       1 row in set
       TABLE
-      table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>2}).should == expected_table
+      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>2}, :resize=>false).should == expected_table
     end
   
-    test "field_lengths option renders" do
+    test "max_fields option without resize renders" do
       expected_table = <<-TABLE.unindent
       +------------+---+
       | a          | b |
@@ -199,7 +199,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +------------+---+
       1 row in set
       TABLE
-      table([{:a=> "A" * 50, :b=>2}], :field_lengths=>{:a=>10}).should == expected_table
+      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>10}, :resize=>false).should == expected_table
     end
   
     test "max_width option renders" do
@@ -253,7 +253,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([{:a=> "A", :b=>2, :c=>"C"}], :headers=>{:b=>"field B", :c=>"field C"}).should == expected_table
     end
   
-    test "headers option and headers shortened by field_lengths renders" do
+    test "headers option and headers shortened by max_fields renders" do
       expected_table = <<-TABLE.unindent
       +-------+---+
       | fi... | b |
@@ -262,7 +262,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +-------+---+
       1 row in set
       TABLE
-      table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :field_lengths=>{:a=>5}).should == expected_table
+      table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :max_fields=>{:a=>5}, :resize=>false).should == expected_table
     end
     
     test "headers option as an array renders" do
