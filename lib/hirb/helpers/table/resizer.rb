@@ -12,11 +12,10 @@ class Hirb::Helpers::Table
     attr_reader :field_lengths
     def initialize(table)
       @table = table
-      @width = table.width
+      @width = table.actual_width
       @field_lengths = table.field_lengths
       @field_size = table.fields.size
-      @width -= @field_size * BORDER_LENGTH + 1
-      @min_field_length = BORDER_LENGTH
+      @min_field_length = MIN_FIELD_LENGTH
       @original_field_lengths = field_lengths.dup
     end
 
@@ -52,7 +51,6 @@ class Hirb::Helpers::Table
     def adjust_long_fields
       total_length = sum @field_lengths.values
       while total_length > @width
-        raise TooManyFieldsForWidthError if @field_size > @width.to_f / @min_field_length
         average_field_length = total_length / @field_size.to_f
         long_lengths = @field_lengths.values.select {|e| e > average_field_length}
         return false if long_lengths.empty?

@@ -59,6 +59,7 @@ module Hirb
 # derived from http://gist.github.com/72234
  class Helpers::Table
   BORDER_LENGTH = 3 # " | " and "-+-" are the borders
+  MIN_FIELD_LENGTH = 3
   class TooManyFieldsForWidthError < StandardError; end
 
   class << self
@@ -234,7 +235,12 @@ module Hirb
   
   def setup_field_lengths
     @field_lengths = default_field_lengths
-    @options[:resize] ? Resizer.resize!(self) : enforce_field_constraints
+    if @options[:resize]
+      raise TooManyFieldsForWidthError if @fields.size > self.actual_width.to_f / MIN_FIELD_LENGTH
+      Resizer.resize!(self)
+    else
+      enforce_field_constraints
+    end
   end
 
   def enforce_field_constraints
@@ -243,6 +249,10 @@ module Hirb
 
   def max_fields
     @max_fields ||= @options[:max_fields] || {}
+  end
+
+  def actual_width
+    self.width - (@fields.size * BORDER_LENGTH + 1)
   end
 
   def width
