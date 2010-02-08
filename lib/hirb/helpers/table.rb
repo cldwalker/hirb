@@ -113,6 +113,8 @@ module Hirb
     attr_accessor :filter_classes
     # Boolean which sets the default for :filter_any option.
     attr_accessor :filter_any
+    # Holds last table object created
+    attr_accessor :last_table
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
 
@@ -128,6 +130,7 @@ module Hirb
       @headers[:hirb_number] = "number"
       @fields.unshift :hirb_number
     end
+    Helpers::Table.last_table = self
   end
 
   def set_fields(rows)
@@ -250,7 +253,7 @@ module Hirb
 
   def max_fields
     @max_fields ||= (@options[:max_fields] ||= {}).each {|k,v|
-      @options[:max_fields][k] = (actual_width * v.abs).floor if v.abs < 1
+      @options[:max_fields][k] = (actual_width * v.to_f.abs).floor if v.to_f.abs < 1
     }
   end
 

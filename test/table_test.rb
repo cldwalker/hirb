@@ -211,7 +211,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +------------------+---+
       1 row in set
       TABLE
-      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>0.15}).should == expected_table
+      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>'0.15'}).should == expected_table
     end
   
     test "max_width option renders" do
