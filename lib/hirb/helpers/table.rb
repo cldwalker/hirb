@@ -69,7 +69,8 @@ module Hirb
     # [*:fields*] An array which overrides the default fields and can be used to indicate field order.
     # [*:headers*] A hash of fields and their header names. Fields that aren't specified here default to their name.
     #              This option can also be an array but only for array rows.
-    # [*:max_fields*] A hash of fields and their maximum allowed lengths. If a field exceeds it's maximum then it's
+    # [*:max_fields*] A hash of fields and their maximum allowed lengths. Maximum length can also be a percentage of the total width
+    #                 (decimal less than one). When a field exceeds it's maximum then it's
     #                 truncated and has a ... appended to it. Fields that aren't specified have no maximum.
     # [*:max_width*] The maximum allowed width of all fields put together including field borders. Only valid when :resize is true.
     #                Default is Hirb::View.width.
@@ -93,7 +94,7 @@ module Hirb
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :max_fields=>{0=>10}, :header_filter=>:capitalize
-    #    Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=>%w{letters numbers}
+    #    Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=>%w{letters numbers}, :max_fields=>{'numbers'=>0.4}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
@@ -248,11 +249,13 @@ module Hirb
   end
 
   def max_fields
-    @max_fields ||= @options[:max_fields] || {}
+    @max_fields ||= (@options[:max_fields] ||= {}).each {|k,v|
+      @options[:max_fields][k] = (actual_width * v.abs).floor if v.abs < 1
+    }
   end
 
   def actual_width
-    self.width - (@fields.size * BORDER_LENGTH + 1)
+    @actual_width ||= self.width - (@fields.size * BORDER_LENGTH + 1)
   end
 
   def width

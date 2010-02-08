@@ -201,6 +201,18 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       TABLE
       table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>10}, :resize=>false).should == expected_table
     end
+
+    test "max_fields option with percentage renders" do
+      expected_table = <<-TABLE.unindent
+      +------------------+---+
+      | a                | b |
+      +------------------+---+
+      | AAAAAAAAAAAAA... | 2 |
+      +------------------+---+
+      1 row in set
+      TABLE
+      table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>0.15}).should == expected_table
+    end
   
     test "max_width option renders" do
       expected_table = <<-TABLE.unindent
