@@ -115,6 +115,7 @@ module Hirb
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
 
   #:stopdoc:
+  attr_accessor :width, :max_fields, :field_lengths, :fields
   def initialize(rows, options={})
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
       :filter_any=>Helpers::Table.filter_any, :resize=>true}.merge(options)
@@ -233,15 +234,19 @@ module Hirb
   
   def setup_field_lengths
     @field_lengths = default_field_lengths
-    if @options[:resize]
-      # Resizer assumes @field_lengths and @fields are the same size
-      Resizer.resize!(@field_lengths,  @options[:max_width] || View.width, :max_fields=>@options[:max_fields])
-    else
-      @max_fields = @options[:max_fields] || {}
-      @max_fields.each do |k,max|
-        @field_lengths[k] = max if @field_lengths[k].to_i > max
-      end
-    end
+    @options[:resize] ? Resizer.resize!(self) : enforce_field_constraints
+  end
+
+  def enforce_field_constraints
+    max_fields.each {|k,max| @field_lengths[k] = max if @field_lengths[k].to_i > max }
+  end
+
+  def max_fields
+    @max_fields ||= @options[:max_fields] || {}
+  end
+
+  def width
+    @width ||= @options[:max_width] || View.width
   end
 
   # find max length for each field; start with the headers

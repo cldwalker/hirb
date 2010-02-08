@@ -2,34 +2,28 @@ class Hirb::Helpers::Table
   # Resizes a table's fields to the width if it exceeds that width
   class Resizer
     # Modifies field_lengths to fit within width
-    def self.resize!(field_lengths, width, options={})
-      obj = new(field_lengths, width, options)
+    def self.resize!(table)
+      obj = new(table)
       obj.resize
       obj.field_lengths
     end
 
     #:stopdoc:
     attr_reader :field_lengths
-    def initialize(field_lengths, width, options)
-      @width = width
-      @field_lengths = field_lengths
-      @field_size = field_lengths.size
+    def initialize(table)
+      @table = table
+      @width = table.width
+      @field_lengths = table.field_lengths
+      @field_size = table.fields.size
       @width -= @field_size * BORDER_LENGTH + 1
       @min_field_length = BORDER_LENGTH
       @original_field_lengths = field_lengths.dup
-      @max_fields = options[:max_fields] || {}
     end
 
     def resize
       adjust_long_fields || default_restrict_field_lengths
-      enforce_constraints
+      @table.enforce_field_constraints
       add_extra_width
-    end
-
-    def enforce_constraints
-      @max_fields.each do |k,max|
-        @field_lengths[k] = max if @field_lengths[k].to_i > max
-      end
     end
 
     def add_extra_width
@@ -42,7 +36,6 @@ class Hirb::Helpers::Table
       unmaxed_fields.each_with_index do |f, i|
         extra_per_field = (extra_width - added_width) / (unmaxed_fields.size - i)
         add_to_field = remaining_width(f) < extra_per_field ? remaining_width(f) : extra_per_field
-        # puts "Added #{add_to_field} to #{f}"
         added_width += add_to_field
         @field_lengths[f] += add_to_field
       end
@@ -50,7 +43,7 @@ class Hirb::Helpers::Table
 
     def remaining_width(field)
       (@remaining_width ||= {})[field] ||= begin
-        (@max_fields[field] || @original_field_lengths[field]) - @field_lengths[field]
+        (@table.max_fields[field] || @original_field_lengths[field]) - @field_lengths[field]
       end
     end
 
