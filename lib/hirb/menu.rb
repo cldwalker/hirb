@@ -18,28 +18,35 @@ module Hirb
     #     extend Hirb::Console
     #     menu([1,2,3], :fields=>[:field1, :field2], :validate_one=>true)
     #     menu([1,2,3], :helper_class=>Hirb::Helpers::Table)
-    def self.render(output, options={})
-      default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ",
-        :ask=>true, :directions=>true}
-      options = default_options.merge(options)
-      return (options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
-      chosen = choose_from_menu(output, options)
-      yield(chosen) if block_given? && Array(chosen).size > 0
-      chosen
+    def self.render(output, options={}, &block)
+      new(options).render(output, &block)
     end
 
     #:stopdoc:
-    def self.readline_loads?
+    def initialize(options={})
+      default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ",
+        :ask=>true, :directions=>true}
+      @options = default_options.merge(options)
+    end
+
+    def render(output, &block)
+      return (@options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
+      chosen = choose_from_menu(output)
+      block.call(chosen) if block && Array(chosen).size > 0
+      chosen
+    end
+
+    def readline_loads?
       require 'readline'
       true
     rescue LoadError
       false
     end
 
-    def self.get_input(options)
+    def get_input
       directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
-      prompt = options[:directions] ? directions+options[:prompt] : options[:prompt]
-      if options[:readline] && readline_loads?
+      prompt = @options[:directions] ? directions+@options[:prompt] : @options[:prompt]
+      if @options[:readline] && readline_loads?
         input = Readline.readline prompt
         Readline::HISTORY << input
         input
@@ -49,17 +56,17 @@ module Hirb
       end
     end
 
-    def self.choose_from_menu(output, options)
-      return (options[:return_input] ? '1' : output) if output.size == 1 && !options[:ask]
-      if (helper_class = Util.any_const_get(options[:helper_class]))
-        View.render_output(output, :class=>options[:helper_class], :options=>options.merge(:number=>true))
+    def choose_from_menu(output)
+      return (@options[:return_input] ? '1' : output) if output.size == 1 && !@options[:ask]
+      if (helper_class = Util.any_const_get(@options[:helper_class]))
+        View.render_output(output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
       else
         output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
-      input = get_input(options)
-      return input if options[:return_input]
+      input = get_input
+      return input if @options[:return_input]
       chosen = Util.choose_from_array(output, input)
-      if options[:validate_one]
+      if @options[:validate_one]
         if chosen.size != 1
           $stderr.puts "Choose one. You chose #{chosen.size} items."
           return nil
