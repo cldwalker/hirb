@@ -91,7 +91,9 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +-----+---+
       2 rows in set
       TABLE
-      table([{'a'=>"1\n", 'b'=>2}, {'a'=>"3\t", 'b'=>4}]).should == expected_table
+      value = [{'a'=>"1\n", 'b'=>2}, {'a'=>"3\t", 'b'=>4}]
+      table(value).should == expected_table
+      value.should == [{'a'=>"1\n", 'b'=>2}, {'a'=>"3\t", 'b'=>4}]
     end
 
     test "with a field of only array values renders values comma joined" do

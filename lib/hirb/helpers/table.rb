@@ -308,7 +308,7 @@ module Hirb
     rows.each {|row|
       @fields.each {|f|
         row[f] = row[f].to_s || ''
-        row[f].gsub!(/(\t|\r|\n)/) {|e| e.dump.gsub('"','') } if @options[:escape_special_chars]
+        row[f] = row[f].gsub(/(\t|\r|\n)/) {|e| e.dump.gsub('"','') } if @options[:escape_special_chars]
       }
     }
   end
