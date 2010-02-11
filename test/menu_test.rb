@@ -114,4 +114,27 @@ class Hirb::MenuTest < Test::Unit::TestCase
       capture_stdout { menu([1,2,3], :validate_one=> true).should == 2 }
     end
   end
+
+  context "2d menu" do
+    test "with default field from last_table renders" do
+      menu_input "1"
+      capture_stdout {
+        menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :two_d=>true).should == [1]
+      }
+    end
+
+    test "with default field from fields option renders" do
+      menu_input "1"
+      capture_stdout {
+        menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :two_d=>true, :fields=>[:b, :a]).should == [2]
+      }
+    end
+
+    test "with choices from multiple fields renders" do
+      menu_input "1 2:b"
+      capture_stdout {
+        menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], :two_d=>true).should == [1, 4]
+      }
+    end
+  end
 end

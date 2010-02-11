@@ -36,13 +36,6 @@ module Hirb
       chosen
     end
 
-    def readline_loads?
-      require 'readline'
-      true
-    rescue LoadError
-      false
-    end
-
     def get_input
       directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
       prompt = @options[:directions] ? directions+@options[:prompt] : @options[:prompt]
@@ -65,7 +58,7 @@ module Hirb
       end
       input = get_input
       return input if @options[:return_input]
-      chosen = Util.choose_from_array(output, input)
+      chosen = parse_input(output, input)
       if @options[:validate_one]
         if chosen.size != 1
           $stderr.puts "Choose one. You chose #{chosen.size} items."
@@ -75,6 +68,43 @@ module Hirb
         end
       end
       chosen
+    end
+
+    def parse_input(output, input)
+      @options[:two_d] ? parse_2d_input(output, input) : Util.choose_from_array(output, input)
+    end
+
+    CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
+
+    def parse_2d_input(output, input)
+      @fields = get_fields
+      @default_field = @fields[0]
+      raise "No default field" unless @default_field
+
+      tokens = input.split(/\s+/).map {|word|
+        word[CHOSEN_REGEXP]
+        field = $3 ? unalias_field($3) : @default_field
+        [Util.choose_from_array(output, word), field ]
+      }
+
+      output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
+        tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
+    end
+
+    def get_fields
+      @options[:fields] || ((@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable) &&
+        Helpers::Table.last_table ? Helpers::Table.last_table.fields[1..-1] : [])
+    end
+
+    def unalias_field(field)
+      @fields.sort_by {|e| e.to_s }.find {|e| e.to_s[/^#{field}/] } || field
+    end
+
+    def readline_loads?
+      require 'readline'
+      true
+    rescue LoadError
+      false
     end
     #:startdoc:
   end
