@@ -118,9 +118,10 @@ class Hirb::MenuTest < Test::Unit::TestCase
   context "2d menu" do
     def two_d_menu(options={})
       result = nil
-      capture_stdout {
-        result = menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], {:two_d=>true}.merge(options))
+      stdout = capture_stdout {
+        result = menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], {:two_d=>true}.merge(options))
       }
+      stdout.should =~ options[:stdout] if options[:stdout]
       result
     end
 
@@ -131,22 +132,27 @@ class Hirb::MenuTest < Test::Unit::TestCase
 
     test "with default field from fields option renders" do
       menu_input "1"
-      two_d_menu(:fields=>[:b, :a]).should == [2]
+      two_d_menu(:fields=>[:bro, :a]).should == [2]
     end
 
     test "with default field option renders" do
       menu_input "1"
-      two_d_menu(:default_field=>:b).should == [2]
+      two_d_menu(:default_field=>:bro).should == [2]
+    end
+
+    test "with choice from abbreviated field" do
+      menu_input "2:b"
+      two_d_menu.should == [4]
     end
 
     test "with choices from multiple fields renders" do
-      menu_input "1 2:b"
+      menu_input "1 2:bro"
       two_d_menu.should == [1,4]
     end
 
-    test "with non-choice arguments returns template and choices" do
-      menu_input "-p cmd 1 2:b"
-      two_d_menu.should == [%w{-p cmd %s}, [1,4]]
+    test "with execute option returns template and choices" do
+      menu_input "p 1 2:bro"
+      two_d_menu(:execute=>true, :stdout=>/[1, 4]/).should == nil
     end
   end
 end

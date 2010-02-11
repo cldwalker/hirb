@@ -33,7 +33,7 @@ module Hirb
       return (@options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output)
       block.call(chosen) if block && Array(chosen).size > 0
-      @template ? [@template, chosen] : chosen
+      @options[:execute] ? execute(chosen) : chosen
     end
 
     def get_input
@@ -70,6 +70,12 @@ module Hirb
       chosen
     end
 
+    def execute(chosen)
+      cmd = get_command
+      args = add_chosen_to_args chosen
+      action_object.send(cmd, *args)
+    end
+
     def parse_input(output, input)
       @options[:two_d] ? parse_2d_input(output, input) : Util.choose_from_array(output, input)
     end
@@ -82,7 +88,7 @@ module Hirb
       raise "No default field" unless @default_field
 
       template = []
-      tokens = input.split(/\s+/).map {|word|
+      tokens = split_input_args(input).map {|word|
         if word[CHOSEN_REGEXP]
           template << '%s'
           field = $3 ? unalias_field($3) : @default_field
@@ -92,15 +98,40 @@ module Hirb
           nil
         end
       }.compact
-      unless template.all? {|e| e == '%s' }
+
+      @template = get_template(template)
+      output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
+        tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
+    end
+
+    def get_template(template)
+      template.all? {|e| e == '%s' } ? ['%s'] : begin
         i = template.index('%s')
         template.delete('%s')
         template.insert(i, '%s')
-        @template = template
+        template
       end
+    end
 
-      output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
-        tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
+    def add_chosen_to_args(items)
+      raise "No items chosen" unless Array(@template).include?('%s')
+      args = @template.dup
+      args[args.index('%s')] = items
+      args
+    end
+
+    def get_command
+      cmd = @template.shift || @options[:default_command]
+      raise "No command found" if [nil, '%s'].include?(cmd)
+      cmd
+    end
+
+    def action_object
+      @options[:action_object] || eval("self", TOPLEVEL_BINDING)
+    end
+
+    def split_input_args(input)
+      input.split(/\s+/)
     end
 
     def get_fields
