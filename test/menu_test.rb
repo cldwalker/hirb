@@ -116,25 +116,37 @@ class Hirb::MenuTest < Test::Unit::TestCase
   end
 
   context "2d menu" do
+    def two_d_menu(options={})
+      result = nil
+      capture_stdout {
+        result = menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], {:two_d=>true}.merge(options))
+      }
+      result
+    end
+
     test "with default field from last_table renders" do
       menu_input "1"
-      capture_stdout {
-        menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :two_d=>true).should == [1]
-      }
+      two_d_menu.should == [1]
     end
 
     test "with default field from fields option renders" do
       menu_input "1"
-      capture_stdout {
-        menu([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :two_d=>true, :fields=>[:b, :a]).should == [2]
-      }
+      two_d_menu(:fields=>[:b, :a]).should == [2]
+    end
+
+    test "with default field option renders" do
+      menu_input "1"
+      two_d_menu(:default_field=>:b).should == [2]
     end
 
     test "with choices from multiple fields renders" do
       menu_input "1 2:b"
-      capture_stdout {
-        menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], :two_d=>true).should == [1, 4]
-      }
+      two_d_menu.should == [1,4]
+    end
+
+    test "with non-choice arguments returns template and choices" do
+      menu_input "-p cmd 1 2:b"
+      two_d_menu.should == [%w{-p cmd %s}, [1,4]]
     end
   end
 end

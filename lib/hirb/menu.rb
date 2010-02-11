@@ -33,7 +33,7 @@ module Hirb
       return (@options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output)
       block.call(chosen) if block && Array(chosen).size > 0
-      chosen
+      @template ? [@template, chosen] : chosen
     end
 
     def get_input
@@ -78,14 +78,26 @@ module Hirb
 
     def parse_2d_input(output, input)
       @fields = get_fields
-      @default_field = @fields[0]
+      @default_field = @options[:default_field] || @fields[0]
       raise "No default field" unless @default_field
 
+      template = []
       tokens = input.split(/\s+/).map {|word|
-        word[CHOSEN_REGEXP]
-        field = $3 ? unalias_field($3) : @default_field
-        [Util.choose_from_array(output, word), field ]
-      }
+        if word[CHOSEN_REGEXP]
+          template << '%s'
+          field = $3 ? unalias_field($3) : @default_field
+          [Util.choose_from_array(output, word), field ]
+        else
+          template << word
+          nil
+        end
+      }.compact
+      unless template.all? {|e| e == '%s' }
+        i = template.index('%s')
+        template.delete('%s')
+        template.insert(i, '%s')
+        @template = template
+      end
 
       output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
         tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
