@@ -140,6 +140,11 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu(:default_field=>:bro).should == [2]
     end
 
+    test "with non-table helper class renders" do
+      menu_input "1"
+      two_d_menu(:helper_class=>false, :fields=>[:a,:bro]).should == [1]
+    end
+
     test "with no default field prints error" do
       menu_input "1"
       capture_stderr { two_d_menu(:fields=>[]) }.should =~ /No default.*found/

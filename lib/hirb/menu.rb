@@ -149,10 +149,12 @@ module Hirb
 
     # Has to be called after displaying menu
     def fields
-      @fields ||= begin
-        @options[:fields] || ((@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable) &&
-          Helpers::Table.last_table ? Helpers::Table.last_table.fields[1..-1] : [])
-      end
+      @fields ||= @options[:fields] || (table_helper_class? && Helpers::Table.last_table ?
+        Helpers::Table.last_table.fields[1..-1] : [])
+    end
+
+    def table_helper_class?
+      @options[:helper_class] && (@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable)
     end
 
     def unalias_field(field)
