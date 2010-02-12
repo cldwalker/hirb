@@ -175,9 +175,9 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu(:execute=>true, :multiple_execute=>true, :stdout=>/1\n4/)
     end
 
-    test "with execute and default_command options executes" do
+    test "with execute and command options executes" do
       menu_input "1"
-      two_d_menu(:execute=>true, :default_command=>'p', :stdout=>/[1]/)
+      two_d_menu(:execute=>true, :command=>'p', :stdout=>/[1]/)
     end
 
     test "with execute option and nothing chosen prints error" do

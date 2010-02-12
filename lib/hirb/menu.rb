@@ -59,7 +59,7 @@ module Hirb
       directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
       prompt = ''
       prompt << "Default field: #{default_field}\n" if @options[:two_d] && default_field
-      prompt << "Default command: #{@options[:default_command]}\n" if @options[:execute] && @options[:default_command]
+      prompt << "Default command: #{@options[:command]}\n" if @options[:execute] && @options[:command]
       prompt << @options[:prompt]
       @options[:directions] ? directions+prompt : prompt
     end
@@ -146,7 +146,7 @@ module Hirb
     def command
       @command ||= begin
         cmd = (@new_args == [CHOSEN_ARG]) ? nil : @new_args.shift
-        cmd ||= @options[:default_command] || raise(Error, "No command given for action menu")
+        cmd ||= @options[:command] || raise(Error, "No command given for action menu")
       end
     end
 
