@@ -78,7 +78,14 @@ module Hirb
 
     def execute(chosen)
       cmd = get_command
-      args = add_chosen_to_args chosen
+      if @options[:multiple_execute]
+        chosen.each {|e| invoke cmd, add_chosen_to_args(e) }
+      else
+        invoke cmd, add_chosen_to_args(chosen)
+      end
+    end
+
+    def invoke(cmd, args)
       action_object.send(cmd, *args)
     end
 
