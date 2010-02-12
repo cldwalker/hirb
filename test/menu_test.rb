@@ -94,16 +94,6 @@ class Hirb::MenuTest < Test::Unit::TestCase
       menu([], :ask=>true).should == []
     end
 
-    test "with return_input option returns input" do
-      menu_input('blah')
-      capture_stdout { menu([1], :return_input=>true).should == 'blah' }
-    end
-
-    test "with return_input and no ask options" do
-      menu([1], :return_input=>true, :ask=>false).should == '1'
-      menu([], :return_input=>true, :ask=>false).should == ''
-    end
-
     test "with directions option turns off directions" do
       menu_input('blah')
       capture_stdout { menu([1], :directions=>false) }.should_not =~ /range.*all/

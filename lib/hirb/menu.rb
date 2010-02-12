@@ -17,7 +17,6 @@ module Hirb
     # [:prompt]  String for menu prompt. Defaults to "Choose: ".
     # [:ask] Always ask for input, even if there is only one choice. Default is true.
     # [:directions] Display directions before prompt. Default is true.
-    # [:return_input] Returns input string without selecting menu items. Default is false
     # [:readline] Uses readline to get user input if available. Input strings are added to readline history. Default is false.
     # Examples:
     #     >> extend Hirb::Console
@@ -37,7 +36,7 @@ module Hirb
 
     def render(output, &block)
       @output = Array(output)
-      return (@options[:return_input] ? '' : []) if @output.size.zero?
+      return [] if @output.size.zero?
       chosen = choose_from_menu
       block.call(chosen) if block && chosen.size > 0
       @options[:execute] ? execute(chosen) : chosen
@@ -65,16 +64,14 @@ module Hirb
     end
 
     def choose_from_menu
-      return (@options[:return_input] ? '1' : @output) if @output.size == 1 && !@options[:ask]
+      return @output if @output.size == 1 && !@options[:ask]
       if (helper_class = Util.any_const_get(@options[:helper_class]))
         View.render_output(@output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
       else
         @output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
 
-      input = get_input
-      return input if @options[:return_input]
-      parse_input(input)
+      parse_input get_input
     end
 
     def execute(chosen)
