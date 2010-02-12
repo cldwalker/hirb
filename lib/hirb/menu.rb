@@ -14,15 +14,15 @@ module Hirb
     # [:helper_class]  Helper class to render menu. Helper class is expected to implement numbering given a :number option.
     #                  To use a very basic menu, set this to false. Defaults to Hirb::Helpers::AutoTable.
     # [:prompt]  String for menu prompt. Defaults to "Choose: ".
-    # [:validate_one] Validates that only one item in array is chosen and returns just that item. Default is false.
     # [:ask] Always ask for input, even if there is only one choice. Default is true.
     # [:directions] Display directions before prompt. Default is true.
     # [:return_input] Returns input string without selecting menu items. Default is false
     # [:readline] Uses readline to get user input if available. Input strings are added to readline history. Default is false.
     # Examples:
-    #     extend Hirb::Console
-    #     menu([1,2,3], :fields=>[:field1, :field2], :validate_one=>true)
-    #     menu([1,2,3], :helper_class=>Hirb::Helpers::Table)
+    #     >> extend Hirb::Console
+    #     => self
+    #     >> menu [1,2,3], :prompt=> "So many choices, so little time: "
+    #     >> menu [{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:a,b], :two_d=>true)
     def self.render(output, options={}, &block)
       new(options).render(output, &block)
     rescue Error=>e
@@ -31,15 +31,13 @@ module Hirb
 
     #:stopdoc:
     def initialize(options={})
-      default_options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose #{options[:validate_one] ? 'one' : ''}: ",
-        :ask=>true, :directions=>true}
-      @options = default_options.merge(options)
+      @options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose: ", :ask=>true, :directions=>true}.merge options
     end
 
     def render(output, &block)
       return (@options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
       chosen = choose_from_menu(output)
-      block.call(chosen) if block && Array(chosen).size > 0
+      block.call(chosen) if block && chosen.size > 0
       @options[:execute] ? execute(chosen) : chosen
     end
 
@@ -66,17 +64,7 @@ module Hirb
 
       input = get_input
       return input if @options[:return_input]
-      chosen = parse_input(output, input)
-
-      if @options[:validate_one]
-        if chosen.size != 1
-          $stderr.puts "Choose one. You chose #{chosen.size} items."
-          return nil
-        else
-          return chosen[0]
-        end
-      end
-      chosen
+      parse_input(output, input)
     end
 
     def execute(chosen)
