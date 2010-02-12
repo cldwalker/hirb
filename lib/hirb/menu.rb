@@ -1,6 +1,8 @@
 module Hirb
   # This class provides a selection menu using Hirb's table helpers by default to display choices.
   class Menu
+    class Error < StandardError; end
+
     # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
     # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
     # All options except for the ones below are passed to render the menu.
@@ -20,6 +22,8 @@ module Hirb
     #     menu([1,2,3], :helper_class=>Hirb::Helpers::Table)
     def self.render(output, options={}, &block)
       new(options).render(output, &block)
+    rescue Error=>e
+      $stderr.puts "Error: #{e.message}"
     end
 
     #:stopdoc:
@@ -56,9 +60,11 @@ module Hirb
       else
         output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
+
       input = get_input
       return input if @options[:return_input]
       chosen = parse_input(output, input)
+
       if @options[:validate_one]
         if chosen.size != 1
           $stderr.puts "Choose one. You chose #{chosen.size} items."
@@ -83,15 +89,13 @@ module Hirb
     CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
 
     def parse_2d_input(output, input)
-      @fields = get_fields
-      @default_field = @options[:default_field] || @fields[0]
-      raise "No default field" unless @default_field
-
+      @output = output
       template = []
       tokens = split_input_args(input).map {|word|
         if word[CHOSEN_REGEXP]
           template << '%s'
-          field = $3 ? unalias_field($3) : @default_field
+          field = $3 ? unalias_field($3) : default_field ||
+            raise(Error, "No default field/column found. Fields must be explicitly picked.")
           [Util.choose_from_array(output, word), field ]
         else
           template << word
@@ -106,7 +110,7 @@ module Hirb
 
     def get_template(template)
       template.all? {|e| e == '%s' } ? ['%s'] : begin
-        i = template.index('%s')
+        i = template.index('%s') || raise(Error, "No rows chosen")
         template.delete('%s')
         template.insert(i, '%s')
         template
@@ -114,7 +118,6 @@ module Hirb
     end
 
     def add_chosen_to_args(items)
-      raise "No items chosen" unless Array(@template).include?('%s')
       args = @template.dup
       args[args.index('%s')] = items
       args
@@ -122,7 +125,7 @@ module Hirb
 
     def get_command
       cmd = @template.shift || @options[:default_command]
-      raise "No command found" if [nil, '%s'].include?(cmd)
+      raise Error, "No command given" if [nil, '%s'].include?(cmd)
       cmd
     end
 
@@ -134,13 +137,20 @@ module Hirb
       input.split(/\s+/)
     end
 
-    def get_fields
-      @options[:fields] || ((@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable) &&
-        Helpers::Table.last_table ? Helpers::Table.last_table.fields[1..-1] : [])
+    def default_field
+      @default_field ||= @options[:default_field] || fields[0]
+    end
+
+    # Has to be called after displaying menu
+    def fields
+      @fields ||= begin
+        @options[:fields] || ((@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable) &&
+          Helpers::Table.last_table ? Helpers::Table.last_table.fields[1..-1] : [])
+      end
     end
 
     def unalias_field(field)
-      @fields.sort_by {|e| e.to_s }.find {|e| e.to_s[/^#{field}/] } || field
+      fields.sort_by {|e| e.to_s }.find {|e| e.to_s[/^#{field}/] } || raise(Error, "Invalid field '#{field}'")
     end
 
     def readline_loads?

@@ -140,6 +140,16 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu(:default_field=>:bro).should == [2]
     end
 
+    test "with no default field prints error" do
+      menu_input "1"
+      capture_stderr { two_d_menu(:fields=>[]) }.should =~ /No default.*found/
+    end
+
+    test "with invalid field prints error" do
+      menu_input "1:z"
+      capture_stderr { two_d_menu }.should =~ /Invalid.*'z'/
+    end
+
     test "with choice from abbreviated field" do
       menu_input "2:b"
       two_d_menu.should == [4]
@@ -153,6 +163,16 @@ class Hirb::MenuTest < Test::Unit::TestCase
     test "with execute option returns template and choices" do
       menu_input "p 1 2:bro"
       two_d_menu(:execute=>true, :stdout=>/[1, 4]/).should == nil
+    end
+
+    test "with execute option and nothing chosen" do
+      menu_input "cmd"
+      capture_stderr { two_d_menu(:execute=>true) }.should =~ /No rows chosen/
+    end
+
+    test "with execute option and no given command prints error" do
+      menu_input "1"
+      capture_stderr { two_d_menu(:execute=>true) }.should =~ /No command given/
     end
   end
 end
