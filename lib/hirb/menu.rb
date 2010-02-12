@@ -5,6 +5,7 @@ module Hirb
 
     # Detects valid choices and optional field/column
     CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
+    CHOSEN_ARG = '%s'
 
     # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
     # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
@@ -77,11 +78,10 @@ module Hirb
     end
 
     def execute(chosen)
-      cmd = get_command
       if @options[:multiple_execute]
-        chosen.each {|e| invoke cmd, add_chosen_to_args(e) }
+        chosen.each {|e| invoke command, add_chosen_to_args(e) }
       else
-        invoke cmd, add_chosen_to_args(chosen)
+        invoke command, add_chosen_to_args(chosen)
       end
     end
 
@@ -109,43 +109,45 @@ module Hirb
     end
 
     def input_to_tokens(input)
-      @template = []
-      tokens = split_input_args(input).map {|word| parse_word(word) }.compact
-      cleanup_template
+      @new_args = []
+      tokens = (@args = split_input_args(input)).map {|word| parse_word(word) }.compact
+      cleanup_new_args
       tokens
     end
 
     def parse_word(word)
       if word[CHOSEN_REGEXP]
-        @template << '%s'
+        @new_args << CHOSEN_ARG
         field = $3 ? unalias_field($3) : default_field ||
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
         [Util.choose_from_array(@output, word), field ]
       else
-        @template << word
+        @new_args << word
         nil
       end
     end
 
-    def cleanup_template
-      if @template.all? {|e| e == '%s' }
-        @template = ['%s']
+    def cleanup_new_args
+      if @new_args.all? {|e| e == CHOSEN_ARG }
+        @new_args = [CHOSEN_ARG]
       else
-        i = @template.index('%s') || raise(Error, "No rows chosen")
-        @template.delete('%s')
-        @template.insert(i, '%s')
+        i = @new_args.index(CHOSEN_ARG) || raise(Error, "No rows chosen")
+        @new_args.delete(CHOSEN_ARG)
+        @new_args.insert(i, CHOSEN_ARG)
       end
     end
 
     def add_chosen_to_args(items)
-      args = @template.dup
-      args[args.index('%s')] = items
+      args = @new_args.dup
+      args[args.index(CHOSEN_ARG)] = items
       args
     end
 
-    def get_command
-      cmd = (@template == ['%s']) ? nil : @template.shift
-      cmd ||= @options[:default_command] || raise(Error, "No command given")
+    def command
+      @command ||= begin
+        cmd = (@new_args == [CHOSEN_ARG]) ? nil : @new_args.shift
+        cmd ||= @options[:default_command] || raise(Error, "No command given for action menu")
+      end
     end
 
     def action_object
