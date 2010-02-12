@@ -166,12 +166,17 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu(:execute=>true, :two_d=>nil, :stdout=>/#{expected}/)
     end
 
-    test "with execute option executes command" do
+    test "with execute option executes" do
       menu_input "p 1 2:bro"
       two_d_menu(:execute=>true, :stdout=>/[1, 4]/).should == nil
     end
 
-    test "with execute option and nothing chosen" do
+    test "with execute and default_command options executes" do
+      menu_input "1"
+      two_d_menu(:execute=>true, :default_command=>'p', :stdout=>/[1]/)
+    end
+
+    test "with execute option and nothing chosen prints error" do
       menu_input "cmd"
       capture_stderr { two_d_menu(:execute=>true) }.should =~ /No rows chosen/
     end

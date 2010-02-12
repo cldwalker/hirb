@@ -42,8 +42,7 @@ module Hirb
     end
 
     def get_input
-      directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
-      prompt = @options[:directions] ? directions+@options[:prompt] : @options[:prompt]
+      prompt = build_prompt
       if @options[:readline] && readline_loads?
         input = Readline.readline prompt
         Readline::HISTORY << input
@@ -52,6 +51,15 @@ module Hirb
         print prompt
         $stdin.gets.chomp.strip
       end
+    end
+
+    def build_prompt
+      directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
+      prompt = ''
+      prompt << "Default field: #{default_field}\n" if @options[:two_d] && default_field
+      prompt << "Default command: #{@options[:default_command]}\n" if @options[:execute] && @options[:default_command]
+      prompt << @options[:prompt]
+      @options[:directions] ? directions+prompt : prompt
     end
 
     def choose_from_menu(output)
@@ -118,9 +126,8 @@ module Hirb
     end
 
     def get_command
-      cmd = @template.shift || @options[:default_command]
-      raise Error, "No command given" if [nil, '%s'].include?(cmd)
-      cmd
+      cmd = (@template == ['%s']) ? nil : @template.shift
+      cmd ||= @options[:default_command] || raise(Error, "No command given")
     end
 
     def action_object
@@ -142,7 +149,7 @@ module Hirb
     end
 
     def table_helper_class?
-      @options[:helper_class] && (@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable)
+      @options[:helper_class].is_a?(Class) && (@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable)
     end
 
     def unalias_field(field)
