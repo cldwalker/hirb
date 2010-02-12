@@ -82,40 +82,50 @@ module Hirb
     end
 
     def parse_input(output, input)
-      @options[:two_d] ? parse_2d_input(output, input) : @options[:execute] ?
-        input_to_template(output, input).map {|e| e[0] }.flatten :
+      (@options[:two_d] || @options[:execute]) ?
+        map_template_tokens(input_to_tokens(output, input), output).flatten :
         Util.choose_from_array(output, input)
     end
 
-    def input_to_template(output, input)
-      template = []
-      tokens = split_input_args(input).map {|word|
-        if word[CHOSEN_REGEXP]
-          template << '%s'
-          field = $3 ? unalias_field($3) : default_field ||
-            raise(Error, "No default field/column found. Fields must be explicitly picked.")
-          [Util.choose_from_array(output, word), field ]
-        else
-          template << word
-          nil
-        end
-      }.compact
-      @template = get_template(template)
+    def map_template_tokens(tokens, output)
+      if return_cell_values?
+        output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} } :
+          tokens.map {|arr,f| arr.map {|e| e.send(f) } }
+      else
+        tokens.map {|e| e[0] }
+      end
+    end
+
+    def return_cell_values?
+      @options[:two_d]
+    end
+
+    def input_to_tokens(output, input)
+      @template = []
+      tokens = split_input_args(input).map {|word| parse_word(word, output) }.compact
+      cleanup_template
       tokens
     end
 
-    def parse_2d_input(output, input)
-      tokens = input_to_template(output, input)
-      output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
-        tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
+    def parse_word(word, output)
+      if word[CHOSEN_REGEXP]
+        @template << '%s'
+        field = $3 ? unalias_field($3) : default_field ||
+          raise(Error, "No default field/column found. Fields must be explicitly picked.")
+        [Util.choose_from_array(output, word), field ]
+      else
+        @template << word
+        nil
+      end
     end
 
-    def get_template(template)
-      template.all? {|e| e == '%s' } ? ['%s'] : begin
-        i = template.index('%s') || raise(Error, "No rows chosen")
-        template.delete('%s')
-        template.insert(i, '%s')
-        template
+    def cleanup_template
+      if @template.all? {|e| e == '%s' }
+        @template = ['%s']
+      else
+        i = @template.index('%s') || raise(Error, "No rows chosen")
+        @template.delete('%s')
+        @template.insert(i, '%s')
       end
     end
 

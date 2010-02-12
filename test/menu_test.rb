@@ -162,8 +162,7 @@ class Hirb::MenuTest < Test::Unit::TestCase
 
     test "with execute option and just 1d renders" do
       menu_input "p 1-2"
-      expected = Regexp.escape "{:bro=>2, :a=>1}"
-      two_d_menu(:execute=>true, :two_d=>nil, :stdout=>/#{expected}/)
+      two_d_menu(:execute=>true, :two_d=>nil, :stdout=>/\{.*:bro/)
     end
 
     test "with execute option executes" do
