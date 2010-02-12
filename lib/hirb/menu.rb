@@ -3,6 +3,9 @@ module Hirb
   class Menu
     class Error < StandardError; end
 
+    # Detects valid choices and optional field/column
+    CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
+
     # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
     # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
     # All options except for the ones below are passed to render the menu.
@@ -83,13 +86,12 @@ module Hirb
     end
 
     def parse_input(output, input)
-      @options[:two_d] ? parse_2d_input(output, input) : Util.choose_from_array(output, input)
+      @options[:two_d] ? parse_2d_input(output, input) : @options[:execute] ?
+        input_to_template(output, input).map {|e| e[0] }.flatten :
+        Util.choose_from_array(output, input)
     end
 
-    CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
-
-    def parse_2d_input(output, input)
-      @output = output
+    def input_to_template(output, input)
       template = []
       tokens = split_input_args(input).map {|word|
         if word[CHOSEN_REGEXP]
@@ -102,8 +104,12 @@ module Hirb
           nil
         end
       }.compact
-
       @template = get_template(template)
+      tokens
+    end
+
+    def parse_2d_input(output, input)
+      tokens = input_to_template(output, input)
       output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
         tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
     end

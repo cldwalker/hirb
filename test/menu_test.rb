@@ -160,7 +160,13 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu.should == [1,4]
     end
 
-    test "with execute option returns template and choices" do
+    test "with execute option and just 1d renders" do
+      menu_input "p 1-2"
+      expected = Regexp.escape "{:bro=>2, :a=>1}"
+      two_d_menu(:execute=>true, :two_d=>nil, :stdout=>/#{expected}/)
+    end
+
+    test "with execute option executes command" do
       menu_input "p 1 2:bro"
       two_d_menu(:execute=>true, :stdout=>/[1, 4]/).should == nil
     end
