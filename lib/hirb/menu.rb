@@ -35,8 +35,9 @@ module Hirb
     end
 
     def render(output, &block)
-      return (@options[:return_input] ? '' : []) if (output = Array(output)).size.zero?
-      chosen = choose_from_menu(output)
+      @output = Array(output)
+      return (@options[:return_input] ? '' : []) if @output.size.zero?
+      chosen = choose_from_menu
       block.call(chosen) if block && chosen.size > 0
       @options[:execute] ? execute(chosen) : chosen
     end
@@ -62,17 +63,17 @@ module Hirb
       @options[:directions] ? directions+prompt : prompt
     end
 
-    def choose_from_menu(output)
-      return (@options[:return_input] ? '1' : output) if output.size == 1 && !@options[:ask]
+    def choose_from_menu
+      return (@options[:return_input] ? '1' : @output) if @output.size == 1 && !@options[:ask]
       if (helper_class = Util.any_const_get(@options[:helper_class]))
-        View.render_output(output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
+        View.render_output(@output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
       else
-        output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
+        @output.each_with_index {|e,i| puts "#{i+1}: #{e}" }
       end
 
       input = get_input
       return input if @options[:return_input]
-      parse_input(output, input)
+      parse_input(input)
     end
 
     def execute(chosen)
@@ -81,15 +82,15 @@ module Hirb
       action_object.send(cmd, *args)
     end
 
-    def parse_input(output, input)
+    def parse_input(input)
       (@options[:two_d] || @options[:execute]) ?
-        map_template_tokens(input_to_tokens(output, input), output).flatten :
-        Util.choose_from_array(output, input)
+        choose_multiple(input).flatten : Util.choose_from_array(@output, input)
     end
 
-    def map_template_tokens(tokens, output)
+    def choose_multiple(input)
+      tokens = input_to_tokens(input)
       if return_cell_values?
-        output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} } :
+        @output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} } :
           tokens.map {|arr,f| arr.map {|e| e.send(f) } }
       else
         tokens.map {|e| e[0] }
@@ -100,19 +101,19 @@ module Hirb
       @options[:two_d]
     end
 
-    def input_to_tokens(output, input)
+    def input_to_tokens(input)
       @template = []
-      tokens = split_input_args(input).map {|word| parse_word(word, output) }.compact
+      tokens = split_input_args(input).map {|word| parse_word(word) }.compact
       cleanup_template
       tokens
     end
 
-    def parse_word(word, output)
+    def parse_word(word)
       if word[CHOSEN_REGEXP]
         @template << '%s'
         field = $3 ? unalias_field($3) : default_field ||
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
-        [Util.choose_from_array(output, word), field ]
+        [Util.choose_from_array(@output, word), field ]
       else
         @template << word
         nil
