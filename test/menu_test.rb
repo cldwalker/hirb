@@ -150,34 +150,34 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu.should == [1,4]
     end
 
-    test "with execute option and just 1d renders" do
+    test "with action option and just 1d renders" do
       menu_input "p 1-2"
-      two_d_menu(:execute=>true, :two_d=>nil, :stdout=>/\{.*:bro/)
+      two_d_menu(:action=>true, :two_d=>nil, :stdout=>/\{.*:bro/)
     end
 
-    test "with execute option executes" do
+    test "with action option renders" do
       menu_input "p 1 2:bro"
-      two_d_menu(:execute=>true, :stdout=>/[1, 4]/)
+      two_d_menu(:action=>true, :stdout=>/[1, 4]/)
     end
 
-    test "with multiple_execute option executes" do
+    test "with multi_action option renders" do
       menu_input "p 1 2:bro"
-      two_d_menu(:execute=>true, :multiple_execute=>true, :stdout=>/1\n4/)
+      two_d_menu(:action=>true, :multi_action=>true, :stdout=>/1\n4/)
     end
 
-    test "with execute and command options executes" do
+    test "with action and command options renders" do
       menu_input "1"
-      two_d_menu(:execute=>true, :command=>'p', :stdout=>/[1]/)
+      two_d_menu(:action=>true, :command=>'p', :stdout=>/[1]/)
     end
 
-    test "with execute option and nothing chosen prints error" do
+    test "with action option and nothing chosen prints error" do
       menu_input "cmd"
-      capture_stderr { two_d_menu(:execute=>true) }.should =~ /No rows chosen/
+      capture_stderr { two_d_menu(:action=>true) }.should =~ /No rows chosen/
     end
 
-    test "with execute option and no given command prints error" do
+    test "with action option and no given command prints error" do
       menu_input "1"
-      capture_stderr { two_d_menu(:execute=>true) }.should =~ /No command given/
+      capture_stderr { two_d_menu(:action=>true) }.should =~ /No command given/
     end
   end
 end

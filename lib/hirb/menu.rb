@@ -12,12 +12,19 @@ module Hirb
     # All options except for the ones below are passed to render the menu.
     #
     # ==== Options:
-    # [:helper_class]  Helper class to render menu. Helper class is expected to implement numbering given a :number option.
-    #                  To use a very basic menu, set this to false. Defaults to Hirb::Helpers::AutoTable.
-    # [:prompt]  String for menu prompt. Defaults to "Choose: ".
-    # [:ask] Always ask for input, even if there is only one choice. Default is true.
-    # [:directions] Display directions before prompt. Default is true.
-    # [:readline] Uses readline to get user input if available. Input strings are added to readline history. Default is false.
+    # [*:helper_class*]  Helper class to render menu. Helper class is expected to implement numbering given a :number option.
+    #                    To use a very basic menu, set this to false. Defaults to Hirb::Helpers::AutoTable.
+    # [*:prompt*]  String for menu prompt. Defaults to "Choose: ".
+    # [*:ask*] Always ask for input, even if there is only one choice. Default is true.
+    # [*:directions*] Display directions before prompt. Default is true.
+    # [*:readline*] Use readline to get user input if available. Input strings are added to readline history. Default is false.
+    # [*:two_d*] Turn menu into a 2 dimensional (2D) menu by allowing user to pick values from table cells. Default is false.
+    # [*:default_field*] Default field for a 2D menu. Defaults to first field in a table.
+    # [*:action*] Turn menu into an action menu by letting user pass menu choices as an argument to a method/command.
+    #             A menu choice's place amongst other arguments is preserved. Default is false.
+    # [*:multi_action*] Execute action menu multiple times iterating over the menu choices. Default is false.
+    # [*:action_object*] Object that takes method/command calls. Default is main.
+    # [*:command*] Default method/command to call when no command given.
     # Examples:
     #     >> extend Hirb::Console
     #     => self
@@ -39,7 +46,7 @@ module Hirb
       return [] if @output.size.zero?
       chosen = choose_from_menu
       block.call(chosen) if block && chosen.size > 0
-      @options[:execute] ? execute(chosen) : chosen
+      @options[:action] ? execute_action(chosen) : chosen
     end
 
     def get_input
@@ -58,7 +65,7 @@ module Hirb
       directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
       prompt = ''
       prompt << "Default field: #{default_field}\n" if @options[:two_d] && default_field
-      prompt << "Default command: #{@options[:command]}\n" if @options[:execute] && @options[:command]
+      prompt << "Default command: #{@options[:command]}\n" if @options[:action] && @options[:command]
       prompt << @options[:prompt]
       @options[:directions] ? directions+prompt : prompt
     end
@@ -74,8 +81,8 @@ module Hirb
       parse_input get_input
     end
 
-    def execute(chosen)
-      if @options[:multiple_execute]
+    def execute_action(chosen)
+      if @options[:multi_action]
         chosen.each {|e| invoke command, add_chosen_to_args(e) }
       else
         invoke command, add_chosen_to_args(chosen)
@@ -87,7 +94,7 @@ module Hirb
     end
 
     def parse_input(input)
-      (@options[:two_d] || @options[:execute]) ?
+      (@options[:two_d] || @options[:action]) ?
         choose_multiple(input).flatten : Util.choose_from_array(@output, input)
     end
 
