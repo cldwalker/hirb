@@ -82,6 +82,7 @@ module Hirb
     end
 
     def execute_action(chosen)
+      return nil if chosen.size.zero?
       if @options[:multi_action]
         chosen.each {|e| invoke command, add_chosen_to_args(e) }
       else

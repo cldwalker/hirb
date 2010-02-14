@@ -18,15 +18,6 @@ class Hirb::MenuTest < Test::Unit::TestCase
     $stdin.expects(:gets).returns(input)
   end
 
-  def two_d_menu(options={})
-    result = nil
-    stdout = capture_stdout {
-      result = menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], {:two_d=>true}.merge(options))
-    }
-    stdout.should =~ options[:stdout] if options[:stdout]
-    result
-  end
-
   context "menu" do
     test "by default renders table menu" do
       expected_menu = <<-MENU.unindent
@@ -109,6 +100,19 @@ class Hirb::MenuTest < Test::Unit::TestCase
     end
   end
 
+  def two_d_menu(options={})
+    if options[:invokes] || options[:invoke]
+      cmd = options[:command] || 'p'
+      (options[:invokes] || [options[:invoke]]).each {|e|
+        Hirb::Menu.any_instance.expects(:invoke).with(cmd, e)
+      }
+    end
+
+    capture_stdout {
+      return menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], {:two_d=>true}.merge(options))
+    }
+  end
+
   context "2d menu" do
     test "with default field from last_table renders" do
       menu_input "1"
@@ -152,19 +156,19 @@ class Hirb::MenuTest < Test::Unit::TestCase
   end
 
   context "action menu" do
-    test "renders" do
+    test "invokes" do
       menu_input "p 1 2:bro"
-      two_d_menu(:action=>true, :stdout=>/[1, 4]/)
+      two_d_menu(:action=>true, :invoke=>[[1,4]])
     end
 
-    test "with 1d renders" do
-      menu_input "p 1-2"
-      two_d_menu(:action=>true, :two_d=>nil, :stdout=>/\{.*:bro/)
+    test "with 1d invokes" do
+      menu_input "p 1"
+      two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a=>1, :bro=>2}]])
     end
 
-    test "with non-choice arguments renders" do
+    test "with non-choice arguments invokes" do
       menu_input "p arg1 1"
-      two_d_menu(:action=>true, :stdout=>/\"arg1\"\n\[1\]/)
+      two_d_menu :action=>true, :invoke=>['arg1', [1]]
     end
 
     test "with nothing chosen prints error" do
@@ -177,18 +181,24 @@ class Hirb::MenuTest < Test::Unit::TestCase
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No command given/
     end
 
-    test "with multi_action option renders" do
+    test "with multi_action option invokes" do
       menu_input "p 1 2:bro"
-      two_d_menu(:action=>true, :multi_action=>true, :stdout=>/1\n4/)
+      two_d_menu(:action=>true, :multi_action=>true, :invokes=>[[1], [4]])
     end
 
-    test "with command option renders" do
+    test "with command option invokes" do
       menu_input "1"
-      two_d_menu(:action=>true, :command=>'p', :stdout=>/\[1\]/)
+      two_d_menu(:action=>true, :command=>'p', :invoke=>[[1]])
     end
 
-    test "with action_object option renders" do
-      obj = mock(:blah=>[])
+    test "with command option and empty input doesn't invoke action and exists silently" do
+      Hirb::Menu.any_instance.expects(:invoke).never
+      menu_input ""
+      two_d_menu(:action=>true, :command=>'p').should == nil
+    end
+
+    test "with action_object option invokes" do
+      obj = mock(:blah=>true)
       menu_input "blah 1"
       two_d_menu(:action=>true, :action_object=>obj)
     end
