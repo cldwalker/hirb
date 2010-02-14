@@ -52,13 +52,17 @@ module Hirb
     def get_input
       prompt = build_prompt
       if @options[:readline] && readline_loads?
-        input = Readline.readline prompt
-        Readline::HISTORY << input
-        input
+        get_readline_input(prompt)
       else
         print prompt
         $stdin.gets.chomp.strip
       end
+    end
+
+    def get_readline_input(prompt)
+      input = Readline.readline prompt
+      Readline::HISTORY << input
+      input
     end
 
     def build_prompt
