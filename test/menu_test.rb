@@ -109,7 +109,8 @@ class Hirb::MenuTest < Test::Unit::TestCase
     end
 
     capture_stdout {
-      return menu([{:a=>1, :bro=>2}, {:a=>3, :bro=>4}], {:two_d=>true}.merge(options))
+      return menu(options[:output] || [{:a=>1, :bro=>2}, {:a=>3, :bro=>4}],
+       {:two_d=>true}.merge(options))
     }
   end
 
@@ -201,6 +202,17 @@ class Hirb::MenuTest < Test::Unit::TestCase
       obj = mock(:blah=>true)
       menu_input "blah 1"
       two_d_menu(:action=>true, :action_object=>obj)
+    end
+
+    test "with ask false and defaults invokes" do
+      two_d_menu(:output=>[{:a=>1, :bro=>2}], :action=>true, :ask=>false, :default_field=>:a,
+        :command=>'p', :invoke=>[[1]])
+    end
+
+    test "with ask false and no defaults prints error" do
+      capture_stderr {
+        two_d_menu(:output=>[{:a=>1, :bro=>2}], :action=>true, :ask=>false, :command=>'p')
+      }.should =~ /Default.*required/
     end
   end
 end

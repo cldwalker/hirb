@@ -75,7 +75,8 @@ module Hirb
     end
 
     def choose_from_menu
-      return @output if @output.size == 1 && !@options[:ask]
+      return unasked_choice if @output.size == 1 && !@options[:ask]
+
       if (helper_class = Util.any_const_get(@options[:helper_class]))
         View.render_output(@output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
       else
@@ -83,6 +84,13 @@ module Hirb
       end
 
       parse_input get_input
+    end
+
+    def unasked_choice
+      return @output unless @options[:action]
+      raise(Error, "Default command and field required for unasked action menu") unless default_field && @options[:command]
+      @new_args = [@options[:command], CHOSEN_ARG]
+      map_tokens([[@output, default_field]])
     end
 
     def execute_action(chosen)
@@ -99,17 +107,20 @@ module Hirb
     end
 
     def parse_input(input)
-      (@options[:two_d] || @options[:action]) ?
-        choose_multiple(input).flatten : Util.choose_from_array(@output, input)
+      if (@options[:two_d] || @options[:action])
+        tokens = input_to_tokens(input)
+        map_tokens(tokens)
+      else
+        Util.choose_from_array(@output, input)
+      end
     end
 
-    def choose_multiple(input)
-      tokens = input_to_tokens(input)
+    def map_tokens(tokens)
       if return_cell_values?
-        @output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} } :
-          tokens.map {|arr,f| arr.map {|e| e.send(f) } }
+        @output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
+          tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
       else
-        tokens.map {|e| e[0] }
+        tokens.map {|e| e[0] }.flatten
       end
     end
 
@@ -173,7 +184,7 @@ module Hirb
 
     # Has to be called after displaying menu
     def fields
-      @fields ||= @options[:fields] || (table_helper_class? && Helpers::Table.last_table ?
+      @fields ||= @options[:fields] || (@options[:ask] && table_helper_class? && Helpers::Table.last_table ?
         Helpers::Table.last_table.fields[1..-1] : [])
     end
 
