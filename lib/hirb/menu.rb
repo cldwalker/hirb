@@ -6,6 +6,7 @@ module Hirb
     # Detects valid choices and optional field/column
     CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
     CHOSEN_ARG = '%s'
+    DIRECTIONS = "Specify individual choices (4,7), range of choices (1-3) or all choices (*)."
 
     # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
     # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
@@ -38,7 +39,8 @@ module Hirb
 
     #:stopdoc:
     def initialize(options={})
-      @options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose: ", :ask=>true, :directions=>true}.merge options
+      @options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose: ", :ask=>true,
+        :directions=>true}.merge options
     end
 
     def render(output, &block)
@@ -50,7 +52,9 @@ module Hirb
     end
 
     def get_input
-      prompt = build_prompt
+      prompt = pre_prompt + @options[:prompt]
+      prompt = DIRECTIONS+"\n"+prompt if @options[:directions]
+
       if @options[:readline] && readline_loads?
         get_readline_input(prompt)
       else
@@ -65,13 +69,11 @@ module Hirb
       input
     end
 
-    def build_prompt
-      directions = "Specify individual choices (4,7), range of choices (1-3) or all choices (*).\n"
+    def pre_prompt
       prompt = ''
       prompt << "Default field: #{default_field}\n" if @options[:two_d] && default_field
       prompt << "Default command: #{@options[:command]}\n" if @options[:action] && @options[:command]
-      prompt << @options[:prompt]
-      @options[:directions] ? directions+prompt : prompt
+      prompt
     end
 
     def choose_from_menu

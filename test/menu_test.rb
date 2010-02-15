@@ -172,6 +172,11 @@ class Hirb::MenuTest < Test::Unit::TestCase
       two_d_menu :action=>true, :invoke=>['arg1', [1]]
     end
 
+    test "with multiple choice arguments flattens them into arg" do
+      menu_input "p arg1 1 2:bro arg2"
+      two_d_menu :action=>true, :invoke=>['arg1', [1,4], 'arg2']
+    end
+
     test "with nothing chosen prints error" do
       menu_input "cmd"
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No rows chosen/
