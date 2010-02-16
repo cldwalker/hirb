@@ -4331,54 +4331,56 @@
         
         Element.addMethods();
         var search_index = [
-          { method: 'activated_by?', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000042"><span class="method_name">activated_by?</span> <span class="module_name">(Hirb::Pager)</span></a>' },
-          { method: 'any_const_get', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000016"><span class="method_name">any_const_get</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'camelize', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000018"><span class="method_name">camelize</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'capture_and_render', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000031"><span class="method_name">capture_and_render</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'capture_stdout', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000022"><span class="method_name">capture_stdout</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'choose_from_array', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000019"><span class="method_name">choose_from_array</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'command_exists?', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000020"><span class="method_name">command_exists?</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'command_pager', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000038"><span class="method_name">command_pager</span> <span class="module_name">(Hirb::Pager)</span></a>' },
-          { method: 'config', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000045"><span class="method_name">config</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
-          { method: 'config_file', module: 'hirb', html: '<a href="classes/Hirb.html#M000003"><span class="method_name">config_file</span> <span class="module_name">(Hirb)</span></a>' },
-          { method: 'default_pager', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000039"><span class="method_name">default_pager</span> <span class="module_name">(Hirb::Pager)</span></a>' },
-          { method: 'detect_terminal_size', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000021"><span class="method_name">detect_terminal_size</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'activated_by?', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000044"><span class="method_name">activated_by?</span> <span class="module_name">(Hirb::Pager)</span></a>' },
+          { method: 'any_const_get', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000017"><span class="method_name">any_const_get</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'camelize', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000019"><span class="method_name">camelize</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'capture_and_render', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000033"><span class="method_name">capture_and_render</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'capture_stdout', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000023"><span class="method_name">capture_stdout</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'choose_from_array', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000020"><span class="method_name">choose_from_array</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'command_exists?', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000021"><span class="method_name">command_exists?</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'command_pager', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000040"><span class="method_name">command_pager</span> <span class="module_name">(Hirb::Pager)</span></a>' },
+          { method: 'config', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000047"><span class="method_name">config</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'config_files', module: 'hirb', html: '<a href="classes/Hirb.html#M000003"><span class="method_name">config_files</span> <span class="module_name">(Hirb)</span></a>' },
+          { method: 'default_pager', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000041"><span class="method_name">default_pager</span> <span class="module_name">(Hirb::Pager)</span></a>' },
+          { method: 'detect_terminal_size', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000022"><span class="method_name">detect_terminal_size</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'disable', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000028"><span class="method_name">disable</span> <span class="module_name">(Hirb::View)</span></a>' },
           { method: 'disable', module: 'hirb', html: '<a href="classes/Hirb.html#M000002"><span class="method_name">disable</span> <span class="module_name">(Hirb)</span></a>' },
-          { method: 'disable', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000026"><span class="method_name">disable</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'enable', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000024"><span class="method_name">enable</span> <span class="module_name">(Hirb::View)</span></a>' },
           { method: 'enable', module: 'hirb', html: '<a href="classes/Hirb.html#M000001"><span class="method_name">enable</span> <span class="module_name">(Hirb)</span></a>' },
-          { method: 'enabled?', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000025"><span class="method_name">enabled?</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'format_class', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000046"><span class="method_name">format_class</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
-          { method: 'format_class', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000037"><span class="method_name">format_class</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'format_output', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000048"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
-          { method: 'format_output', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000012"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Console)</span></a>' },
-          { method: 'formatter_config', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000036"><span class="method_name">formatter_config</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'height', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000035"><span class="method_name">height</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'menu', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000015"><span class="method_name">menu</span> <span class="module_name">(Hirb::Console)</span></a>' },
-          { method: 'new', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000040"><span class="method_name">new</span> <span class="module_name">(Hirb::Pager)</span></a>' },
-          { method: 'new', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000044"><span class="method_name">new</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
-          { method: 'page', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000041"><span class="method_name">page</span> <span class="module_name">(Hirb::Pager)</span></a>' },
-          { method: 'recursive_hash_merge', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000017"><span class="method_name">recursive_hash_merge</span> <span class="module_name">(Hirb::Util)</span></a>' },
-          { method: 'reload', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000047"><span class="method_name">reload</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'enable', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000026"><span class="method_name">enable</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'enabled?', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000027"><span class="method_name">enabled?</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'find_home', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000024"><span class="method_name">find_home</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'format_class', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000048"><span class="method_name">format_class</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'format_class', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000039"><span class="method_name">format_class</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'format_output', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000013"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Console)</span></a>' },
+          { method: 'format_output', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000050"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'formatter_config', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000038"><span class="method_name">formatter_config</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'height', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000037"><span class="method_name">height</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'menu', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000016"><span class="method_name">menu</span> <span class="module_name">(Hirb::Console)</span></a>' },
+          { method: 'new', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000046"><span class="method_name">new</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'new', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000042"><span class="method_name">new</span> <span class="module_name">(Hirb::Pager)</span></a>' },
+          { method: 'page', module: 'hirb::pager', html: '<a href="classes/Hirb/Pager.html#M000043"><span class="method_name">page</span> <span class="module_name">(Hirb::Pager)</span></a>' },
+          { method: 'recursive_hash_merge', module: 'hirb::util', html: '<a href="classes/Hirb/Util.html#M000018"><span class="method_name">recursive_hash_merge</span> <span class="module_name">(Hirb::Util)</span></a>' },
+          { method: 'reload', module: 'hirb::formatter', html: '<a href="classes/Hirb/Formatter.html#M000049"><span class="method_name">reload</span> <span class="module_name">(Hirb::Formatter)</span></a>' },
+          { method: 'render', module: 'hirb::menu', html: '<a href="classes/Hirb/Menu.html#M000045"><span class="method_name">render</span> <span class="module_name">(Hirb::Menu)</span></a>' },
           { method: 'render', module: 'hirb::helpers::activerecordtable', html: '<a href="classes/Hirb/Helpers/ActiveRecordTable.html#M000004"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ActiveRecordTable)</span></a>' },
-          { method: 'render', module: 'hirb::helpers::objecttable', html: '<a href="classes/Hirb/Helpers/ObjectTable.html#M000008"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ObjectTable)</span></a>' },
-          { method: 'render', module: 'hirb::helpers::table', html: '<a href="classes/Hirb/Helpers/Table.html#M000007"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Table)</span></a>' },
-          { method: 'render', module: 'hirb::helpers::autotable', html: '<a href="classes/Hirb/Helpers/AutoTable.html#M000006"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::AutoTable)</span></a>' },
-          { method: 'render', module: 'hirb::helpers::tree', html: '<a href="classes/Hirb/Helpers/Tree.html#M000010"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Tree)</span></a>' },
           { method: 'render', module: 'hirb::helpers::verticaltable', html: '<a href="classes/Hirb/Helpers/VerticalTable.html#M000005"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::VerticalTable)</span></a>' },
-          { method: 'render', module: 'hirb::helpers::parentchildtree', html: '<a href="classes/Hirb/Helpers/ParentChildTree.html#M000009"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ParentChildTree)</span></a>' },
-          { method: 'render', module: 'hirb::menu', html: '<a href="classes/Hirb/Menu.html#M000043"><span class="method_name">render</span> <span class="module_name">(Hirb::Menu)</span></a>' },
-          { method: 'render_method', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000032"><span class="method_name">render_method</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'render_output', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000011"><span class="method_name">render_output</span> <span class="module_name">(Hirb::Console)</span></a>' },
-          { method: 'reset_render_method', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000033"><span class="method_name">reset_render_method</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'resize', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000029"><span class="method_name">resize</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'table', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000013"><span class="method_name">table</span> <span class="module_name">(Hirb::Console)</span></a>' },
-          { method: 'toggle_formatter', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000028"><span class="method_name">toggle_formatter</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'toggle_pager', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000027"><span class="method_name">toggle_pager</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'view', module: 'hirb::objectmethods', html: '<a href="classes/Hirb/ObjectMethods.html#M000023"><span class="method_name">view</span> <span class="module_name">(Hirb::ObjectMethods)</span></a>' },
-          { method: 'view', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000014"><span class="method_name">view</span> <span class="module_name">(Hirb::Console)</span></a>' },
-          { method: 'view_output', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000030"><span class="method_name">view_output</span> <span class="module_name">(Hirb::View)</span></a>' },
-          { method: 'width', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000034"><span class="method_name">width</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'render', module: 'hirb::helpers::tree', html: '<a href="classes/Hirb/Helpers/Tree.html#M000011"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Tree)</span></a>' },
+          { method: 'render', module: 'hirb::helpers::objecttable', html: '<a href="classes/Hirb/Helpers/ObjectTable.html#M000009"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ObjectTable)</span></a>' },
+          { method: 'render', module: 'hirb::helpers::parentchildtree', html: '<a href="classes/Hirb/Helpers/ParentChildTree.html#M000010"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ParentChildTree)</span></a>' },
+          { method: 'render', module: 'hirb::helpers::autotable', html: '<a href="classes/Hirb/Helpers/AutoTable.html#M000006"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::AutoTable)</span></a>' },
+          { method: 'render', module: 'hirb::helpers::table', html: '<a href="classes/Hirb/Helpers/Table.html#M000007"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Table)</span></a>' },
+          { method: 'render_method', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000034"><span class="method_name">render_method</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'render_output', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000012"><span class="method_name">render_output</span> <span class="module_name">(Hirb::Console)</span></a>' },
+          { method: 'reset_render_method', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000035"><span class="method_name">reset_render_method</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'resize', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000031"><span class="method_name">resize</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'resize!', module: 'hirb::helpers::table::resizer', html: '<a href="classes/Hirb/Helpers/Table/Resizer.html#M000008"><span class="method_name">resize!</span> <span class="module_name">(Hirb::Helpers::Table::Resizer)</span></a>' },
+          { method: 'table', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000014"><span class="method_name">table</span> <span class="module_name">(Hirb::Console)</span></a>' },
+          { method: 'toggle_formatter', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000030"><span class="method_name">toggle_formatter</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'toggle_pager', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000029"><span class="method_name">toggle_pager</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'view', module: 'hirb::objectmethods', html: '<a href="classes/Hirb/ObjectMethods.html#M000025"><span class="method_name">view</span> <span class="module_name">(Hirb::ObjectMethods)</span></a>' },
+          { method: 'view', module: 'hirb::console', html: '<a href="classes/Hirb/Console.html#M000015"><span class="method_name">view</span> <span class="module_name">(Hirb::Console)</span></a>' },
+          { method: 'view_output', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000032"><span class="method_name">view_output</span> <span class="module_name">(Hirb::View)</span></a>' },
+          { method: 'width', module: 'hirb::view', html: '<a href="classes/Hirb/View.html#M000036"><span class="method_name">width</span> <span class="module_name">(Hirb::View)</span></a>' },
         ]
         $(document).observe('dom:loaded', function() {
         	// Setup search-during-typing.
@@ -4441,54 +4443,56 @@
       </form>
       <ol class='methods' id='search-results' style='display: none'></ol>
       <ol class='methods' id='index-entries'>
-        <li><a href="classes/Hirb/Pager.html#M000042"><span class="method_name">activated_by?</span> <span class="module_name">(Hirb::Pager)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000016"><span class="method_name">any_const_get</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000018"><span class="method_name">camelize</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000031"><span class="method_name">capture_and_render</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000022"><span class="method_name">capture_stdout</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000019"><span class="method_name">choose_from_array</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000020"><span class="method_name">command_exists?</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/Pager.html#M000038"><span class="method_name">command_pager</span> <span class="module_name">(Hirb::Pager)</span></a></li>
-        <li><a href="classes/Hirb/Formatter.html#M000045"><span class="method_name">config</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
-        <li><a href="classes/Hirb.html#M000003"><span class="method_name">config_file</span> <span class="module_name">(Hirb)</span></a></li>
-        <li><a href="classes/Hirb/Pager.html#M000039"><span class="method_name">default_pager</span> <span class="module_name">(Hirb::Pager)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000021"><span class="method_name">detect_terminal_size</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Pager.html#M000044"><span class="method_name">activated_by?</span> <span class="module_name">(Hirb::Pager)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000017"><span class="method_name">any_const_get</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000019"><span class="method_name">camelize</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000033"><span class="method_name">capture_and_render</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000023"><span class="method_name">capture_stdout</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000020"><span class="method_name">choose_from_array</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000021"><span class="method_name">command_exists?</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Pager.html#M000040"><span class="method_name">command_pager</span> <span class="module_name">(Hirb::Pager)</span></a></li>
+        <li><a href="classes/Hirb/Formatter.html#M000047"><span class="method_name">config</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb.html#M000003"><span class="method_name">config_files</span> <span class="module_name">(Hirb)</span></a></li>
+        <li><a href="classes/Hirb/Pager.html#M000041"><span class="method_name">default_pager</span> <span class="module_name">(Hirb::Pager)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000022"><span class="method_name">detect_terminal_size</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000028"><span class="method_name">disable</span> <span class="module_name">(Hirb::View)</span></a></li>
         <li><a href="classes/Hirb.html#M000002"><span class="method_name">disable</span> <span class="module_name">(Hirb)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000026"><span class="method_name">disable</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000024"><span class="method_name">enable</span> <span class="module_name">(Hirb::View)</span></a></li>
         <li><a href="classes/Hirb.html#M000001"><span class="method_name">enable</span> <span class="module_name">(Hirb)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000025"><span class="method_name">enabled?</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Formatter.html#M000046"><span class="method_name">format_class</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000037"><span class="method_name">format_class</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Formatter.html#M000048"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
-        <li><a href="classes/Hirb/Console.html#M000012"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Console)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000036"><span class="method_name">formatter_config</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000035"><span class="method_name">height</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Console.html#M000015"><span class="method_name">menu</span> <span class="module_name">(Hirb::Console)</span></a></li>
-        <li><a href="classes/Hirb/Pager.html#M000040"><span class="method_name">new</span> <span class="module_name">(Hirb::Pager)</span></a></li>
-        <li><a href="classes/Hirb/Formatter.html#M000044"><span class="method_name">new</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
-        <li><a href="classes/Hirb/Pager.html#M000041"><span class="method_name">page</span> <span class="module_name">(Hirb::Pager)</span></a></li>
-        <li><a href="classes/Hirb/Util.html#M000017"><span class="method_name">recursive_hash_merge</span> <span class="module_name">(Hirb::Util)</span></a></li>
-        <li><a href="classes/Hirb/Formatter.html#M000047"><span class="method_name">reload</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000026"><span class="method_name">enable</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000027"><span class="method_name">enabled?</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000024"><span class="method_name">find_home</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Formatter.html#M000048"><span class="method_name">format_class</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000039"><span class="method_name">format_class</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Console.html#M000013"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Console)</span></a></li>
+        <li><a href="classes/Hirb/Formatter.html#M000050"><span class="method_name">format_output</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000038"><span class="method_name">formatter_config</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000037"><span class="method_name">height</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Console.html#M000016"><span class="method_name">menu</span> <span class="module_name">(Hirb::Console)</span></a></li>
+        <li><a href="classes/Hirb/Formatter.html#M000046"><span class="method_name">new</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb/Pager.html#M000042"><span class="method_name">new</span> <span class="module_name">(Hirb::Pager)</span></a></li>
+        <li><a href="classes/Hirb/Pager.html#M000043"><span class="method_name">page</span> <span class="module_name">(Hirb::Pager)</span></a></li>
+        <li><a href="classes/Hirb/Util.html#M000018"><span class="method_name">recursive_hash_merge</span> <span class="module_name">(Hirb::Util)</span></a></li>
+        <li><a href="classes/Hirb/Formatter.html#M000049"><span class="method_name">reload</span> <span class="module_name">(Hirb::Formatter)</span></a></li>
+        <li><a href="classes/Hirb/Menu.html#M000045"><span class="method_name">render</span> <span class="module_name">(Hirb::Menu)</span></a></li>
         <li><a href="classes/Hirb/Helpers/ActiveRecordTable.html#M000004"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ActiveRecordTable)</span></a></li>
-        <li><a href="classes/Hirb/Helpers/ObjectTable.html#M000008"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ObjectTable)</span></a></li>
-        <li><a href="classes/Hirb/Helpers/Table.html#M000007"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Table)</span></a></li>
-        <li><a href="classes/Hirb/Helpers/AutoTable.html#M000006"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::AutoTable)</span></a></li>
-        <li><a href="classes/Hirb/Helpers/Tree.html#M000010"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Tree)</span></a></li>
         <li><a href="classes/Hirb/Helpers/VerticalTable.html#M000005"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::VerticalTable)</span></a></li>
-        <li><a href="classes/Hirb/Helpers/ParentChildTree.html#M000009"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ParentChildTree)</span></a></li>
-        <li><a href="classes/Hirb/Menu.html#M000043"><span class="method_name">render</span> <span class="module_name">(Hirb::Menu)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000032"><span class="method_name">render_method</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Console.html#M000011"><span class="method_name">render_output</span> <span class="module_name">(Hirb::Console)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000033"><span class="method_name">reset_render_method</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000029"><span class="method_name">resize</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/Console.html#M000013"><span class="method_name">table</span> <span class="module_name">(Hirb::Console)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000028"><span class="method_name">toggle_formatter</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000027"><span class="method_name">toggle_pager</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/ObjectMethods.html#M000023"><span class="method_name">view</span> <span class="module_name">(Hirb::ObjectMethods)</span></a></li>
-        <li><a href="classes/Hirb/Console.html#M000014"><span class="method_name">view</span> <span class="module_name">(Hirb::Console)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000030"><span class="method_name">view_output</span> <span class="module_name">(Hirb::View)</span></a></li>
-        <li><a href="classes/Hirb/View.html#M000034"><span class="method_name">width</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/Tree.html#M000011"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Tree)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/ObjectTable.html#M000009"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ObjectTable)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/ParentChildTree.html#M000010"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::ParentChildTree)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/AutoTable.html#M000006"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::AutoTable)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/Table.html#M000007"><span class="method_name">render</span> <span class="module_name">(Hirb::Helpers::Table)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000034"><span class="method_name">render_method</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Console.html#M000012"><span class="method_name">render_output</span> <span class="module_name">(Hirb::Console)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000035"><span class="method_name">reset_render_method</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000031"><span class="method_name">resize</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/Helpers/Table/Resizer.html#M000008"><span class="method_name">resize!</span> <span class="module_name">(Hirb::Helpers::Table::Resizer)</span></a></li>
+        <li><a href="classes/Hirb/Console.html#M000014"><span class="method_name">table</span> <span class="module_name">(Hirb::Console)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000030"><span class="method_name">toggle_formatter</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000029"><span class="method_name">toggle_pager</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/ObjectMethods.html#M000025"><span class="method_name">view</span> <span class="module_name">(Hirb::ObjectMethods)</span></a></li>
+        <li><a href="classes/Hirb/Console.html#M000015"><span class="method_name">view</span> <span class="module_name">(Hirb::Console)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000032"><span class="method_name">view_output</span> <span class="module_name">(Hirb::View)</span></a></li>
+        <li><a href="classes/Hirb/View.html#M000036"><span class="method_name">width</span> <span class="module_name">(Hirb::View)</span></a></li>
       </ol>
     </div>
   </body>

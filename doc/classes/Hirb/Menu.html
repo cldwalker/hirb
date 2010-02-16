@@ -43,64 +43,125 @@
         <div id='text'>
           <div id='description'>
             <p>
-            This class provides a selection menu using Hirb&#8217;s table helpers by
-            default to display choices.
+            This class provides a menu using Hirb&#8217;s table helpers by default to
+            display choices. <a href="Menu.html">Menu</a> choices (syntax at <a
+            href="Util.html#M000020">Hirb::Util.choose_from_array</a>) refer to rows.
+            However, when in two_d mode, choices refer to specific cells by appending a
+            &#8217;:field&#8217; to a choice. A field name can be an abbreviated. Menus
+            can also have an action mode, which turns the menu prompt into a
+            commandline that executes the choices as arguments and uses methods as
+            actions/commands.
             </p>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000043">render</a></li>
+              <li><a href="#M000045">render</a></li>
             </ol>
           </div>
           <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Menu/Error.html" class="link">Hirb::Menu::Error</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CHOSEN_REGEXP</td>
+                    <td>=</td>
+                    <td class='context-item-value'>/^(\d([^:]+)?)(?::)?(\S+)?/</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      Detects valid choices and optional field/column
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CHOSEN_ARG</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'%s'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DIRECTIONS</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Specify individual choices (4,7), range of choices (1-3) or all choices (*).&quot;</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000043'>
-                <a name='M000043'>      </a>
+              <div class='public-class method' id='method-M000045'>
+                <a name='M000045'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
-                  <span class='arguments'>(output, options={}) {|chosen| ...}</span>
+                  <span class='arguments'>(output, options={}, &amp;block)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  <a href="Menu.html">Menu</a> which asks to select from the given array and
-                  returns the selected menu items as an array. See <a
-                  href="Util.html#M000019">Hirb::Util.choose_from_array</a> for the syntax
-                  for specifying selections. All options except for the ones below are passed
-                  to render the menu.
+                  This method will return an array unless it&#8217;s exited by simply
+                  pressing return, which returns nil. If given a block, the block will yield
+                  if and with any menu items are chosen. All options except for the ones
+                  below are passed to render the menu.
                   </p>
                   <h4>Options:</h4>
                   <dl>
-                  <dt>:helper_class</dt><dd>Helper class to render menu. Helper class is expected to implement
+                  <dt><b>:helper_class</b></dt><dd>Helper class to render menu. Helper class is expected to implement
                   numbering given a :number option. To use a very basic menu, set this to
                   false. Defaults to <a
                   href="Helpers/AutoTable.html">Hirb::Helpers::AutoTable</a>.
                   
                   </dd>
-                  <dt>:prompt</dt><dd><a href="String.html">String</a> for menu prompt. Defaults to
+                  <dt><b>:prompt</b></dt><dd><a href="String.html">String</a> for menu prompt. Defaults to
                   &#8220;Choose: &#8220;.
                   
                   </dd>
-                  <dt>:validate_one</dt><dd>Validates that only one item in array is chosen and returns just that item.
-                  Default is false.
+                  <dt><b>:ask</b></dt><dd>Always ask for input, even if there is only one choice. Default is true.
                   
                   </dd>
-                  <dt>:ask</dt><dd>Always ask for input, even if there is only one choice. Default is true.
+                  <dt><b>:directions</b></dt><dd>Display directions before prompt. Default is true.
+                  
+                  </dd>
+                  <dt><b>:readline</b></dt><dd>Use readline to get user input if available. Input strings are added to
+                  readline history. Default is false.
+                  
+                  </dd>
+                  <dt><b>:two_d</b></dt><dd>Turn menu into a 2 dimensional (2D) menu by allowing user to pick values
+                  from table cells. Default is false.
+                  
+                  </dd>
+                  <dt><b>:default_field</b></dt><dd>Default field for a 2D menu. Defaults to first field in a table.
+                  
+                  </dd>
+                  <dt><b>:action</b></dt><dd>Turn menu into an action menu by letting user pass menu choices as an
+                  argument to a method/command. A menu choice&#8217;s place amongst other
+                  arguments is preserved. Default is false.
+                  
+                  </dd>
+                  <dt><b>:multi_action</b></dt><dd>Execute action menu multiple times iterating over the menu choices. Default
+                  is false.
+                  
+                  </dd>
+                  <dt><b>:action_object</b></dt><dd>Object that takes method/command calls. Default is main.
+                  
+                  </dd>
+                  <dt><b>:command</b></dt><dd>Default method/command to call when no command given.
                   
                   </dd>
                   </dl>
                   <p>
                   Examples:
                   </p>
-                  <pre>extend Hirb::Console&#x000A;menu([1,2,3], :fields=&gt;[:field1, :field2], :validate_one=&gt;true)&#x000A;menu([1,2,3], :helper_class=&gt;Hirb::Helpers::Table)</pre>
+                  <pre>&gt;&gt; extend Hirb::Console&#x000A;=&gt; self&#x000A;&gt;&gt; menu [1,2,3], :prompt=&gt; &quot;So many choices, so little time: &quot;&#x000A;&gt;&gt; menu [{:a=&gt;1, :b=&gt;2}, {:a=&gt;3, :b=&gt;4}], :fields=&gt;[:a,b], :two_d=&gt;true)</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000043-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000043-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 17</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">default_options</span> = {<span class="ruby-identifier">:helper_class=</span><span class="ruby-operator">&gt;</span><span class="ruby-constant">Hirb</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">AutoTable</span>, <span class="ruby-identifier">:prompt=</span><span class="ruby-operator">&gt;</span><span class="ruby-node">&quot;Choose #{options[:validate_one] ? 'one' : ''}: &quot;</span>, <span class="ruby-identifier">:ask=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">true</span>}&#x000A;      <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-identifier">output</span> = [<span class="ruby-identifier">output</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">output</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;      <span class="ruby-identifier">chosen</span> = <span class="ruby-identifier">choose_from_menu</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>)&#x000A;      <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">chosen</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">chosen</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;      <span class="ruby-identifier">chosen</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000045-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 40</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Error</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">e</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error: #{e.message}&quot;</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

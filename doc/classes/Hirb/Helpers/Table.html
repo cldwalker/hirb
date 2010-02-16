@@ -31,7 +31,16 @@
         </h1>
         <ol class='paths'>
           <li>
+            <a href="../../../files/lib/hirb/helpers/table/filters_rb.html">lib/hirb/helpers/table/filters.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/hirb/helpers/table/resizer_rb.html">lib/hirb/helpers/table/resizer.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../../files/lib/hirb/helpers/table_rb.html">lib/hirb/helpers/table.rb</a>
+          </li>
+          <li>
+            <a class='show' href='#' onclick='this.parentNode.parentNode.className += " expanded"; this.parentNode.removeChild(this); return false'>show all</a>
           </li>
         </ol>
         <div class='parent'>
@@ -46,7 +55,7 @@
             Base <a href="Table.html">Table</a> class from which other table classes
             inherit. By default, a table is constrained to a default width but this can
             be adjusted via the max_width option or <a
-            href="../View.html#M000034">Hirb::View.width</a>. Rows can be an array of
+            href="../View.html#M000036">Hirb::View.width</a>. Rows can be an array of
             arrays or an array of hashes.
             </p>
             <p>
@@ -105,6 +114,8 @@
           <div id='section'>
             <div id='class-list'>
               <h2>Classes and Modules</h2>
+              Module <a href="Table/Filters.html" class="link">Hirb::Helpers::Table::Filters</a><br />
+              Class <a href="Table/Resizer.html" class="link">Hirb::Helpers::Table::Resizer</a><br />
               Class <a href="Table/TooManyFieldsForWidthError.html" class="link">Hirb::Helpers::Table::TooManyFieldsForWidthError</a><br />
             </div>
             <div id='constants-list'>
@@ -115,6 +126,45 @@
                     <td class='context-item-name'>BORDER_LENGTH</td>
                     <td>=</td>
                     <td class='context-item-value'>3</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>MIN_FIELD_LENGTH</td>
+                    <td>=</td>
+                    <td class='context-item-value'>3</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>filter_any</td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'>
+                      
+                      Boolean which sets the default for :filter_any option.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>filter_classes</td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'>
+                      
+                      A hash which maps a cell value&#8217;s class to a filter. This serves to
+                      set a default filter per field if all of its values are a class in this
+                      hash. By default, Array values are comma joined and Hashes are inspected.
+                      See the :filter_any option to apply this filter per value.
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>last_table</td>
+                    <td class='context-item-value'>[RW]</td>
+                    <td class='context-item-desc'>
+                      
+                      Holds last table object created
+                    </td>
                   </tr>
                 </table>
               </div>
@@ -133,67 +183,89 @@
                   </p>
                   <h4>Options:</h4>
                   <dl>
-                  <dt>:fields</dt><dd>An array which overrides the default fields and can be used to indicate
+                  <dt><b>:fields</b></dt><dd>An array which overrides the default fields and can be used to indicate
                   field order.
                   
                   </dd>
-                  <dt>:headers</dt><dd>A hash of fields and their header names. Fields that aren&#8217;t specified
+                  <dt><b>:headers</b></dt><dd>A hash of fields and their header names. Fields that aren&#8217;t specified
                   here default to their name. This option can also be an array but only for
                   array rows.
                   
                   </dd>
-                  <dt>:field_lengths</dt><dd>A hash of fields and their maximum allowed lengths. If a field exceeds
-                  it&#8217;s maximum length than it&#8217;s truncated and has a &#8230;
-                  appended to it. Fields that aren&#8217;t specified here have no maximum
-                  allowed length.
+                  <dt><b>:max_fields</b></dt><dd>A hash of fields and their maximum allowed lengths. Maximum length can also
+                  be a percentage of the total width (decimal less than one). When a field
+                  exceeds it&#8217;s maximum then it&#8217;s truncated and has a &#8230;
+                  appended to it. Fields that aren&#8217;t specified have no maximum.
                   
                   </dd>
-                  <dt>:max_width</dt><dd>The maximum allowed width of all fields put together. This option is
-                  enforced except when the field_lengths option is set. This doesn&#8217;t
-                  count field borders as part of the total.
+                  <dt><b>:max_width</b></dt><dd>The maximum allowed width of all fields put together including field
+                  borders. Only valid when :resize is true. Default is <a
+                  href="../View.html#M000036">Hirb::View.width</a>.
                   
                   </dd>
-                  <dt>:number</dt><dd>When set to true, numbers rows by adding a :hirb_number column as the first
+                  <dt><b>:resize</b></dt><dd>Resizes table to display all columns in allowed :max_width. Default is
+                  true. Setting this false will display the full length of each field.
+                  
+                  </dd>
+                  <dt><b>:number</b></dt><dd>When set to true, numbers rows by adding a :hirb_number column as the first
                   column. Default is false.
                   
                   </dd>
-                  <dt>:change_fields</dt><dd>A hash to change old field names to new field names. This can also be an
+                  <dt><b>:change_fields</b></dt><dd>A hash to change old field names to new field names. This can also be an
                   array of new names but only for array rows. This is useful when wanting to
                   change auto-generated keys to more user-friendly names i.e. for array rows.
                   
                   </dd>
-                  <dt>:filters</dt><dd>A hash of fields and the filters that each row in the field must run
-                  through. The filter converts the cell&#8217;s value by applying a given
-                  proc or an array containing a method and optional arguments to it.
+                  <dt><b>:filters</b></dt><dd>A hash of fields and their filters, applied to every row in a field. A
+                  filter can be a proc, an instance method applied to the field value or a <a
+                  href="Table/Filters.html">Filters</a> method. Also see the filter_classes
+                  attribute below.
                   
                   </dd>
-                  <dt>:vertical</dt><dd>When set to true, renders a vertical table using <a
+                  <dt><b>:header_filter</b></dt><dd>A filter, like one in :filters, that is applied to all headers after the
+                  :headers option.
+                  
+                  </dd>
+                  <dt><b>:filter_any</b></dt><dd>When set to true, any cell defaults to being filtered by its class in
+                  :filter_classes. Default Hirb::Helpers::Table.filter_any().
+                  
+                  </dd>
+                  <dt><b>:filter_classes</b></dt><dd>Hash which maps classes to filters. Default is
+                  Hirb::Helpers::Table.filter_classes().
+                  
+                  </dd>
+                  <dt><b>:vertical</b></dt><dd>When set to true, renders a vertical table using <a
                   href="VerticalTable.html">Hirb::Helpers::VerticalTable</a>. Default is
                   false.
                   
                   </dd>
-                  <dt>:all_fields</dt><dd>When set to true, renders fields in all rows. Valid only in rows that are
+                  <dt><b>:all_fields</b></dt><dd>When set to true, renders fields in all rows. Valid only in rows that are
                   hashes. Default is false.
                   
                   </dd>
-                  <dt>:description</dt><dd>When set to true, renders row count description at bottom. Default is true.
+                  <dt><b>:description</b></dt><dd>When set to true, renders row count description at bottom. Default is true.
                   
                   </dd>
-                  <dt>:no_newlines</dt><dd>When set to true, stringifies newlines so they don&#8217;t disrupt tables.
-                  Default is false for vertical tables and true for anything else.
+                  <dt><b>:escape_special_chars</b></dt><dd>When set to true, escapes special characters n,t,r so they don&#8217;t
+                  disrupt tables. Default is false for vertical tables and true for anything
+                  else.
+                  
+                  </dd>
+                  <dt><b>:return_rows</b></dt><dd>When set to true, returns rows that have been initialized but not rendered.
+                  Default is false.
                   
                   </dd>
                   </dl>
                   <p>
                   Examples:
                   </p>
-                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :field_lengths=&gt;{0=&gt;10}&#x000A;Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=&gt;%w{letters numbers}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
+                  <pre>Hirb::Helpers::Table.render [[1,2], [2,3]]&#x000A;Hirb::Helpers::Table.render [[1,2], [2,3]], :max_fields=&gt;{0=&gt;10}, :header_filter=&gt;:capitalize&#x000A;Hirb::Helpers::Table.render [['a',1], ['b',2]], :change_fields=&gt;%w{letters numbers}, :max_fields=&gt;{'numbers'=&gt;0.4}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}]&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :headers=&gt;{:weight=&gt;&quot;Weight(lbs)&quot;}&#x000A;Hirb::Helpers::Table.render [{:age=&gt;10, :weight=&gt;100}, {:age=&gt;80, :weight=&gt;500}], :filters=&gt;{:age=&gt;[:to_f]}</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 90</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:vertical</span>] <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/table.rb, line 101</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:vertical</span>] <span class="ruby-operator">?</span> <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>) <span class="ruby-operator">:</span>&#x000A;      <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:return_rows</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value str">&quot;@rows&quot;</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TooManyFieldsForWidthError</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-value str">&quot;** Error: Too many fields for the current width. Configure your width &quot;</span> <span class="ruby-operator">+</span>&#x000A;        <span class="ruby-value str">&quot;and/or fields to avoid this error. Defaulting to a vertical table. **&quot;</span>&#x000A;      <span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">VerticalTable</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">rows</span>, <span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
