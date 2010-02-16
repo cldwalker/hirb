@@ -1,3 +1,16 @@
+== 0.2.10
+* Added multiple options to Menu, most importantly :two_d and :action.
+* Improved table resizing algorithm.
+* Added merging of configs for multiple Hirb.enable calls.
+* Added :max_fields, :hide_empty, :delete_callbacks, :resize, :header_filter
+  and :return_rows options to Table.
+* Added escaping for \t and \r in Table.
+* Renamed Table's :no_newlines option to :escape_special_chars.
+* Removed Table's :field_lengths option.
+* Removed Menu's :validate_one option.
+* Bug fix for table header of a basic array.
+* Deprecating Hirb.config_file + View.enable in next release.
+
 == 0.2.9
 * Added newline filtering and :no_newlines option for table helper.
 * Added default filters for hashes that have hash values.

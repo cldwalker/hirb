@@ -1,5 +1,10 @@
 module Hirb
-  # This class provides a selection menu using Hirb's table helpers by default to display choices.
+  # This class provides a menu using Hirb's table helpers by default to display choices.
+  # Menu choices (syntax at Hirb::Util.choose_from_array) refer to rows. However, when in
+  # two_d mode, choices refer to specific cells by appending a ':field' to a choice.
+  # A field name can be an abbreviated. Menus can also have an action mode, which turns the
+  # menu prompt into a commandline that executes the choices as arguments and uses methods as
+  # actions/commands.
   class Menu
     class Error < StandardError; end
 
@@ -8,8 +13,9 @@ module Hirb
     CHOSEN_ARG = '%s'
     DIRECTIONS = "Specify individual choices (4,7), range of choices (1-3) or all choices (*)."
 
-    # Menu which asks to select from the given array and returns the selected menu items as an array. See Hirb::Util.choose_from_array
-    # for the syntax for specifying selections. If menu is given a block, the block will yield if any menu items are chosen.
+
+    # This method will return an array unless it's exited by simply pressing return, which returns nil.
+    # If given a block, the block will yield if and with any menu items are chosen.
     # All options except for the ones below are passed to render the menu.
     #
     # ==== Options:
