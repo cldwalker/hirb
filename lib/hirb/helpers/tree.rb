@@ -43,6 +43,7 @@ class Hirb::Helpers::Tree
     # [:indent] Number of spaces to indent between levels for basic + number trees. Default is 4.
     # [:limit] Limits the level or depth of a tree that is displayed. Root node is level 0.
     # [:description] Displays brief description about tree ie how many nodes it has.
+    # [:multi_line_nodes] Handles multi-lined nodes by indenting their newlines. Default is false.
     #  Examples:
     #     Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=>:directory)
     def render(nodes, options={})
@@ -81,28 +82,27 @@ class Hirb::Helpers::Tree
     @indent = ' ' * (@options[:indent] || 4 )
     @nodes = @nodes.select {|e| e[:level] <= @options[:limit] } if @options[:limit]
     case @type.to_s
-    when 'directory'
-      render_directory
-    when 'number'
-      render_number
-    else
-      render_basic
+    when 'directory' then render_directory
+    when 'number'    then render_number
+    else render_basic
     end
+  end
+
+  def render_nodes
+    value_indent = @options[:multi_line_nodes] ? @indent : nil
+    @nodes.map {|e| yield(e) + e.value(value_indent) }.join("\n")
   end
 
   def render_directory
     mark_last_nodes_per_level
-    new_nodes = []
-    @nodes.each_with_index {|e, i|
+    render_nodes {|e|
       value = ''
       unless e.root?
         value << e.render_parent_characters
         value << (e[:last_node] ? "`-- " : "|-- ")
       end
-      value << e[:value]
-      new_nodes << value
+      value
     }
-    new_nodes.join("\n")
   end
   
   def render_number
@@ -113,13 +113,13 @@ class Hirb::Helpers::Tree
       counter[parent_level_key] += 1
       e[:pre_value] = "#{counter[parent_level_key]}. "
     }
-    @nodes.map {|e| @indent * e[:level] + e[:pre_value] + e[:value]}.join("\n")
+    render_nodes {|e| @indent * e[:level] + e[:pre_value] }
   end
-  
+
   def render_basic
-    @nodes.map {|e| @indent * e[:level] + e[:value]}.join("\n")
+    render_nodes {|e| @indent * e[:level] }
   end
-  
+
   def validate_nodes
     @nodes.each do |e|
       raise ParentlessNodeError if (e[:level] > e.previous[:level]) && (e[:level] - e.previous[:level]) > 1
@@ -144,6 +144,10 @@ class Hirb::Helpers::Tree
       raise MissingLevelError unless hash.has_key?(:level)
       raise MissingValueError unless hash.has_key?(:value)
       replace(hash)
+    end
+
+    def value(indent=nil)
+      indent ? self[:value].gsub("\n", "\n#{indent * self[:level]}") : self[:value]
     end
 
     def parent

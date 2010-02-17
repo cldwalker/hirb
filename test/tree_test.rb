@@ -107,6 +107,23 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       TREE
       tree([[0,'0'],[1,'1'],[2,'2'],[2,'3'],[1,'4']], :type=>:number)
     end
+
+    test "with multi-line nodes option renders" do
+      expected_tree = <<-TREE.unindent
+      parent
+          +-------+
+          | value |
+          +-------+
+          | 1     |
+          | 2     |
+          | 3     |
+          +-------+
+              indented
+              stuff
+      TREE
+      node1 = "+-------+\n| value |\n+-------+\n| 1     |\n| 2     |\n| 3     |\n+-------+"
+      tree([ [0, 'parent'],[1, node1],[2, "indented\nstuff"]], :multi_line_nodes=>true)
+    end
   end
 
   def mock_node(value, value_method)
