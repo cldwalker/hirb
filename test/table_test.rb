@@ -27,7 +27,17 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       +---+---+
       1 row in set
       TABLE
-      table([{:a=>1, :b=>2}], :headers=>nil).should == expected_table
+      table([{:a=>1, :b=>2}], :headers=>false).should == expected_table
+    end
+
+    test "with no headers and nil fields renders" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | 1 |   |
+      +---+---+
+      1 row in set
+      TABLE
+      table([{:a=>1, :b=>nil}], :headers=>false).should == expected_table
     end
 
     test "with string keys renders" do

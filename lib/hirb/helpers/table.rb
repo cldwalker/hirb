@@ -68,7 +68,7 @@ module Hirb
     # ==== Options:
     # [*:fields*] An array which overrides the default fields and can be used to indicate field order.
     # [*:headers*] A hash of fields and their header names. Fields that aren't specified here default to their name.
-    #              This option can also be an array but only for array rows.
+    #              When set to false, headers are hidden. Can also be an array but only for array rows.
     # [*:max_fields*] A hash of fields and their maximum allowed lengths. Maximum length can also be a percentage of the total width
     #                 (decimal less than one). When a field exceeds it's maximum then it's
     #                 truncated and has a ... appended to it. Fields that aren't specified have no maximum.
@@ -267,7 +267,8 @@ module Hirb
 
   # find max length for each field; start with the headers
   def default_field_lengths
-    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = String.size(v); h} : {}
+    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = String.size(v); h} :
+      @fields.inject({}) {|h,e| h[e] = 1; h }
     @rows.each do |row|
       @fields.each do |field|
         len = String.size(row[field])
