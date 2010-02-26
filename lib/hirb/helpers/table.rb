@@ -134,19 +134,18 @@ module Hirb
   end
 
   def set_fields(rows)
-    fields = if @options[:fields]
-      @options[:fields].dup
-    else
-      if rows[0].is_a?(Hash)
-        keys = @options[:all_fields] ? rows.map {|e| e.keys}.flatten.uniq : rows[0].keys
-        keys.sort {|a,b| a.to_s <=> b.to_s}
-      else
-        rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
-      end
-    end
     @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
+    return @options[:fields].dup if @options[:fields]
+
+    fields = if rows[0].is_a?(Hash)
+      keys = @options[:all_fields] ? rows.map {|e| e.keys}.flatten.uniq : rows[0].keys
+      keys.sort {|a,b| a.to_s <=> b.to_s}
+    else
+      rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
+    end
+
     @options[:change_fields].each do |oldf, newf|
-      (index = fields.index(oldf)) ? fields[index] = newf : fields << newf
+      (index = fields.index(oldf)) && fields[index] = newf
     end
     fields
   end

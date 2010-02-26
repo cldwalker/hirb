@@ -449,6 +449,33 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2],[2,3]], :change_fields=>['name', 'value']).should == expected_table
     end
 
+    test "change_fields and fields option renders" do
+      expected_table = <<-TABLE.unindent
+      +------+
+      | name |
+      +------+
+      | 1    |
+      | 2    |
+      +------+
+      2 rows in set
+      TABLE
+      table([[1,2],[2,3]], :change_fields=>['name', 'value'], :fields=>['name']).should == expected_table
+    end
+
+    test "invalid fields in change_fields options are ignored" do
+      expected_table = <<-TABLE.unindent
+      +------+-------+
+      | name | value |
+      +------+-------+
+      | 1    | 2     |
+      | 2    | 3     |
+      +------+-------+
+      2 rows in set
+      TABLE
+      table([{:a=>1,:b=>2}, {:a=>2,:b=>3}], :change_fields=>{:a=>'name', :b=>'value', :c=>'time'}).should == expected_table
+      table([[1,2],[2,3]], :change_fields=>['name', 'value','time']).should == expected_table
+    end
+
     test "return_rows option returns rows" do
       table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
     end
