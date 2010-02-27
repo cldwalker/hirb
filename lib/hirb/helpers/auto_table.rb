@@ -18,23 +18,51 @@ class Hirb::Helpers::AutoTable
   def self.object_table_options(obj)
     auto_table = new
     auto_table.option_method_classes.each do |meth, klass|
-      if obj.class.ancestors.include?(Hirb::Util.any_const_get(klass))
-        return auto_table.send("#{meth}_options", obj) rescue {}
+      if obj.class.ancestors.include?(Hirb::Util.any_const_get(klass)) &&
+        auto_table.respond_to?("#{meth}_options")
+        update_config(klass) unless Hirb::View.formatter_config[klass]
+        return auto_table.send("#{meth}_options", obj)
       end
     end
   end
 
+  def self.add_module(mod)
+    orig_methods = new.option_methods
+    include mod
+    new_methods = new.option_methods - orig_methods
+    new.update_config(new_methods)
+  end
+
+  def update_config(meths)
+    output_config = meths.inject({}) {|t,e|
+      t[method_to_class(e)] = {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}; t
+    }
+    Hirb.enable :output=>output_config if Hirb.respond_to?(:enable)
+  end
+
   def option_method_classes
     @option_method_classes ||= option_methods.inject({}) {|t,e|
-      t[e] = Hirb::Util.camelize e.gsub('__', '/') ; t
+      t[e] = method_to_class(e); t
     }
   end
 
-  def option_methods
-    self.class.instance_methods(false).select {|e| e.to_s =~ /_options$/ }.map {|e| e.to_s.sub(/_options$/, '') }
+  def method_to_class(meth)
+    Hirb::Util.camelize meth.gsub('__', '/')
   end
 
-  def mongoid__document_options(obj)
-    {:fields=>obj.class.fields.keys}
+  def option_methods
+    self.class.instance_methods.select {|e| e.to_s =~ /_options$/ }.map {|e| e.to_s.sub(/_options$/, '') }
   end
+
+  module Mongoid
+    def mongoid__document_options(obj)
+      {:fields=>obj.class.fields.keys + ['_id']}
+    end
+
+    def mongo_mapper__document_options(obj)
+      {:fields=>obj.class.column_names}
+    end
+  end
+
+  add_module Mongoid
 end
