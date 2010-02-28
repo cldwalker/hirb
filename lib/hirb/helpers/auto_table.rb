@@ -54,16 +54,7 @@ class Hirb::Helpers::AutoTable
   def option_methods
     self.class.instance_methods.select {|e| e.to_s =~ /_options$/ }.map {|e| e.to_s.sub(/_options$/, '') }
   end
-
-  module Mongoid
-    def mongoid__document_options(obj)
-      {:fields=>obj.class.fields.keys + ['_id']}
-    end
-
-    def mongo_mapper__document_options(obj)
-      {:fields=>obj.class.column_names}
-    end
-  end
-
-  add_module Mongoid
 end
+
+require 'hirb/helpers/auto_table/mongo'
+require 'hirb/helpers/auto_table/orm'

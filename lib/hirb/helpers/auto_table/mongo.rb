@@ -1,0 +1,17 @@
+class Hirb::Helpers::AutoTable
+  module Mongo
+    def mongoid__document_options(obj)
+      {:fields=>obj.class.fields.keys + ['_id']}
+    end
+
+    def mongo_mapper__document_options(obj)
+      {:fields=>obj.class.column_names}
+    end
+
+    def mongo_mapper__embedded_document_options(obj)
+      {:fields=>obj.class.column_names}
+    end
+  end
+
+  add_module Mongo
+end
