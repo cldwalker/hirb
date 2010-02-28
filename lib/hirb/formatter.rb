@@ -84,9 +84,12 @@ module Hirb
 =end 
   
   class Formatter
+    class<<self; attr_accessor :default_config; end
+    self.default_config = {}
+
     def initialize(additional_config={})
       @klass_config = {}
-      @config = Util.recursive_hash_merge default_config, additional_config || {}
+      @config = self.class.default_config.merge Util.recursive_hash_merge(default_config, additional_config || {})
     end
 
     # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method, :output_method

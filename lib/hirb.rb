@@ -7,11 +7,11 @@ $KCODE = 'u' if RUBY_VERSION < '1.9'
 require 'hirb/util'
 require 'hirb/string'
 require 'hirb/hash_struct'
+require 'hirb/formatter' # must come before helpers/auto_table
 require 'hirb/helpers'
 require 'hirb/view'
 require 'hirb/views/activerecord_base'
 require 'hirb/console'
-require 'hirb/formatter'
 require 'hirb/pager'
 require 'hirb/menu'
 

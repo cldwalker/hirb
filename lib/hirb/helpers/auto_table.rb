@@ -35,9 +35,10 @@ class Hirb::Helpers::AutoTable
 
   def update_config(meths)
     output_config = meths.inject({}) {|t,e|
-      t[method_to_class(e)] = {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}; t
+      t[method_to_class(e)] = {:class=>self.class, :ancestor=>true}; t
     }
-    Hirb.enable :output=>output_config if Hirb.respond_to?(:enable)
+    (Hirb.respond_to?(:enable) && Hirb::View.enabled?) ? Hirb.enable(:output=>output_config) :
+      Hirb::Formatter.default_config.merge!(output_config)
   end
 
   def option_method_classes
