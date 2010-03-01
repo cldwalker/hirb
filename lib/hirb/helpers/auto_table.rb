@@ -56,5 +56,6 @@ class Hirb::Helpers::AutoTable
   end
 end
 
-require 'hirb/helpers/auto_table/mongo'
 require 'hirb/helpers/auto_table/orm'
+require 'hirb/helpers/auto_table/mongo_db'
+require 'hirb/helpers/auto_table/couch_db'

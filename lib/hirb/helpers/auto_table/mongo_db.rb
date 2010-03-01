@@ -1,5 +1,5 @@
 class Hirb::Helpers::AutoTable
-  module Mongo
+  module MongoDb
     def mongoid__document_options(obj)
       {:fields=>obj.class.fields.keys + ['_id']}
     end
@@ -13,5 +13,5 @@ class Hirb::Helpers::AutoTable
     end
   end
 
-  add_module Mongo
+  add_module MongoDb
 end
