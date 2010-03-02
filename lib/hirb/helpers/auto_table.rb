@@ -20,7 +20,7 @@ class Hirb::Helpers::AutoTable
     auto_table.option_method_classes.each do |meth, klass|
       if obj.class.ancestors.include?(Hirb::Util.any_const_get(klass)) &&
         auto_table.respond_to?("#{meth}_options")
-        update_config(klass) unless Hirb::View.formatter_config[klass]
+        auto_table.update_config(klass) unless Hirb::View.formatter_config[klass]
         return auto_table.send("#{meth}_options", obj)
       end
     end

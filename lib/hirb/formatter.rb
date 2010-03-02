@@ -89,7 +89,7 @@ module Hirb
 
     def initialize(additional_config={})
       @klass_config = {}
-      @config = self.class.default_config.merge Util.recursive_hash_merge(default_config, additional_config || {})
+      @config = Util.recursive_hash_merge(default_config, additional_config || {})
     end
 
     # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method, :output_method
@@ -171,12 +171,21 @@ module Hirb
     # Internal view options built from user-defined ones. Options are built by recursively merging options from oldest
     # ancestors to the most recent ones.
     def klass_config(output_class)
-      @klass_config[output_class] ||= begin
-        output_ancestors_with_config = output_class.ancestors.map {|e| e.to_s}.select {|e| @config.has_key?(e)}
-        @klass_config[output_class] = output_ancestors_with_config.reverse.inject({}) {|h, klass|
-          (klass == output_class.to_s || @config[klass][:ancestor]) ? Util.recursive_hash_merge(h, @config[klass]) : h
-        }
-      end
+      @klass_config[output_class] ||= build_klass_config(output_class)
+    end
+
+    def build_klass_config(output_class)
+      output_ancestors_in_config = output_class.ancestors.map {|e| e.to_s}.
+        select {|e| @config.key?(e) || self.class.default_config.key?(e)}
+      output_ancestors_in_config.reverse.inject({}) {|h, klass|
+        if (klass == output_class.to_s || (@config[klass] && @config[klass][:ancestor]))
+          Util.recursive_hash_merge(h, @config[klass])
+        elsif self.class.default_config[klass]
+          Util.recursive_hash_merge(h, self.class.default_config[klass])
+        else
+          h
+        end
+      }
     end
 
     def reset_klass_config
