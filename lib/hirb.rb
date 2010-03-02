@@ -8,6 +8,7 @@ require 'hirb/util'
 require 'hirb/string'
 require 'hirb/hash_struct'
 require 'hirb/formatter' # must come before helpers/auto_table
+require 'hirb/helper_view'
 require 'hirb/helpers'
 require 'hirb/view'
 require 'hirb/views/activerecord_base'
