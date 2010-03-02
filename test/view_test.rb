@@ -49,6 +49,12 @@ module Hirb
         { :output=>{klass=>{:class=>:auto_table}} }
       end
 
+      test "sets formatter config" do
+        class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
+        Hirb.enable :output=>class_hash
+        View.formatter_config['Something::Base'].should == class_hash['Something::Base']
+      end
+
       test "when called multiple times merges configs" do
         Hirb.config = nil
         # default config + config_file

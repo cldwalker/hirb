@@ -130,27 +130,30 @@ module Hirb
       output_class = determine_output_class(output)
       options = parse_console_options(options) if options.delete(:console)
       options = Util.recursive_hash_merge(klass_config(output_class), options)
-      output = options[:output_method] ? (output.is_a?(Array) ? output.map {|e| call_output_method(options[:output_method], e) } : 
+      _format_output(output, options, &block)
+    end
+
+    #:stopdoc:
+    def _format_output(output, options, &block)
+      output = options[:output_method] ? (output.is_a?(Array) ?
+        output.map {|e| call_output_method(options[:output_method], e) } :
         call_output_method(options[:output_method], output) ) : output
       args = [output]
       args << options[:options] if options[:options] && !options[:options].empty?
       if options[:method]
-        new_output = send(options[:method],*args)
+        send(options[:method],*args)
       elsif options[:class] && (helper_class = determine_helper_class(options[:class]))
-        new_output = helper_class.render(*args, &block)
+        helper_class.render(*args, &block)
       elsif options[:output_method]
-        new_output = output
+        output
       end
-      new_output
     end
 
-    #:stopdoc:
     def parse_console_options(options) #:nodoc:
       real_options = [:method, :class, :output_method].inject({}) do |h, e|
         h[e] = options.delete(e) if options[e]; h
       end
       real_options.merge! :options=>options
-      real_options
     end
 
     def determine_helper_class(klass)
@@ -175,10 +178,10 @@ module Hirb
     end
 
     def build_klass_config(output_class)
-      output_ancestors_in_config = output_class.ancestors.map {|e| e.to_s}.
-        select {|e| @config.key?(e) || self.class.default_config.key?(e)}
-      output_ancestors_in_config.reverse.inject({}) {|h, klass|
-        if (klass == output_class.to_s || (@config[klass] && @config[klass][:ancestor]))
+      output_ancestors = output_class.ancestors.map {|e| e.to_s}.reverse
+      output_ancestors.pop
+      hash = output_ancestors.inject({}) {|h, klass|
+        if @config[klass] && @config[klass][:ancestor]
           Util.recursive_hash_merge(h, @config[klass])
         elsif self.class.default_config[klass]
           Util.recursive_hash_merge(h, self.class.default_config[klass])
@@ -186,6 +189,7 @@ module Hirb
           h
         end
       }
+      @config[output_class.to_s] ? Util.recursive_hash_merge(hash, @config[output_class.to_s]) : hash
     end
 
     def reset_klass_config

@@ -2,14 +2,12 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 module Hirb
 class FormatterTest < Test::Unit::TestCase
-  context "formatter" do
-    def set_formatter(hash={})
-      @formatter = Formatter.new(hash)
-    end
+  def set_formatter(hash={})
+    @formatter = Formatter.new(hash)
+  end
 
-    before(:all) { eval "module ::Dooda; end" }
-
-    test "klass_config recursively merges ancestor options" do
+  context "klass_config" do
+    test "recursively merges ancestor options" do
       set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
         "Object"=>{:method=>:object_output, :ancestor=>true, :options=>{:vertical=>true}},
         "Kernel"=>{:method=>:default_output}
@@ -17,15 +15,19 @@ class FormatterTest < Test::Unit::TestCase
       @formatter.klass_config(::String).should == expected_result
     end
 
-    test "klass_config doesn't merge ancestor options" do
+    test "doesn't merge ancestor options" do
       set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}
       expected_result = {:args=>[1, 2]}
       @formatter.klass_config(::String).should == expected_result
     end
 
-    test "klass_config returns hash when nothing found" do
+    test "returns hash when nothing found" do
       set_formatter.klass_config(::String).should == {}
     end
+  end
+
+  context "formatter methods:" do
+    before(:all) { eval "module ::Dooda; end" }
 
     test "reload detects new Hirb::Views" do
       set_formatter
@@ -55,7 +57,7 @@ class FormatterTest < Test::Unit::TestCase
     end
   end
 
-  context "enable" do
+  context "views" do
     before(:each) { View.formatter = nil; reset_config }
     after(:each) { Hirb.disable }
 
@@ -73,12 +75,6 @@ class FormatterTest < Test::Unit::TestCase
       eval "module ::Hirb::Views::Blah; def self.render; end; def self.default_options; {:ancestor=>true}; end; end"
       Hirb.enable
       formatter_config["Blah"].should == {:class=>"Hirb::Views::Blah", :ancestor=>true}
-    end
-  
-    test "sets formatter config" do
-      class_hash = {"Something::Base"=>{:class=>"BlahBlah"}}
-      Hirb.enable :output=>class_hash
-      formatter_config['Something::Base'].should == class_hash['Something::Base']
     end
   end
 
