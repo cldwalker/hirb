@@ -3,4 +3,4 @@ module Hirb
   module Views
   end
 end
-%w{rails orm mongo_db couch_db}.each {|e| require "hirb/views/#{e}" }
+%w{rails orm mongo_db couch_db misc_db}.each {|e| require "hirb/views/#{e}" }
