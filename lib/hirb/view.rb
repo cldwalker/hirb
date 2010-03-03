@@ -217,8 +217,4 @@ module Hirb
       #:startdoc:
     end
   end
-  
-  # Namespace for autoloaded views
-  module Views
-  end
 end

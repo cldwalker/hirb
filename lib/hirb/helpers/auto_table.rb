@@ -14,8 +14,3 @@ class Hirb::Helpers::AutoTable
     klass.render(output, options)
   end
 end
-
-require 'hirb/helpers/auto_table/rails'
-require 'hirb/helpers/auto_table/orm'
-require 'hirb/helpers/auto_table/mongo_db'
-require 'hirb/helpers/auto_table/couch_db'

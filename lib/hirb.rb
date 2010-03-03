@@ -10,6 +10,7 @@ require 'hirb/hash_struct'
 require 'hirb/formatter' # must come before helpers/auto_table
 require 'hirb/helper_view'
 require 'hirb/helpers'
+require 'hirb/views'
 require 'hirb/view'
 require 'hirb/console'
 require 'hirb/pager'
