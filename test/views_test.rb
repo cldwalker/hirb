@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class Hirb::Helpers::ActiveRecordTableTest < Test::Unit::TestCase
+class Hirb::ViewsTest < Test::Unit::TestCase
   context "activerecord table" do
     test "with no select gets default options" do
       pet = stub(:name=>'rufus', :age=>7, :attributes=>{"name"=>'rufus', 'age'=>7}, :class=>stub(:column_names=>%w{age name}))
