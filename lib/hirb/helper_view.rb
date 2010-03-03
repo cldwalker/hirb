@@ -24,8 +24,7 @@ module Hirb
       output_config = meths.inject({}) {|t,e|
         t[method_to_class(e)] = {:class=>self, :ancestor=>true}; t
       }
-      (Hirb.respond_to?(:enable) && View.enabled?) ? Hirb.enable(:output=>output_config) :
-        Formatter.default_config.merge!(output_config)
+      Formatter.default_config = output_config.merge Formatter.default_config
     end
 
     def option_method_classes
