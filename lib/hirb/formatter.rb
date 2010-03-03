@@ -1,10 +1,10 @@
 module Hirb
 =begin rdoc
-  This class is format an output into a string using Hirb::Helpers::*, Hirb::Views::* or any user-created views.
+  This class is format an output into a string using Hirb::Helpers::* or any user-created views.
   The formatter object looks for an output's class config in Hirb::Formatter.config and if found applies a helper to the output.
 
-  == Create and Configure Views
-  Let's create a simple view and configure it in different ways to be Hash's default view:
+  == Create and Configure Helpers
+  Let's create a simple helper and configure it in different ways to be a Hash's default view:
 
   === Setup
     irb>> require 'hirb'
@@ -14,9 +14,9 @@ module Hirb
     irb>> require 'yaml'
     =>true
 
-  === Configure As View Method
-  A view method is the smallest reuseable view.
-    # Create yaml view method
+  === Configure As Helper Method
+  A helper method is the smallest reuseable view.
+    # Create yaml helper method
     irb>> def yaml(output); output.to_yaml; end
     =>nil
 
@@ -32,23 +32,8 @@ module Hirb
       :c : 3
     => true
 
-  === Configure As View Class
-  A view class is suited for more complex views. View classes can be under any namespace
-  and are expected to provide a render method. However, if a class is under the Hirb::Views namespace,
-  it will be automatically loaded with no configuration. Something to think about when
-  sharing views with others.
-
-    # Create yaml view class
-    irb>> class Hirb::Views::Hash; def self.render(output, options={}); output.to_yaml; end ;end
-    =>nil
-    # Just reload since no configuration is necessary
-    irb>>Hirb::View.formatter.reload
-
-    # Hashes now appear as yaml ...
-
-  Although the Hirb::Views namespace is great for quick classes that just plug and play, you
-  often want view classes that can be reused with multiple outputs. For this case, it's recommended to
-  use the Hirb::Helpers namespace.
+  === Configure As a Helper Class
+  Now let's create a Helper class for Hash:
 
     # Create yaml view class
     irb>> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
@@ -89,7 +74,7 @@ module Hirb
 
     def initialize(additional_config={})
       @klass_config = {}
-      @config = Util.recursive_hash_merge(default_config, additional_config || {})
+      @config = additional_config || {}
     end
 
     # A hash of Ruby class strings mapped to helper config hashes. A helper config hash must have at least a :method, :output_method
@@ -115,11 +100,6 @@ module Hirb
       @klass_config.delete(klass)
       @config[klass.to_s] = helper_config
       true
-    end
-
-    # Reloads autodetected Hirb::Views
-    def reload
-      @config = Util.recursive_hash_merge default_config, @config
     end
 
     # This is the main method of this class. The formatter looks for the first helper in its config for the given output class.
@@ -194,17 +174,6 @@ module Hirb
 
     def reset_klass_config
       @klass_config = {}
-    end
-
-    def default_config
-      Views.constants.inject({}) {|h,e|
-        output_class = e.to_s.gsub("_", "::")
-        if (views_class = Views.const_get(e)) && views_class.respond_to?(:render)
-          default_options = views_class.respond_to?(:default_options) ? views_class.default_options : {}
-          h[output_class] = default_options.merge({:class=>"Hirb::Views::#{e}"})
-        end
-        h
-      }
     end
     #:startdoc:
   end

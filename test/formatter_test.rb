@@ -29,14 +29,6 @@ class FormatterTest < Test::Unit::TestCase
   context "formatter methods:" do
     before(:all) { eval "module ::Dooda; end" }
 
-    test "reload detects new Hirb::Views" do
-      set_formatter
-      @formatter.config.keys.include?('Zzz').should be(false)
-      eval "module ::Hirb::Views::Zzz; def self.render; end; end"
-      @formatter.reload
-      @formatter.config.keys.include?('Zzz').should be(true)
-    end
-
     test "format_class sets formatter config" do
       set_formatter
       @formatter.format_class ::Dooda, :class=>"DoodaView"
@@ -54,27 +46,6 @@ class FormatterTest < Test::Unit::TestCase
       options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :blah=>'blah'}
       expected_options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :options=>{:blah=>'blah'}}
       @formatter.parse_console_options(options).should == expected_options
-    end
-  end
-
-  context "views" do
-    before(:each) { View.formatter = nil; reset_config }
-    after(:each) { Hirb.disable }
-
-    def formatter_config
-      View.formatter.config
-    end
-    
-    test "sets default formatter config" do
-      eval "module ::Hirb::Views::Something_Base; def self.render; end; end"
-      Hirb.enable
-      formatter_config["Something::Base"].should == {:class=>"Hirb::Views::Something_Base"}
-    end
-  
-    test "sets default formatter config with default_options" do
-      eval "module ::Hirb::Views::Blah; def self.render; end; def self.default_options; {:ancestor=>true}; end; end"
-      Hirb.enable
-      formatter_config["Blah"].should == {:class=>"Hirb::Views::Blah", :ancestor=>true}
     end
   end
 
