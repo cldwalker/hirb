@@ -11,7 +11,6 @@ require 'hirb/formatter' # must come before helpers/auto_table
 require 'hirb/helper_view'
 require 'hirb/helpers'
 require 'hirb/view'
-require 'hirb/views/activerecord_base'
 require 'hirb/console'
 require 'hirb/pager'
 require 'hirb/menu'

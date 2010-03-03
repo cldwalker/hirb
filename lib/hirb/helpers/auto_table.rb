@@ -5,9 +5,7 @@ class Hirb::Helpers::AutoTable
   # Same options as Hirb::Helpers::Table.render.
   def self.render(output, options={})
     output = Array(output)
-    klass = if (output[0].is_a?(ActiveRecord::Base) rescue false)
-      Hirb::Helpers::ActiveRecordTable
-    elsif !(output[0].is_a?(Hash) || output[0].is_a?(Array))
+    klass = if !(output[0].is_a?(Hash) || output[0].is_a?(Array))
       options = (get_options(output[0]) || {}).merge options
       Hirb::Helpers::ObjectTable
     else
@@ -17,6 +15,7 @@ class Hirb::Helpers::AutoTable
   end
 end
 
+require 'hirb/helpers/auto_table/rails'
 require 'hirb/helpers/auto_table/orm'
 require 'hirb/helpers/auto_table/mongo_db'
 require 'hirb/helpers/auto_table/couch_db'
