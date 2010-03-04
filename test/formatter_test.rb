@@ -27,9 +27,10 @@ class FormatterTest < Test::Unit::TestCase
     context "with default config" do
       after(:each) { Formatter.default_config = {}}
 
-      test "merges ancestor options" do
+      test "merges ancestor options and sets local config" do
         Formatter.default_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
         set_formatter.klass_config(::String).should == {:args=>[1,2], :ancestor=>true}
+        @formatter.config['Kernel'].should == {:args=>[1,2], :ancestor=>true}
       end
 
       test "uses local config over default config" do
@@ -38,9 +39,10 @@ class FormatterTest < Test::Unit::TestCase
         @formatter.klass_config(::String).should == {:args=>[1,2]}
       end
 
-      test "uses default config if no local config" do
+      test "uses default config and sets local config" do
         Formatter.default_config = {"String"=>{:method=>:blah}}
         set_formatter.klass_config(::String).should == {:method=>:blah}
+        @formatter.config['String'].should == {:method=>:blah}
       end
     end
   end

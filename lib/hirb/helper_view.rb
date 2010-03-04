@@ -6,7 +6,6 @@ module Hirb
     def get_options(obj)
       option_method_classes.each do |meth, klass|
         if obj.class.ancestors.include?(Util.any_const_get(klass))
-          update_config(klass) unless View.formatter_config[klass]
           return send("#{meth}_options", obj)
         end
       end
@@ -24,7 +23,7 @@ module Hirb
       output_config = meths.inject({}) {|t,e|
         t[method_to_class(e)] = {:class=>self, :ancestor=>true}; t
       }
-      Formatter.default_config = output_config.merge Formatter.default_config
+      Formatter.default_config.merge! output_config
     end
 
     def option_method_classes

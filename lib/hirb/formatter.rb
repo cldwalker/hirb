@@ -164,13 +164,21 @@ module Hirb
         if @config[klass] && @config[klass][:ancestor]
           Util.recursive_hash_merge(h, @config[klass])
         elsif self.class.default_config[klass] && self.class.default_config[klass][:ancestor]
+          copy_default_to_local klass
           Util.recursive_hash_merge(h, self.class.default_config[klass])
         else
           h
         end
       }
-      output_class_config = @config[output_class.to_s] || self.class.default_config[output_class.to_s]
+      output_class_config = @config[output_class.to_s] || begin
+        copy_default_to_local output_class.to_s if self.class.default_config[output_class.to_s]
+        self.class.default_config[output_class.to_s]
+      end
       output_class_config ? Util.recursive_hash_merge(hash, output_class_config) : hash
+    end
+
+    def copy_default_to_local(klass)
+      @config[klass] = self.class.default_config[klass].dup
     end
 
     def reset_klass_config

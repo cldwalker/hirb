@@ -24,10 +24,10 @@ module Hirb
         output_expects [Date.new], :fields=>Date::DAYNAMES
       end
 
-      test "doesn't override existing formatter default_config" do
+      test "does override existing formatter default_config" do
         Formatter.default_config["Date"] = {:class=>Helpers::Table}
         define_view
-        Formatter.default_config["Date"].should == {:class=>Helpers::Table}
+        Formatter.default_config["Date"].should == {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}
       end
 
       test "another view can reuse an old view's options" do
