@@ -2,6 +2,21 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 module Hirb
   class HelperViewTest < Test::Unit::TestCase
+    def output_expects(output, expects)
+      Helpers::ObjectTable.expects(:render).with(output, expects)
+      Helpers::AutoTable.render(output)
+    end
+
+    context "add" do
+      before(:all) { View.load_config }
+      test "adds a view with :view option" do
+        HelperView.add(:view=>"Date", :helper=>:auto_table) do |obj|
+          {:fields=>obj.class::DAYNAMES}
+        end
+        output_expects [Date.new], :fields=>Date::DAYNAMES
+      end
+    end
+
     context "helper_view" do
       def define_view(mod_name= :Blah, &block)
         mod = Views.const_set(mod_name, Module.new)
@@ -9,15 +24,11 @@ module Hirb
         mod.send(:define_method, :date_options, mod_block)
         Helpers::AutoTable.add_module mod
       end
+
       before(:all) { View.load_config }
       before(:each) { Formatter.default_config = {} }
       after(:each) { Views.send(:remove_const, :Blah) }
       after(:all) { reset_config}
-
-      def output_expects(output, expects)
-        Helpers::ObjectTable.expects(:render).with(output, expects)
-        Helpers::AutoTable.render(output)
-      end
 
       test "sets a view's options" do
         define_view

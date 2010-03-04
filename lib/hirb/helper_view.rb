@@ -1,8 +1,51 @@
 module Hirb
-  # A module which extends a Helper with the ability to have views for configured classes.
-  # For classes to be configured for a helper, a helper must add view modules using add_module().
-  # A helper can then get options for configured classes using get_options().
+  # This module extends a Helper with the ability to have views for configured classes.
+  # After a Helper has extended this module, it can use it within a render() by calling
+  # get_options() to get default options for the object it's rendering. See Hirb::Helpers::AutoTable for an example.
+  #
+  # A view for a given class and helper is a method that generates a hash of helper options to be passed
+  # to the helper via get_options. A view method expects the object it's supposed to render.
+  # To define multiple views create a views module:
+  #
+  #   module Hirb::Views::ORM
+  #     def data_mapper__resource_options(obj)
+  #       {:fields=>obj.class.properties.map {|e| e.name }}
+  #     end
+  #
+  #     def sequel__model_options(obj)
+  #       {:fields=>obj.class.columns}
+  #     end
+  #   end
+  #
+  #   Hirb.add :views=>Hirb::Views::ORM, :helper=>:auto_table
+  #
+  # To generate a single view:
+  #   Hirb.add(:view=>"DataMapper::Resource", :helper=>:auto_table) do |obj|
+  #     {:fields=>obj.class.properties.map {|e| e.name }}
+  #   end
   module HelperView
+    def self.add(options, &block)
+      raise ArgumentError, ":views or :view option required" unless options[:views] or options[:view]
+      raise ArgumentError, ":helper option is required" unless options[:helper]
+      helper = Helpers.helper_class options[:helper]
+      unless helper.is_a?(Module) && class << helper; self.ancestors; end.include?(self)
+        raise ArgumentError, ":helper option must be a helper that has extended HelperView"
+      end
+      raise ArgumentError, ":views option must be a module" if options[:views] && !options[:views].is_a?(Module)
+      mod = options[:views] || generate_single_view_module(options, &block)
+      helper.add_module(mod)
+    end
+
+    def self.generate_single_view_module(options, &block)
+      output_class = Util.any_const_get(options[:view])
+      mod_name = output_class.to_s.gsub("::","__")
+      Views::Single.send(:remove_const, mod_name) if Views::Single.const_defined?(mod_name)
+      mod = Views::Single.const_set(mod_name, Module.new)
+      mod.send(:define_method, "#{mod_name}_options".downcase, block)
+      mod
+    end
+
+    # Returns a hash of default options based on the object's class config. If no config is found returns nil.
     def get_options(obj)
       option_methods.each do |meth|
         if obj.class.ancestors.map {|e| e.to_s }.include?(method_to_class(meth))
@@ -17,11 +60,12 @@ module Hirb
       nil
     end
 
+    #:nodoc:
     def add_module(mod)
       new_methods = mod.instance_methods.select {|e| e.to_s =~ /_options$/ }.map {|e| e.to_s}
       return if new_methods.empty?
       extend mod
-      option_methods.replace option_methods + new_methods
+      option_methods.replace(option_methods + new_methods).uniq!
       update_config(new_methods)
     end
 
@@ -40,6 +84,8 @@ module Hirb
       @option_method_classes ||= {}
     end
 
+    #:startdoc:
+    # Stores option methods that a helper has been configured to have
     def option_methods
       @option_methods ||= []
     end

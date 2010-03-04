@@ -1,6 +1,6 @@
 module Hirb
 =begin rdoc
-  This class is format an output into a string using Hirb::Helpers::* or any user-created views.
+  This class formats an output into a string using Hirb::Helpers::* or any user-created views.
   The formatter object looks for an output's class config in Hirb::Formatter.config and if found applies a helper to the output.
 
   == Create and Configure Helpers
@@ -122,7 +122,7 @@ module Hirb
       args << options[:options] if options[:options] && !options[:options].empty?
       if options[:method]
         send(options[:method],*args)
-      elsif options[:class] && (helper_class = determine_helper_class(options[:class]))
+      elsif options[:class] && (helper_class = Helpers.helper_class(options[:class]))
         helper_class.render(*args, &block)
       elsif options[:output_method]
         output
@@ -134,13 +134,6 @@ module Hirb
         h[e] = options.delete(e) if options[e]; h
       end
       real_options.merge! :options=>options
-    end
-
-    def determine_helper_class(klass)
-      if (helper_class = Helpers.constants.find {|e| e.to_s == Util.camelize(klass.to_s)})
-        klass = "Hirb::Helpers::#{helper_class}"
-      end
-      Util.any_const_get(klass)
     end
 
     def determine_output_class(output)
