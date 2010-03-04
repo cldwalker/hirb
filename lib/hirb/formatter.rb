@@ -163,13 +163,14 @@ module Hirb
       hash = output_ancestors.inject({}) {|h, klass|
         if @config[klass] && @config[klass][:ancestor]
           Util.recursive_hash_merge(h, @config[klass])
-        elsif self.class.default_config[klass]
+        elsif self.class.default_config[klass] && self.class.default_config[klass][:ancestor]
           Util.recursive_hash_merge(h, self.class.default_config[klass])
         else
           h
         end
       }
-      @config[output_class.to_s] ? Util.recursive_hash_merge(hash, @config[output_class.to_s]) : hash
+      output_class_config = @config[output_class.to_s] || self.class.default_config[output_class.to_s]
+      output_class_config ? Util.recursive_hash_merge(hash, output_class_config) : hash
     end
 
     def reset_klass_config

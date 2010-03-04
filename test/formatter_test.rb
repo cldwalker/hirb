@@ -17,12 +17,31 @@ class FormatterTest < Test::Unit::TestCase
 
     test "doesn't merge ancestor options" do
       set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}
-      expected_result = {:args=>[1, 2]}
-      @formatter.klass_config(::String).should == expected_result
+      @formatter.klass_config(::String).should == {:args=>[1, 2]}
     end
 
     test "returns hash when nothing found" do
       set_formatter.klass_config(::String).should == {}
+    end
+
+    context "with default config" do
+      after(:each) { Formatter.default_config = {}}
+
+      test "merges ancestor options" do
+        Formatter.default_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
+        set_formatter.klass_config(::String).should == {:args=>[1,2], :ancestor=>true}
+      end
+
+      test "uses local config over default config" do
+        Formatter.default_config = {"String"=>{:method=>:blah}}
+        set_formatter "String"=>{:args=>[1,2]}
+        @formatter.klass_config(::String).should == {:args=>[1,2]}
+      end
+
+      test "uses default config if no local config" do
+        Formatter.default_config = {"String"=>{:method=>:blah}}
+        set_formatter.klass_config(::String).should == {:method=>:blah}
+      end
     end
   end
 
