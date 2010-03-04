@@ -5,7 +5,7 @@ module Hirb
   module HelperView
     def get_options(obj)
       option_methods.each do |meth|
-        if obj.class.ancestors.include?(Util.any_const_get(method_to_class(meth)))
+        if obj.class.ancestors.map {|e| e.to_s }.include?(method_to_class(meth))
           begin
             return send(meth, obj)
           rescue
