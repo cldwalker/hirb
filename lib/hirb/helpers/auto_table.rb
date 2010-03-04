@@ -6,7 +6,7 @@ class Hirb::Helpers::AutoTable
   def self.render(output, options={})
     output = Array(output)
     klass = if !(output[0].is_a?(Hash) || output[0].is_a?(Array))
-      options = (get_options(output[0]) || {}).merge options
+      options = (default_options(output[0]) || {}).merge options
       Hirb::Helpers::ObjectTable
     else
       Hirb::Helpers::Table

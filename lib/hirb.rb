@@ -21,8 +21,8 @@ require 'hirb/menu'
 # Hirb can have multiple config files defined by config_files(). These config files
 # have the following top level keys:
 # [:output] This hash is used by the formatter object. See Hirb::Formatter.config for its format.
-# [:width]  Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
-# [:height]  Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
+# [:width]  Width of the terminal/console. Defaults to Hirb::View::DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
+# [:height]  Height of the terminal/console. Defaults to Hirb::View::DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
 # [:formatter] Boolean which determines if the formatter is enabled. Defaults to true.
 # [:pager] Boolean which determines if the pager is enabled. Defaults to true.
 # [:pager_command] Command to be used for paging. Command can have options after it i.e. 'less -r'.
