@@ -43,6 +43,11 @@ module Hirb
       View.disable
     end
 
+    # Adds views. See Hirb::HelperView.add for details.
+    def add(options, &block)
+      HelperView.add(options, &block)
+    end
+
     # Array of config files which are merged sequentially to produce config.
     # Defaults to config/hirb.yml and ~/.hirb_yml
     def config_files

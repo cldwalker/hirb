@@ -16,4 +16,4 @@ module Hirb::Views::Rails
   end
 end
 
-Hirb::Helpers::AutoTable.add_module Hirb::Views::Rails
+Hirb::HelperView.add :views=>Hirb::Views::Rails, :helper=>:auto_table

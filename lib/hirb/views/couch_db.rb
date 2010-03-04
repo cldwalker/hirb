@@ -8,4 +8,4 @@ module Hirb::Views::CouchDb
   alias_method :couch_potato__persistence_options, :default_couch
 end
 
-Hirb::Helpers::AutoTable.add_module Hirb::Views::CouchDb
+Hirb::HelperView.add :views=>Hirb::Views::CouchDb, :helper=>:auto_table

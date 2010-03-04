@@ -8,4 +8,4 @@ module Hirb::Views::ORM
   end
 end
 
-Hirb::Helpers::AutoTable.add_module Hirb::Views::ORM
+Hirb::HelperView.add :views=>Hirb::Views::ORM, :helper=>:auto_table

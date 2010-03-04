@@ -9,11 +9,46 @@ module Hirb
 
     context "add" do
       before(:all) { View.load_config }
+
+      test "raises error if no :views or :view option" do
+        assert_raises(ArgumentError) {
+          Hirb.add :helper=>:table
+        }.message.should =~ /:view.*required/
+      end
+
+      test "raises error if no :helper option" do
+        assert_raises(ArgumentError) {
+          Hirb.add :view=>'Blah'
+        }.message.should =~ /:helper.*required/
+      end
+
+      test "raises error if helper not a helper_view module" do
+        assert_raises(ArgumentError) {
+          Hirb.add :view=>'Blah', :helper=>:table
+        }.message.should =~ /:helper.*must/
+      end
+
+      test "raises error if :views is not a module" do
+        assert_raises(ArgumentError) {
+          Hirb.add :views=>'Blah', :helper=>:auto_table
+        }.message.should =~ /:views.*must/
+      end
+
       test "adds a view with :view option" do
-        HelperView.add(:view=>"Date", :helper=>:auto_table) do |obj|
+        Hirb.add(:view=>"Date", :helper=>:auto_table) do |obj|
           {:fields=>obj.class::DAYNAMES}
         end
         output_expects [Date.new], :fields=>Date::DAYNAMES
+      end
+
+      test "when adding a second :view option overrides the first one" do
+        Hirb.add(:view=>"Date", :helper=>:auto_table) do |obj|
+          {:fields=>obj.class::DAYNAMES}
+        end
+        Hirb.add(:view=>"Date", :helper=>:auto_table) do |obj|
+          {:fields=>[:blah]}
+        end
+        output_expects [Date.new], :fields=>[:blah]
       end
     end
 
@@ -22,7 +57,7 @@ module Hirb
         mod = Views.const_set(mod_name, Module.new)
         mod_block = block_given? ? block : lambda {|obj| {:fields=>obj.class::DAYNAMES}}
         mod.send(:define_method, :date_options, mod_block)
-        Helpers::AutoTable.add_module mod
+        Hirb.add :views=>mod, :helper=>:auto_table
       end
 
       before(:all) { View.load_config }
