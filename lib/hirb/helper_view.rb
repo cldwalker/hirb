@@ -6,7 +6,12 @@ module Hirb
     def get_options(obj)
       option_methods.each do |meth|
         if obj.class.ancestors.include?(Util.any_const_get(method_to_class(meth)))
-          return send(meth, obj)
+          begin
+            return send(meth, obj)
+          rescue
+            raise "View failed to generate for '#{method_to_class(meth)}' "+
+              "while in '#{meth}' with error:\n#{$!.message}"
+          end
         end
       end
       nil

@@ -30,6 +30,13 @@ module Hirb
         Formatter.default_config["Date"].should == {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}
       end
 
+      test "raises a readable error when error occurs in a view" do
+        define_view {|obj| raise 'blah' }
+        assert_raises(RuntimeError) {
+          Helpers::AutoTable.render([Date.new])
+        }.message.should =~ /'Date'.*date_options.*\nblah/
+      end
+
       test "another view can reuse an old view's options" do
         define_view
         define_view(:Blah2) do |obj|
