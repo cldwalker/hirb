@@ -22,16 +22,22 @@ module Hirb
         }.message.should =~ /:helper.*required/
       end
 
-      test "raises error if helper not a helper_view module" do
+      test "raises error if :helper option not a helper_view module" do
         assert_raises(ArgumentError) {
           Hirb.add :view=>'Blah', :helper=>:table
         }.message.should =~ /:helper.*must/
       end
 
-      test "raises error if :views is not a module" do
+      test "raises error if :views option is not a module" do
         assert_raises(ArgumentError) {
           Hirb.add :views=>'Blah', :helper=>:auto_table
         }.message.should =~ /:views.*must/
+      end
+
+      test "raises error if :view option doesn't have a block" do
+        assert_raises(ArgumentError) {
+          Hirb.add :view=>'Blah', :helper=>:auto_table
+        }.message.should =~ /:view.*block/
       end
 
       test "adds a view with :view option" do

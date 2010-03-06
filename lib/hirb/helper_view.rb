@@ -46,7 +46,12 @@ module Hirb
       unless helper.is_a?(Module) && class << helper; self.ancestors; end.include?(self)
         raise ArgumentError, ":helper option must be a helper that has extended HelperView"
       end
-      raise ArgumentError, ":views option must be a module" if options[:views] && !options[:views].is_a?(Module)
+      if options[:views]
+        raise ArgumentError, ":views option must be a module" unless options[:views].is_a?(Module)
+      else
+        raise ArgumentError, ":view option must be given a block" unless block
+      end
+
       mod = options[:views] || generate_single_view_module(options, &block)
       helper.add_module(mod)
     end
