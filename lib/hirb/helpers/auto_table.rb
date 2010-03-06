@@ -5,12 +5,10 @@ class Hirb::Helpers::AutoTable
   # Same options as Hirb::Helpers::Table.render.
   def self.render(output, options={})
     output = Array(output)
-    klass = if !(output[0].is_a?(Hash) || output[0].is_a?(Array))
-      options = (default_options(output[0]) || {}).merge options
-      Hirb::Helpers::ObjectTable
-    else
-      Hirb::Helpers::Table
-    end
+    (defaults = default_options(output[0])) && (options = defaults.merge options)
+    klass = options.delete(:table_class) || (
+      !(output[0].is_a?(Hash) || output[0].is_a?(Array)) ?
+      Hirb::Helpers::ObjectTable : Hirb::Helpers::Table)
     klass.render(output, options)
   end
 end

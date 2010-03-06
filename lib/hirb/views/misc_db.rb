@@ -6,6 +6,10 @@ module Hirb::Views::MiscDb
   def ripple__document_options(obj)
     {:fields=>obj.class.properties.keys}
   end
+
+  def d_b_i__row_options(obj)
+    {:fields=>obj.column_names, :table_class=>Hirb::Helpers::Table}
+  end
 end
 
-Hirb::Helpers::AutoTable.add_module Hirb::Views::MiscDb
+Hirb::HelperView.add :views=>Hirb::Views::MiscDb, :helper=>:auto_table
