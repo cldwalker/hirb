@@ -197,7 +197,7 @@ module Hirb
     end
 
     def table_helper_class?
-      @options[:helper_class].is_a?(Class) && (@options[:helper_class] < Helpers::Table || @options[:helper_class] == Helpers::AutoTable)
+      @options[:helper_class].is_a?(Class) && @options[:helper_class] < Helpers::Table
     end
 
     def unalias_field(field)
