@@ -1,11 +1,11 @@
 == Description
 
 Hirb provides a mini view framework for console applications, designed to improve irb's default inspect output.
-Given an object or array of objects, hirb renders a view based on the object's class and/or ancestry. Hirb bundles reusable
+Given an object or array of objects, hirb renders a view based on the object's class and/or ancestry. Hirb offers reusable
 views in the form of helper classes. The two main helpers, Hirb::Helpers::Table and Hirb::Helpers::Tree, provide several options
-for generating ascii tables and trees. Using these helpers, hirb has useful default views for popular database classes i.e. Rails'
-ActiveRecord::Base (see Hirb::Helpers::AutoTable). Other than views, hirb also offers a smart pager and a menu widget. The smart pager
-only pages when the output exceeds the current screen size. The menu widget is used in conjunction with tables to offer
+for generating ascii tables and trees. Using Hirb::Helpers::AutoTable, hirb has useful default views for popular database classes
+i.e. Rails' ActiveRecord::Base. Other than views, hirb offers a smart pager and a console menu. The smart pager
+only pages when the output exceeds the current screen size. The menu is used in conjunction with tables to offer
 {two dimensional menus}[http://tagaholic.me/2010/02/16/two-dimensional-console-menus-with-hirb.html].
 
 Note: To read a linked version of this README, {click here}[http://tagaholic.me/hirb/doc/].

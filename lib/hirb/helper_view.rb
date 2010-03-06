@@ -30,8 +30,8 @@ module Hirb
   module HelperView
     # Add views to output class(es) for a given helper. :helper option and either :views or :view option are required options.
     # ==== Options:
-    # [*:helper*] Helper class that view(s) will use. Can be given in aliased form i.e.
-    #             :auto_table -> Hirb::Helpers::AutoTable.
+    # [*:helper*] Helper class that view(s) will use.
+    #             Can be given in aliased form i.e. :auto_table -> Hirb::Helpers::AutoTable.
     # [*:view*] Output class. Must be given with a block.
     # [*:views*] Module containg views for multiple output classes. Output classes extracted from method names.
     # Examples:
@@ -43,21 +43,20 @@ module Hirb
       raise ArgumentError, ":views or :view option required" unless options[:views] or options[:view]
       raise ArgumentError, ":helper option is required" unless options[:helper]
       helper = Helpers.helper_class options[:helper]
-      unless helper.is_a?(Module) && class << helper; self.ancestors; end.include?(self)
-        raise ArgumentError, ":helper option must be a helper that has extended HelperView"
-      end
-      if options[:views]
-        raise ArgumentError, ":views option must be a module" unless options[:views].is_a?(Module)
+      if options[:views] || block
+        unless helper.is_a?(Module) && class << helper; self.ancestors; end.include?(self)
+          raise ArgumentError, ":helper option must be a helper that has extended HelperView"
+        end
+        mod = options[:views] || generate_single_view_module(options[:view], &block)
+        raise ArgumentError, ":views option must be a module" unless mod.is_a?(Module)
+        helper.add_module mod
       else
-        raise ArgumentError, ":view option must be given a block" unless block
+        Formatter.default_config.merge! options[:view]=>{:class=>helper}
       end
-
-      mod = options[:views] || generate_single_view_module(options, &block)
-      helper.add_module(mod)
     end
 
-    def self.generate_single_view_module(options, &block) #:nodoc:
-      output_class = Util.any_const_get(options[:view])
+    def self.generate_single_view_module(output_mod, &block) #:nodoc:
+      output_class = Util.any_const_get(output_mod)
       mod_name = output_class.to_s.gsub("::","__")
       Views::Single.send(:remove_const, mod_name) if Views::Single.const_defined?(mod_name)
       mod = Views::Single.const_set(mod_name, Module.new)

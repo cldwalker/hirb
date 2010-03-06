@@ -24,7 +24,7 @@ module Hirb
 
       test "raises error if :helper option not a helper_view module" do
         assert_raises(ArgumentError) {
-          Hirb.add :view=>'Blah', :helper=>:table
+          Hirb.add(:view=>'Blah', :helper=>:table) {|obj| }
         }.message.should =~ /:helper.*must/
       end
 
@@ -34,10 +34,9 @@ module Hirb
         }.message.should =~ /:views.*must/
       end
 
-      test "raises error if :view option doesn't have a block" do
-        assert_raises(ArgumentError) {
-          Hirb.add :view=>'Blah', :helper=>:auto_table
-        }.message.should =~ /:view.*block/
+      test "merges with default config if :view option doesn't have a block" do
+        Hirb.add :view=>'Blah', :helper=>:tree
+        Formatter.default_config['Blah'].should == {:class=>Hirb::Helpers::Tree}
       end
 
       test "adds a view with :view option" do
