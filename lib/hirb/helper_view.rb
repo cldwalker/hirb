@@ -1,7 +1,7 @@
 module Hirb
   # This module extends a Helper with the ability to have dynamic views for configured output classes.
   # After a Helper has extended this module, it can use it within a render() by calling
-  # default_options() to get default options for the object it's rendering. See Hirb::Helpers::AutoTable for an example.
+  # default_options() to get default options for the object it's rendering. See Hirb::Helpers::AutoTable as an example.
   #
   # A view for a given output class and helper is a method that generates a hash of helper options to be passed
   # to the helper via default_options. A view method expects the object it's supposed to render.
@@ -51,8 +51,9 @@ module Hirb
         raise ArgumentError, ":views option must be a module" unless mod.is_a?(Module)
         helper.add_module mod
       else
-        Formatter.default_config.merge! options[:view]=>{:class=>helper}
+        Formatter.default_config.merge! options[:view].to_s=>{:class=>helper}
       end
+      true
     end
 
     def self.generate_single_view_module(output_mod, &block) #:nodoc:

@@ -18,7 +18,8 @@ Install the gem with:
 
 == Create and Configure Views
 
-If you'd like to learn how to create and configure views, {read the docs}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
+To learn how to create views, {read this tutorial}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
+To learn how to configure views, {read this tutorial}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
 
 == Rails Example
 
@@ -145,7 +146,7 @@ or toggle their state at runtime:
 == Sharing Helpers and Views
 If you have tested helpers you'd like to share, fork Hirb and put them under lib/hirb/helpers. To share
 views for certain classes, put them under lib/hirb/views. Please submit views for gems that have a nontrivial
-number of users using it.
+number of users.
 
 == Limitations
 If using Wirble, you should call Hirb after it since they both override irb's default output.

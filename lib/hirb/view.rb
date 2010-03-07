@@ -1,6 +1,39 @@
 module Hirb
-  # This class is responsible for managing all view-related functionality. Its functionality is determined by setting up a configuration file
-  # as explained in Hirb and/or passed configuration directly to Hirb.enable. Most of the functionality in this class is dormant until enabled.
+  # This class is responsible for managing all view-related functionality.
+  #
+  # == Configure a View
+  # Once you know {how to create views for a given class}[link:classes/Hirb/Formatter.html], you can configure
+  # them to load at startup by either passing Hirb.enable a hash:
+  #   # In .irbrc
+  #   require 'hirb'
+  #   # View class needs to come before enable()
+  #   class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+  #   Hirb.enable :output=>{"Hash"=>{:class=>"Hirb::Helpers::Yaml"}}
+  #
+  # Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
+  #   # The config file for the yaml example would look like:
+  #   # ---
+  #   # :output :
+  #   #   Hash :
+  #   #    :class : Hirb::Helpers::Yaml
+  #
+  #   # In .irbrc
+  #   require 'hirb'
+  #   # View class needs to come before enable()
+  #   class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+  #   Hirb.enable
+  #
+  # == Config Files
+  # Hirb can have multiple config files defined by config_files(). These config files
+  # have the following top level keys:
+  # [:output] This hash is used by the formatter object. See Hirb::Formatter.config for its format.
+  # [:width]  Width of the terminal/console. Defaults to Hirb::View::DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
+  # [:height]  Height of the terminal/console. Defaults to Hirb::View::DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
+  # [:formatter] Boolean which determines if the formatter is enabled. Defaults to true.
+  # [:pager] Boolean which determines if the pager is enabled. Defaults to true.
+  # [:pager_command] Command to be used for paging. Command can have options after it i.e. 'less -r'.
+  #                  Defaults to common pagers i.e. less and more if detected.
+  #
   module View
     DEFAULT_WIDTH = 120
     DEFAULT_HEIGHT = 40
