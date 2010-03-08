@@ -140,11 +140,6 @@ module Hirb
         formatter.config
       end
 
-      # Sets the helper config for the given output class.
-      def format_class(klass, helper_config)
-        formatter.format_class(klass, helper_config)
-      end
-
       #:stopdoc:
       def enable_output_method(meth)
         if (meth ||= Object.const_defined?(:IRB) ? "IRB::Irb.output_value" : false) && !@output_method

@@ -131,24 +131,20 @@ module Hirb
       output_ancestors = output_class.ancestors.map {|e| e.to_s}.reverse
       output_ancestors.pop
       hash = output_ancestors.inject({}) {|h, klass|
-        if @config[klass] && @config[klass][:ancestor]
-          Util.recursive_hash_merge(h, @config[klass])
-        elsif self.class.default_config[klass] && self.class.default_config[klass][:ancestor]
-          copy_default_to_local klass
-          Util.recursive_hash_merge(h, self.class.default_config[klass])
-        else
-          h
-        end
+        add_klass_config_if_true(h, klass) {|c,klass| c[klass] && c[klass][:ancestor] }
       }
-      output_class_config = @config[output_class.to_s] || begin
-        copy_default_to_local output_class.to_s if self.class.default_config[output_class.to_s]
-        self.class.default_config[output_class.to_s]
-      end
-      output_class_config ? Util.recursive_hash_merge(hash, output_class_config) : hash
+      add_klass_config_if_true(hash, output_class.to_s) {|c,klass| c[klass] }
     end
 
-    def copy_default_to_local(klass)
-      @config[klass] = self.class.default_config[klass].dup
+    def add_klass_config_if_true(hash, klass)
+      if yield(@config, klass)
+        Util.recursive_hash_merge hash, @config[klass]
+      elsif yield(self.class.default_config, klass)
+        @config[klass] = self.class.default_config[klass].dup # copy to local
+        Util.recursive_hash_merge hash, self.class.default_config[klass]
+      else
+        hash
+      end
     end
 
     def reset_klass_config
