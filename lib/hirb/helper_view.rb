@@ -55,6 +55,8 @@ module Hirb
       else
         new_config = options[:method] ? {:method=>options[:method]} :
           {:class=>Helpers.helper_class(options[:helper])}
+        new_config[:options] = options[:options] if options[:options]
+        new_config[:ancestor] = options[:ancestor] if options.key?(:ancestor)
         Formatter.default_config.merge! options[:view].to_s=>new_config
       end
       true

@@ -35,8 +35,9 @@ module Hirb
       end
 
       test "merges with default config with :view option and no block" do
-        Hirb.add :view=>'Blah', :helper=>:tree
-        Formatter.default_config['Blah'].should == {:class=>Hirb::Helpers::Tree}
+        Hirb.add :view=>'Blah', :helper=>:tree, :options=>{:type=>:directory}, :ancestor=>true
+        Formatter.default_config['Blah'].should == {:class=>Hirb::Helpers::Tree,
+          :options=>{:type=>:directory}, :ancestor=>true}
       end
 
       test "merges with default config with :method option" do
