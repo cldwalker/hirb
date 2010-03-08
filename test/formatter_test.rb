@@ -50,15 +50,15 @@ class FormatterTest < Test::Unit::TestCase
   context "formatter methods:" do
     before(:all) { eval "module ::Dooda; end" }
 
-    test "format_class sets formatter config" do
+    test "add_view sets formatter config" do
       set_formatter
-      @formatter.format_class ::Dooda, :class=>"DoodaView"
+      @formatter.add_view ::Dooda, :class=>"DoodaView"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView"}
     end
 
-    test "format_class overwrites existing formatter config" do
+    test "add_view overwrites existing formatter config" do
       set_formatter "Dooda"=>{:class=>"DoodaView"}
-      @formatter.format_class ::Dooda, :class=>"DoodaView2"
+      @formatter.add_view ::Dooda, :class=>"DoodaView2"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
 

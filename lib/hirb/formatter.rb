@@ -17,7 +17,7 @@ module Hirb
     >> def yaml(output); output.to_yaml; end
     => nil
     # Add the view
-    >> Hirb.add :view=>Hash, :method=>:yaml
+    >> Hirb.add_view Hash, :method=>:yaml
     => true
 
     # Hashes now appear as yaml
@@ -31,10 +31,10 @@ module Hirb
   Another way of creating a view is a Helper class:
 
     # Create yaml view class
-    irb>> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+    >> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
     =>nil
     # Add the view
-    irb>> Hirb.add :view=>Hash, :helper=>Hirb::Helpers::Yaml
+    >> Hirb.add_view Hash, :helper=>Hirb::Helpers::Yaml
     =>true
 
     # Hashes appear as yaml like above ...
@@ -42,7 +42,7 @@ module Hirb
   
   class Formatter
     class<<self
-      # This config is used by Formatter.format_output to lazily load default helper views i.e. Hirb::Helpers::AutoTable
+      # This config is used by Formatter.format_output to lazily load default dynamic views i.e. Hirb::Helpers::AutoTable
       # and ActiveRecord support. This hash has the same format as Formatter.config.
       attr_accessor :default_config
     end
@@ -72,10 +72,10 @@ module Hirb
       @config
     end
 
-    # Sets the view for the given output class.
-    def format_class(klass, helper_config)
+    # Adds the view for the given class and view hash config. See Formatter.config for valid keys for view hash.
+    def add_view(klass, view_config)
       @klass_config.delete(klass)
-      @config[klass.to_s] = helper_config
+      @config[klass.to_s] = view_config
       true
     end
 

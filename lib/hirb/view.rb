@@ -52,9 +52,9 @@ module Hirb
       #   hirb's view system. The instance method should take a string to be output. Default is IRB::Irb.output_value
       #   if using irb.
       # Examples:
-      #   Hirb::View.enable
-      #   Hirb::View.enable :formatter=>false, :output_method=>"Mini.output"
-      #   Hirb::View.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
+      #   Hirb.enable
+      #   Hirb.enable :formatter=>false, :output_method=>"Mini.output"
+      #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
         Array(options.delete(:config_file)).each {|e|
           @new_config_file = true
@@ -138,6 +138,15 @@ module Hirb
       # Current formatter config
       def formatter_config
         formatter.config
+      end
+
+      # Adds a view when View is enabled. See Formatter.add_view for more details.
+      def add(klass, view_config)
+        if enabled?
+          formatter.add_view(klass, view_config)
+        else
+          puts "View must be enabled to add a view"
+        end
       end
 
       #:stopdoc:

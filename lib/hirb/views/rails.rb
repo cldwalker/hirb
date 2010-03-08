@@ -16,4 +16,4 @@ module Hirb::Views::Rails
   end
 end
 
-Hirb::HelperView.add :views=>Hirb::Views::Rails, :helper=>:auto_table
+Hirb::DynamicView.add Hirb::Views::Rails, :helper=>:auto_table

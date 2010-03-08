@@ -8,4 +8,4 @@ module Hirb::Views::ORM
   end
 end
 
-Hirb::HelperView.add :views=>Hirb::Views::ORM, :helper=>:auto_table
+Hirb::DynamicView.add Hirb::Views::ORM, :helper=>:auto_table

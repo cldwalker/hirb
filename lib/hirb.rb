@@ -8,7 +8,7 @@ require 'hirb/util'
 require 'hirb/string'
 require 'hirb/hash_struct'
 require 'hirb/formatter' # must come before helpers/auto_table
-require 'hirb/helper_view'
+require 'hirb/dynamic_view'
 require 'hirb/helpers'
 require 'hirb/views'
 require 'hirb/view'
@@ -32,9 +32,14 @@ module Hirb
       View.disable
     end
 
-    # Adds views. See Hirb::HelperView.add for details.
-    def add(options, &block)
-      HelperView.add(options, &block)
+    # Adds views. See Hirb::View.add for details.
+    def add_view(view, options, &block)
+      View.add(view, options, &block)
+    end
+
+    # Adds views. See Hirb::DynamicView.add for details.
+    def add_dynamic_view(view, options, &block)
+      DynamicView.add(view, options, &block)
     end
 
     # Array of config files which are merged sequentially to produce config.

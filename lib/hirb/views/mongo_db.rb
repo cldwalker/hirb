@@ -12,4 +12,4 @@ module Hirb::Views::MongoDb
   end
 end
 
-Hirb::HelperView.add :views=>Hirb::Views::MongoDb, :helper=>:auto_table
+Hirb::DynamicView.add Hirb::Views::MongoDb, :helper=>:auto_table

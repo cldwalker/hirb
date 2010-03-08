@@ -1,5 +1,5 @@
 module Hirb
-  # Namespace for Helpers using HelperView to have class-specific views
+  # Namespace for Helpers using DynamicView to have class-specific views
   module Views
     module Single #:nodoc:
     end

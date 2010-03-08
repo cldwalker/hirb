@@ -12,4 +12,4 @@ module Hirb::Views::MiscDb
   end
 end
 
-Hirb::HelperView.add :views=>Hirb::Views::MiscDb, :helper=>:auto_table
+Hirb::DynamicView.add Hirb::Views::MiscDb, :helper=>:auto_table
