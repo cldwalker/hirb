@@ -1,9 +1,9 @@
 module Hirb::Views::ORM
-  def data_mapper__resource_options(obj)
+  def data_mapper__resource_view(obj)
     {:fields=>obj.class.properties.map {|e| e.name }}
   end
 
-  def sequel__model_options(obj)
+  def sequel__model_view(obj)
     {:fields=>obj.class.columns}
   end
 end

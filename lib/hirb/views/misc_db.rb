@@ -1,13 +1,13 @@
 module Hirb::Views::MiscDb
-  def friendly__document_options(obj)
+  def friendly__document_view(obj)
     {:fields=>obj.class.attributes.keys - [:id]}
   end
 
-  def ripple__document_options(obj)
+  def ripple__document_view(obj)
     {:fields=>obj.class.properties.keys}
   end
 
-  def d_b_i__row_options(obj)
+  def d_b_i__row_view(obj)
     {:fields=>obj.column_names, :table_class=>Hirb::Helpers::Table}
   end
 end

@@ -8,20 +8,20 @@ module Hirb
   # To define multiple views create a views module:
   #
   #   module Hirb::Views::ORM
-  #     def data_mapper__resource_options(obj)
+  #     def data_mapper__resource_view(obj)
   #       {:fields=>obj.class.properties.map {|e| e.name }}
   #     end
   #
-  #     def sequel__model_options(obj)
+  #     def sequel__model_view(obj)
   #       {:fields=>obj.class.columns}
   #     end
   #   end
   #
   #   Hirb.add :views=>Hirb::Views::ORM, :helper=>:auto_table
   #
-  # Each method that ends in '_options' defined a view for a given output class. These methods map to their output
+  # Each method that ends in '_view' defined a view for a given output class. These methods map to their output
   # classes, with '__' being converted to '::' and '_' signaling the next letter to be capitalized. In the above
-  # examples, 'data_mapper__resource_options' maps to DataMapper::Resource and 'sequel__model_options' maps to Sequel::Model.
+  # examples, 'data_mapper__resource_view' maps to DataMapper::Resource and 'sequel__model_view' maps to Sequel::Model.
   #
   # To generate a single view, pass a block to Hirb.add:
   #   Hirb.add(:view=>"DataMapper::Resource", :helper=>:auto_table) do |obj|
@@ -61,13 +61,13 @@ module Hirb
       mod_name = output_class.to_s.gsub("::","__")
       Views::Single.send(:remove_const, mod_name) if Views::Single.const_defined?(mod_name)
       mod = Views::Single.const_set(mod_name, Module.new)
-      mod.send(:define_method, "#{mod_name}_options".downcase, block)
+      mod.send(:define_method, "#{mod_name}_view".downcase, block)
       mod
     end
 
     # Returns a hash of default options based on the object's class config. If no config is found returns nil.
     def default_options(obj)
-      option_methods.each do |meth|
+      view_methods.each do |meth|
         if obj.class.ancestors.map {|e| e.to_s }.include?(method_to_class(meth))
           begin
             return send(meth, obj)
@@ -82,10 +82,10 @@ module Hirb
 
     #:stopdoc:
     def add_module(mod)
-      new_methods = mod.instance_methods.select {|e| e.to_s =~ /_options$/ }.map {|e| e.to_s}
+      new_methods = mod.instance_methods.select {|e| e.to_s =~ /_view$/ }.map {|e| e.to_s}
       return if new_methods.empty?
       extend mod
-      option_methods.replace(option_methods + new_methods).uniq!
+      view_methods.replace(view_methods + new_methods).uniq!
       update_config(new_methods)
     end
 
@@ -97,7 +97,7 @@ module Hirb
     end
 
     def method_to_class(meth)
-      option_method_classes[meth] ||= Util.camelize meth.sub(/_options$/, '').gsub('__', '/')
+      option_method_classes[meth] ||= Util.camelize meth.sub(/_view$/, '').gsub('__', '/')
     end
 
     def option_method_classes
@@ -106,8 +106,8 @@ module Hirb
     #:startdoc:
 
     # Stores option methods that a Helper has been given via HelperView.add
-    def option_methods
-      @option_methods ||= []
+    def view_methods
+      @view_methods ||= []
     end
   end
 end

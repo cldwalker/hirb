@@ -3,9 +3,9 @@ module Hirb::Views::CouchDb
     {:fields=>([:_id] + obj.class.properties.map {|e| e.name }) }
   end
 
-  alias_method :couch_rest__extended_document_options, :default_couch
-  alias_method :couch_foo__base_options, :default_couch
-  alias_method :couch_potato__persistence_options, :default_couch
+  alias_method :couch_rest__extended_document_view, :default_couch
+  alias_method :couch_foo__base_view, :default_couch
+  alias_method :couch_potato__persistence_view, :default_couch
 end
 
 Hirb::HelperView.add :views=>Hirb::Views::CouchDb, :helper=>:auto_table

@@ -61,7 +61,7 @@ module Hirb
       def define_view(mod_name= :Blah, &block)
         mod = Views.const_set(mod_name, Module.new)
         mod_block = block_given? ? block : lambda {|obj| {:fields=>obj.class::DAYNAMES}}
-        mod.send(:define_method, :date_options, mod_block)
+        mod.send(:define_method, :date_view, mod_block)
         Hirb.add :views=>mod, :helper=>:auto_table
       end
 
@@ -85,7 +85,7 @@ module Hirb
         define_view {|obj| raise 'blah' }
         assert_raises(RuntimeError) {
           Helpers::AutoTable.render([Date.new])
-        }.message.should =~ /'Date'.*date_options.*\nblah/
+        }.message.should =~ /'Date'.*date_view.*\nblah/
       end
 
       test "another view can reuse an old view's options" do
