@@ -28,10 +28,12 @@ module Hirb
   #     {:fields=>obj.class.properties.map {|e| e.name }}
   #   end
   module HelperView
-    # Add views to output class(es) for a given helper. :helper option and either :views or :view option are required options.
+    # Add views to output class(es) for a given helper. Either :helper or :method option is required and either
+    # :views or :view option is required.
     # ==== Options:
-    # [*:helper*] Helper class that view(s) will use.
+    # [*:helper*] Helper class that view(s) use to format.
     #             Can be given in aliased form i.e. :auto_table -> Hirb::Helpers::AutoTable.
+    # [*:method*] Top-level (main) method used to format a view.
     # [*:view*] Output class. Must be given with a block.
     # [*:views*] Module containg views for multiple output classes. Output classes extracted from method names.
     # Examples:
@@ -41,9 +43,9 @@ module Hirb
     #    end
     def self.add(options, &block)
       raise ArgumentError, ":views or :view option required" unless options[:views] or options[:view]
-      raise ArgumentError, ":helper option is required" unless options[:helper]
-      helper = Helpers.helper_class options[:helper]
-      if options[:views] || block
+      raise ArgumentError, ":helper or :method option is required" unless options[:helper] or options[:method]
+      if options[:views] || (options[:view] && block)
+        helper = Helpers.helper_class options[:helper]
         unless helper.is_a?(Module) && class << helper; self.ancestors; end.include?(self)
           raise ArgumentError, ":helper option must be a helper that has extended HelperView"
         end
@@ -51,7 +53,9 @@ module Hirb
         raise ArgumentError, ":views option must be a module" unless mod.is_a?(Module)
         helper.add_module mod
       else
-        Formatter.default_config.merge! options[:view].to_s=>{:class=>helper}
+        new_config = options[:method] ? {:method=>options[:method]} :
+          {:class=>Helpers.helper_class(options[:helper])}
+        Formatter.default_config.merge! options[:view].to_s=>new_config
       end
       true
     end

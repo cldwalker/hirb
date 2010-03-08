@@ -34,9 +34,14 @@ module Hirb
         }.message.should =~ /:views.*must/
       end
 
-      test "merges with default config if :view option doesn't have a block" do
+      test "merges with default config with :view option and no block" do
         Hirb.add :view=>'Blah', :helper=>:tree
         Formatter.default_config['Blah'].should == {:class=>Hirb::Helpers::Tree}
+      end
+
+      test "merges with default config with :method option" do
+        Hirb.add :view=>'Blah', :method=>:puts
+        Formatter.default_config['Blah'].should == {:method=>:puts}
       end
 
       test "adds a view with :view option" do
