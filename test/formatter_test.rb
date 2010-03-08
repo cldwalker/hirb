@@ -24,23 +24,23 @@ class FormatterTest < Test::Unit::TestCase
       set_formatter.klass_config(::String).should == {}
     end
 
-    context "with default config" do
-      after(:each) { Formatter.default_config = {}}
+    context "with dynamic_config" do
+      after(:each) { Formatter.dynamic_config = {}}
 
       test "merges ancestor options and sets local config" do
-        Formatter.default_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
+        Formatter.dynamic_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
         set_formatter.klass_config(::String).should == {:args=>[1,2], :ancestor=>true}
         @formatter.config['Kernel'].should == {:args=>[1,2], :ancestor=>true}
       end
 
-      test "uses local config over default config" do
-        Formatter.default_config = {"String"=>{:method=>:blah}}
+      test "uses local config over dynamic_config" do
+        Formatter.dynamic_config = {"String"=>{:method=>:blah}}
         set_formatter "String"=>{:args=>[1,2]}
         @formatter.klass_config(::String).should == {:args=>[1,2]}
       end
 
-      test "uses default config and sets local config" do
-        Formatter.default_config = {"String"=>{:method=>:blah}}
+      test "uses dynamic_config and sets local config" do
+        Formatter.dynamic_config = {"String"=>{:method=>:blah}}
         set_formatter.klass_config(::String).should == {:method=>:blah}
         @formatter.config['String'].should == {:method=>:blah}
       end

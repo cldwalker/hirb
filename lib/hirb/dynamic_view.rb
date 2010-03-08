@@ -1,13 +1,14 @@
 module Hirb
   # This module extends a Helper with the ability to have dynamic views for configured output classes.
   # After a Helper has extended this module, it can use it within a render() by calling
-  # default_options() to get dynamically generated options for the object it's rendering. See Hirb::Helpers::AutoTable as an example.
+  # dynamic_options() to get dynamically generated options for the object it's rendering. See Hirb::Helpers::AutoTable as an example.
   #
   # == Dynamic Views
   # Whereas normal views are generated from helpers with static helper options, dynamic views are generated from helpers and
   # dynamically generated helper options. Let's look at an example for Rails' ActiveRecord classes:
   #
-  #   Hirb.add_dynamic_view("ActiveRecord::Base", :helper=>:auto_table) {|obj| {:fields=>obj.class.column_names} }
+  #   Hirb.add_dynamic_view("ActiveRecord::Base", :helper=>:auto_table) {|obj|
+  #    {:fields=>obj.class.column_names} }
   #
   # From this dynamic view definition, _any_ ActiveRecord model class will render a table with the correct fields, since the fields
   # are extracted from the output object's class at runtime.
@@ -60,8 +61,8 @@ module Hirb
       mod
     end
 
-    # Returns a hash of default options based on the object's class config. If no config is found returns nil.
-    def default_options(obj)
+    # Returns a hash of options based on dynamic views defined for the object's ancestry. If no config is found returns nil.
+    def dynamic_options(obj)
       view_methods.each do |meth|
         if obj.class.ancestors.map {|e| e.to_s }.include?(method_to_class(meth))
           begin
@@ -88,19 +89,19 @@ module Hirb
       output_config = meths.inject({}) {|t,e|
         t[method_to_class(e)] = {:class=>self, :ancestor=>true}; t
       }
-      Formatter.default_config.merge! output_config
+      Formatter.dynamic_config.merge! output_config
     end
 
     def method_to_class(meth)
-      option_method_classes[meth] ||= Util.camelize meth.sub(/_view$/, '').gsub('__', '/')
+      view_method_classes[meth] ||= Util.camelize meth.sub(/_view$/, '').gsub('__', '/')
     end
 
-    def option_method_classes
-      @option_method_classes ||= {}
+    def view_method_classes
+      @view_method_classes ||= {}
     end
     #:startdoc:
 
-    # Stores option methods that a Helper has been given via DynamicView.add
+    # Stores view methods that a Helper has been given via DynamicView.add
     def view_methods
       @view_methods ||= []
     end

@@ -16,10 +16,11 @@ Install the gem with:
 
     sudo gem install hirb
 
-== Create and Configure Views
+== View Tutorials
 
-To learn how to create views, {read this tutorial}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
-To learn how to configure views, {read this tutorial}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
+* To create views, see Hirb::Formatter or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
+* To configure views, see Hirb::View or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
+* To create dynamic views, see Hirb::DynamicView or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/DynamicView.html].
 
 == Rails Example
 

@@ -34,7 +34,7 @@ module Hirb
     >> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
     =>nil
     # Add the view
-    >> Hirb.add_view Hash, :helper=>Hirb::Helpers::Yaml
+    >> Hirb.add_view Hash, :class=>Hirb::Helpers::Yaml
     =>true
 
     # Hashes appear as yaml like above ...
@@ -42,11 +42,11 @@ module Hirb
   
   class Formatter
     class<<self
-      # This config is used by Formatter.format_output to lazily load default dynamic views i.e. Hirb::Helpers::AutoTable
-      # and ActiveRecord support. This hash has the same format as Formatter.config.
-      attr_accessor :default_config
+      # This config is used by Formatter.format_output to lazily load dynamic views defined with Hirb::DynamicView.
+      # This hash has the same format as Formatter.config.
+      attr_accessor :dynamic_config
     end
-    self.default_config = {}
+    self.dynamic_config = {}
 
     def initialize(additional_config={}) #:nodoc:
       @klass_config = {}
@@ -55,14 +55,14 @@ module Hirb
 
     # A hash of Ruby class strings mapped to view hashes. A view hash must have at least a :method, :output_method
     # or :class option for a view to be applied to an output. A view hash has the following keys:
-    # [:method] Specifies a global (Kernel) method to do the formatting.
-    # [:class] Specifies a class to do the formatting, using its render() class method. If a symbol it's converted to a corresponding
-    #          Hirb::Helpers::* class if it exists.
-    # [:output_method] Specifies a method or proc to call on output before passing it to a helper. If the output is an array, it's applied
-    #                  to every element in the array.
-    # [:options] Options to pass the helper method or class.
-    # [:ancestor] Boolean which when true causes subclasses of the output class to inherit its config. This doesn't effect the current 
-    #             output class. Defaults to false. This is used by ActiveRecord classes.
+    # [*:method*] Specifies a global (Kernel) method to do the formatting.
+    # [*:class*] Specifies a class to do the formatting, using its render() class method. If a symbol it's converted to a corresponding
+    #            Hirb::Helpers::* class if it exists.
+    # [*:output_method*] Specifies a method or proc to call on output before passing it to a helper. If the output is an array, it's applied
+    #                    to every element in the array.
+    # [*:options*] Options to pass the helper method or class.
+    # [*:ancestor*] Boolean which when true causes subclasses of the output class to inherit its config. This doesn't effect the current
+    #               output class. Defaults to false. This is used by ActiveRecord classes.
     # 
     #   Examples:
     #     {'WWW::Delicious::Element'=>{:class=>'Hirb::Helpers::ObjectTable', :ancestor=>true, :options=>{:max_width=>180}}}
@@ -79,7 +79,7 @@ module Hirb
       true
     end
 
-    # This method looks for an output object's view in Formatter.config and then Formatter.default_config.
+    # This method looks for an output object's view in Formatter.config and then Formatter.dynamic_config.
     # If a view is found, a stringified view is returned based on the object. If no view is found, nil is returned. The options this
     # class takes are a view hash as described in Formatter.config. These options will be merged with any existing helper
     # config hash an output class has in Formatter.config. Any block given is passed along to a helper class.
@@ -139,9 +139,9 @@ module Hirb
     def add_klass_config_if_true(hash, klass)
       if yield(@config, klass)
         Util.recursive_hash_merge hash, @config[klass]
-      elsif yield(self.class.default_config, klass)
-        @config[klass] = self.class.default_config[klass].dup # copy to local
-        Util.recursive_hash_merge hash, self.class.default_config[klass]
+      elsif yield(self.class.dynamic_config, klass)
+        @config[klass] = self.class.dynamic_config[klass].dup # copy to local
+        Util.recursive_hash_merge hash, self.class.dynamic_config[klass]
       else
         hash
       end

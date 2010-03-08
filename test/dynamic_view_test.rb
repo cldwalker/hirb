@@ -6,7 +6,7 @@ module Hirb
       Helpers::ObjectTable.expects(:render).with(output, expects)
       Helpers::AutoTable.render(output)
     end
-    after(:all) { Formatter.default_config = {} }
+    after(:all) { Formatter.dynamic_config = {} }
 
     context "add" do
       before(:all) { View.load_config }
@@ -56,7 +56,7 @@ module Hirb
       end
 
       before(:all) { View.load_config }
-      before(:each) { Formatter.default_config = {} }
+      before(:each) { Formatter.dynamic_config = {} }
       after(:each) { Views.send(:remove_const, :Blah) }
       after(:all) { reset_config }
 
@@ -65,10 +65,10 @@ module Hirb
         output_expects [Date.new], :fields=>Date::DAYNAMES
       end
 
-      test "does override existing formatter default_config" do
-        Formatter.default_config["Date"] = {:class=>Helpers::Table}
+      test "does override existing formatter dynamic_config" do
+        Formatter.dynamic_config["Date"] = {:class=>Helpers::Table}
         define_view
-        Formatter.default_config["Date"].should == {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}
+        Formatter.dynamic_config["Date"].should == {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}
       end
 
       test "raises a readable error when error occurs in a view" do
