@@ -1,45 +1,6 @@
 module Hirb
-=begin rdoc
-  A Formatter object formats an output object (using Formatter.format_output) into a string based on the views defined
-  for its class and/or ancestry.
-
-  == Create a View
-  Let's create a simple view for Hash objects:
-    $ irb -rubygems
-    >> require 'hirb'
-    =>true
-    >> Hirb.enable
-    =>nil
-    >> require 'yaml'
-    =>true
-
-    # A view method is the smallest view
-    >> def yaml(output); output.to_yaml; end
-    => nil
-    # Add the view
-    >> Hirb.add_view Hash, :method=>:yaml
-    => true
-
-    # Hashes now appear as yaml
-    >> {:a=>1, :b=>{:c=>3}}
-    ---
-    :a : 1
-    :b : 
-      :c : 3
-    => true
-
-  Another way of creating a view is a Helper class:
-
-    # Create yaml view class
-    >> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
-    =>nil
-    # Add the view
-    >> Hirb.add_view Hash, :class=>Hirb::Helpers::Yaml
-    =>true
-
-    # Hashes appear as yaml like above ...
-=end 
-  
+  # A Formatter object formats an output object (using Formatter.format_output) into a string based on the views defined
+  # for its class and/or ancestry.
   class Formatter
     class<<self
       # This config is used by Formatter.format_output to lazily load dynamic views defined with Hirb::DynamicView.

@@ -1,16 +1,51 @@
 module Hirb
   # This class is responsible for managing all view-related functionality.
   #
+  # == Create a View
+  # Let's create a simple view for Hash objects:
+  #   $ irb -rubygems
+  #   >> require 'hirb'
+  #   =>true
+  #   >> Hirb.enable
+  #   =>nil
+  #   >> require 'yaml'
+  #   =>true
+  #
+  #   # A view method is the smallest view
+  #   >> def yaml(output); output.to_yaml; end
+  #   => nil
+  #   # Add the view
+  #   >> Hirb.add_view Hash, :method=>:yaml
+  #   => true
+  #
+  #   # Hashes now appear as yaml
+  #   >> {:a=>1, :b=>{:c=>3}}
+  #   ---
+  #   :a : 1
+  #   :b : 
+  #     :c : 3
+  #   => true
+  #
+  # Another way of creating a view is a Helper class:
+  #
+  #   # Create yaml view class
+  #   >> class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
+  #   =>nil
+  #   # Add the view
+  #   >> Hirb.add_view Hash, :class=>Hirb::Helpers::Yaml
+  #   =>true
+  #
+  #   # Hashes appear as yaml like above ...
+  #
   # == Configure a View
-  # Once you know {how to create views for a given class}[link:classes/Hirb/Formatter.html], you can configure
-  # them to load at startup by either passing Hirb.enable a hash:
+  # To configure the above Helper class as a view, either pass Hirb.enable a hash:
   #   # In .irbrc
   #   require 'hirb'
   #   # View class needs to come before enable()
   #   class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
   #   Hirb.enable :output=>{"Hash"=>{:class=>"Hirb::Helpers::Yaml"}}
   #
-  # Or by creating a config file at config/hirb.yml or ~/.hirb.yml:
+  # Or create a config file at config/hirb.yml or ~/.hirb.yml:
   #   # The config file for the yaml example would look like:
   #   # ---
   #   # :output :
@@ -23,17 +58,7 @@ module Hirb
   #   class Hirb::Helpers::Yaml; def self.render(output, options={}); output.to_yaml; end ;end
   #   Hirb.enable
   #
-  # == Config Files
-  # Hirb can have multiple config files defined by config_files(). These config files
-  # have the following top level keys:
-  # [:output] This hash is used by the formatter object. See Hirb::Formatter.config for its format.
-  # [:width]  Width of the terminal/console. Defaults to Hirb::View::DEFAULT_WIDTH or possibly autodetected when Hirb is enabled.
-  # [:height]  Height of the terminal/console. Defaults to Hirb::View::DEFAULT_HEIGHT or possibly autodetected when Hirb is enabled.
-  # [:formatter] Boolean which determines if the formatter is enabled. Defaults to true.
-  # [:pager] Boolean which determines if the pager is enabled. Defaults to true.
-  # [:pager_command] Command to be used for paging. Command can have options after it i.e. 'less -r'.
-  #                  Defaults to common pagers i.e. less and more if detected.
-  #
+  # For more about configuring Hirb, see the Config Files section in Hirb.
   module View
     DEFAULT_WIDTH = 120
     DEFAULT_HEIGHT = 40

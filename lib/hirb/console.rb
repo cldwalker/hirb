@@ -1,9 +1,9 @@
 module Hirb
   # This module is meant to be extended to provide methods for use in a console/irb shell.
   # For example:
-  #    irb>> extend Hirb::Console
-  #    irb>> view 'some string', :class=>Some::String::Formatter
-  #    irb>> table [[:row1], [:row2]]
+  #    >> extend Hirb::Console
+  #    >> view 'some string', :class=>Some::String::Formatter
+  #    >> table [[:row1], [:row2]]
   module Console
     class<<self
       # A console version of render_output() which takes its same options but allows for shorthand. All options are passed to

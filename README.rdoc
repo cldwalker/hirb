@@ -18,8 +18,7 @@ Install the gem with:
 
 == View Tutorials
 
-* To create views, see Hirb::Formatter or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html].
-* To configure views, see Hirb::View or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
+* To create and configure views, see Hirb::View or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
 * To create dynamic views, see Hirb::DynamicView or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/DynamicView.html].
 
 == Rails Example
