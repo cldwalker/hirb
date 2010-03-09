@@ -1,3 +1,15 @@
+== 0.3.0
+* Added dynamic views.
+* Added default table views for the following database classes/modules:
+  CouchFoo::Base, CouchPotato::Persistence, CouchRest::ExtendedDocument,
+  DBI::Row, DataMapper::Resource, Friendly::Document, MongoMapper::Document, MongoMapper::EmbeddedDocument,
+  Mongoid::Document, Ripple::Document and Sequel::Model.
+* Added Hirb.add_view and Hirb.add_dynamic_view for easier view manipulation.
+* Added :multi_line_nodes option for Tree.
+* Fixed :change_fields option bug in Table.
+* Fixed no headers and nil fields bug in Table.
+* Removed deprecations in Hirb.config_file + View.enable.
+
 == 0.2.10
 * Added multiple options to Menu, most importantly :two_d and :action.
 * Improved table resizing algorithm.
