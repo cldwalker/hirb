@@ -47,6 +47,12 @@ module Hirb
       end
     end
 
+    test "class_to_method and method_to_class convert to each other" do
+      ["DBI::Row", "Hirb::View"].each do |e|
+        Helpers::AutoTable.method_to_class(DynamicView.class_to_method(e).downcase).should == e
+      end
+    end
+
     context "dynamic_view" do
       def define_view(mod_name= :Blah, &block)
         mod = Views.const_set(mod_name, Module.new)
