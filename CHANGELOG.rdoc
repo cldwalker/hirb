@@ -9,6 +9,7 @@
 * Fixed :change_fields option bug in Table.
 * Fixed no headers and nil fields bug in Table.
 * Removed deprecations in Hirb.config_file + View.enable.
+* Removed Views classes and View.format_class.
 
 == 0.2.10
 * Added multiple options to Menu, most importantly :two_d and :action.
