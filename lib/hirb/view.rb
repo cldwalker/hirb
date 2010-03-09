@@ -68,9 +68,8 @@ module Hirb
 
       # This activates view functionality i.e. the formatter, pager and size detection. If irb exists, it overrides irb's output
       # method with Hirb::View.view_output. When called multiple times, new configs are merged into the existing config.
-      # If using Wirble, you should call this after it. The view configuration
-      # can be specified in a hash via a config file, as options to this method, as this method's block or any combination of these three.
-      # In addition to the config keys mentioned in Hirb, the options also take the following keys:
+      # If using Wirble, you should call this after it. The view configuration can be specified in a hash via a config file,
+      # or as options to this method. In addition to the config keys mentioned in Hirb, options also take the following keys:
       # ==== Options:
       # * config_file: Name of config file(s) that are merged into existing config
       # * output_method: Specify an object's class and instance method (separated by a period) to be realiased with
@@ -79,15 +78,13 @@ module Hirb
       # Examples:
       #   Hirb.enable
       #   Hirb.enable :formatter=>false, :output_method=>"Mini.output"
-      #   Hirb.enable {|c| c.output = {'String'=>{:class=>'Hirb::Helpers::Table'}} }
       def enable(options={}, &block)
         Array(options.delete(:config_file)).each {|e|
           @new_config_file = true
           Hirb.config_files << e
         }
         enable_output_method(options.delete(:output_method))
-        puts "Using a block with View.enable will be *deprecated* in the next release" if block_given?
-        merge_or_load_config(Util.recursive_hash_merge(options, HashStruct.block_to_hash(block)))
+        merge_or_load_config options
         resize(config[:width], config[:height])
         @enabled = true
       end

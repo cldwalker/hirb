@@ -6,7 +6,6 @@ $KCODE = 'u' if RUBY_VERSION < '1.9'
 
 require 'hirb/util'
 require 'hirb/string'
-require 'hirb/hash_struct'
 require 'hirb/formatter' # must come before helpers/auto_table
 require 'hirb/dynamic_view'
 require 'hirb/helpers'
@@ -60,10 +59,6 @@ module Hirb
     end
 
     #:stopdoc:
-    def config_file
-      puts "Hirb.config_file is *deprecated*. Use Hirb.config_files"
-    end
-
     def default_config_files
       [File.join(Util.find_home, ".hirb.yml")] +
         (File.exists?('config/hirb.yml') ? ['config/hirb.yml'] : [])
