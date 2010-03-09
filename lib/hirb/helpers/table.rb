@@ -121,6 +121,8 @@ module Hirb
   #:stopdoc:
   attr_accessor :width, :max_fields, :field_lengths, :fields
   def initialize(rows, options={})
+    raise ArgumentError, "Table must be an array of hashes or array of arrays" unless rows.is_a?(Array) &&
+      (rows[0].is_a?(Hash) or rows[0].is_a?(Array) or rows.empty?)
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
       :filter_any=>Helpers::Table.filter_any, :resize=>true}.merge(options)
     @fields = set_fields(rows)

@@ -76,6 +76,10 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([]).should == "0 rows in set"
     end
 
+    test "with invalid rows raises an argumenterror" do
+      assert_raises(ArgumentError) { table(:a=>1) }.message.should =~ /Table must/
+    end
+
     test "renders utf8" do
       expected_table = <<-TABLE.unindent
       +--------------------+
@@ -161,7 +165,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
 
     test "fields and number options copies fields option and does not modify it" do
       options = {:fields=>[:f1], :number=>true}
-      table({:f1=>1, :f2=>2}, options)
+      table([{:f1=>1, :f2=>2}], options)
       options[:fields].should == [:f1]
     end
   
