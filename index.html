@@ -8,9 +8,9 @@
     
       <meta name="keywords" content="hirb, ruby irb, console, automated views, trees, tables, view framework, menu, pager" />
       <meta name="description" content="<p>
-Hirb currently provides a mini view framework for console applications,
-designed to improve irb&#8217;s default output. Hirb improves console
-output by prov" />
+Hirb provides a mini view framework for console applications and uses it to
+improve irb&#8217;s default inspect output. Given an object or array of
+objects," />
     
     <link rel="stylesheet" href="http://tagaholic.me/stylesheets/master.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="http://tagaholic.me/stylesheets/syntax.css" type="text/css" />
@@ -76,17 +76,20 @@ output by prov" />
 <h2>Description</h2>
 <p>
   <p>
-Hirb currently provides a mini view framework for console applications,
-designed to improve irb&#8217;s default output. Hirb improves console
-output by providing a smart pager and auto-formatting output. The smart
-pager detects when an output exceeds a screenful and thus only pages output
-as needed. Auto-formatting adds a view to an output&#8217;s class. This is
-helpful in separating views from content (MVC anyone?). The framework
-encourages reusing views by letting you package them in classes and
-associate them with any number of output classes. Hirb comes with tree
-views (see Hirb::Helpers::Tree) and table views (see Hirb::Helpers::Table).
-By default Hirb displays Rails&#8217; model classes as tables. Hirb also
-sports a nice selection menu, Hirb::Menu.
+Hirb provides a mini view framework for console applications and uses it to
+improve irb&#8217;s default inspect output. Given an object or array of
+objects, hirb renders a view based on the object&#8217;s class and/or
+ancestry. Hirb offers reusable views in the form of helper classes. The two
+main helpers, Hirb::Helpers::Table and Hirb::Helpers::Tree, provide several
+options for generating ascii tables and trees. Using
+Hirb::Helpers::AutoTable, hirb has useful default views for at least ten
+popular database gems i.e. Rails&#8217; ActiveRecord::Base. Other than
+views, hirb offers a smart pager and a console menu. The smart pager only
+pages when the output exceeds the current screen size. The menu is used in
+conjunction with tables to offer <a
+href="http://tagaholic.me/2010/02/16/two-dimensional-console-menus-with-hirb.html">two
+dimensional menus</a>. Note: To read a linked version of this README, <a
+href="http://tagaholic.me/hirb/doc/">click here</a>.
 </p>
 
   

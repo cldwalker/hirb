@@ -82,7 +82,7 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000011">render</a></li>
+              <li><a href="#M000012">render</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -92,8 +92,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000011'>
-                <a name='M000011'>      </a>
+              <div class='public-class method' id='method-M000012'>
+                <a name='M000012'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(nodes, options={})</span>
@@ -123,14 +123,17 @@
                   <dt>:description</dt><dd>Displays brief description about tree ie how many nodes it has.
                   
                   </dd>
+                  <dt>:multi_line_nodes</dt><dd>Handles multi-lined nodes by indenting their newlines. Default is false.
+                  
+                  </dd>
                   </dl>
                   <pre>Examples:&#x000A;   Hirb::Helpers::Tree.render([[0, 'root'], [1, 'child']], :type=&gt;:directory)</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000011-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000012-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000011-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/tree.rb, line 48</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000012-source'><span class="ruby-comment cmt"># File lib/hirb/helpers/tree.rb, line 49</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>={})&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Fri Jan 22 16:01:16 -0500 2010</span>
+          <span class='datetime'>Thu Mar 11 12:25:21 -0500 2010</span>
         </div>
       </div>
       <div id='content'>
@@ -39,28 +39,91 @@
           <div id='description'>
             <h2>Description</h2>
             <p>
-            <a href="../classes/Hirb.html">Hirb</a> currently provides a mini view
-            framework for console applications, designed to improve irb&#8217;s default
-            output. <a href="../classes/Hirb.html">Hirb</a> improves console output by
-            providing a smart pager and auto-formatting output. The smart pager detects
-            when an output exceeds a screenful and thus only pages output as needed.
-            Auto-formatting adds a view to an output&#8217;s class. This is helpful in
-            separating views from content (MVC anyone?). The framework encourages
-            reusing views by letting you package them in classes and associate them
-            with any number of output classes. <a href="../classes/Hirb.html">Hirb</a>
-            comes with tree views (see <a
-            href="../classes/Hirb/Helpers/Tree.html">Hirb::Helpers::Tree</a>) and table
-            views (see <a
-            href="../classes/Hirb/Helpers/Table.html">Hirb::Helpers::Table</a>). By
-            default <a href="../classes/Hirb.html">Hirb</a> displays Rails&#8217; model
-            classes as tables. <a href="../classes/Hirb.html">Hirb</a> also sports a
-            nice selection menu, <a href="../classes/Hirb/Menu.html">Hirb::Menu</a>.
+            <a href="../classes/Hirb.html">Hirb</a> provides a mini view framework for
+            console applications and uses it to improve irb&#8217;s default inspect
+            output. Given an object or array of objects, hirb renders a view based on
+            the object&#8217;s class and/or ancestry. <a
+            href="../classes/Hirb.html">Hirb</a> offers reusable views in the form of
+            helper classes. The two main helpers, <a
+            href="../classes/Hirb/Helpers/Table.html">Hirb::Helpers::Table</a> and <a
+            href="../classes/Hirb/Helpers/Tree.html">Hirb::Helpers::Tree</a>, provide
+            several options for generating ascii tables and trees. Using <a
+            href="../classes/Hirb/Helpers/AutoTable.html">Hirb::Helpers::AutoTable</a>,
+            hirb has useful default views for at least ten popular database gems i.e.
+            Rails&#8217; ActiveRecord::Base. Other than views, hirb offers a smart
+            pager and a console menu. The smart pager only pages when the output
+            exceeds the current screen size. The menu is used in conjunction with
+            tables to offer <a
+            href="http://tagaholic.me/2010/02/16/two-dimensional-console-menus-with-hirb.html">two
+            dimensional menus</a>.
+            </p>
+            <p>
+            Note: To read a linked version of this README, <a
+            href="http://tagaholic.me/hirb/doc/">click here</a>.
             </p>
             <h2>Install</h2>
             <p>
             Install the gem with:
             </p>
             <pre>sudo gem install hirb</pre>
+            <h2>View Tutorials</h2>
+            <ul>
+            <li>To create and configure views, see <a
+            href="../classes/Hirb/View.html">Hirb::View</a> or <a
+            href="http://tagaholic.me/hirb/doc/classes/Hirb/View.html">here if on the
+            web</a>.
+            
+            </li>
+            <li>To create dynamic views, see <a
+            href="../classes/Hirb/DynamicView.html">Hirb::DynamicView</a> or <a
+            href="http://tagaholic.me/hirb/doc/classes/Hirb/DynamicView.html">here if
+            on the web</a>.
+            
+            </li>
+            </ul>
+            <h2>Rails Example</h2>
+            <p>
+            Let&#8217;s load and enable the view framework:
+            </p>
+            <pre>$ script/console&#x000A;Loading local environment (Rails 2.3.5)&#x000A;&gt;&gt; require 'hirb'&#x000A;=&gt; true&#x000A;&gt;&gt; Hirb.enable&#x000A;=&gt; nil</pre>
+            <p>
+            The default configuration provides table views for ActiveRecord::Base
+            descendants. If a class isn&#8217;t configured, <a
+            href="../classes/Hirb.html">Hirb</a> reverts to irb&#8217;s default echo
+            mode.
+            </p>
+            <pre>&gt;&gt; Hirb::Formatter.dynamic_config['ActiveRecord::Base']&#x000A;=&gt; {:class=&gt;Hirb::Helpers::AutoTable, :ancestor=&gt;true}&#x000A;&#x000A;# Tag is a model class and descendant of ActiveRecord::Base&#x000A;&gt;&gt; Tag.last&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;| id  | created_at              | description | name          | namespace | predicate | value |&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;| 907 | 2009-03-06 21:10:41 UTC |             | gem:tags=yaml | gem       | tags      | yaml  |&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;1 row in set&#x000A;&#x000A;&gt;&gt; Hirb::Formatter.dynamic_config['String']&#x000A;=&gt; nil&#x000A;&gt;&gt; 'plain ol irb'&#x000A;=&gt; 'plain ol irb'&#x000A;&gt;&gt; Hirb::Formatter.dynamic_config['Symbol']&#x000A;=&gt; nil&#x000A;&gt;&gt; :blah&#x000A;=&gt; :blah</pre>
+            <p>
+            From above you can see there are no views configured for a String or a
+            Symbol so <a href="../classes/Hirb.html">Hirb</a> defaults to irb&#8217;s
+            echo mode. On the other hand, Tag has a view thanks to being a descendant
+            of ActiveRecord::Base and there being an :ancestor option.
+            </p>
+            <p>
+            Having seen hirb display views based on an output object&#8217;s class,
+            let&#8217;s see it handle an array of objects:
+            </p>
+            <pre>&gt;&gt; Tag.all :limit=&gt;3, :order=&gt;&quot;id DESC&quot;&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;| id  | created_at              | description | name              | namespace | predicate | value    |&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;| 907 | 2009-03-06 21:10:41 UTC |             | gem:tags=yaml     | gem       | tags      | yaml     |&#x000A;| 906 | 2009-03-06 08:47:04 UTC |             | gem:tags=nomonkey | gem       | tags      | nomonkey |&#x000A;| 905 | 2009-03-04 00:30:10 UTC |             | article:tags=ruby | article   | tags      | ruby     |&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;3 rows in set</pre>
+            <p>
+            At any time you can disable <a href="../classes/Hirb.html">Hirb</a> if you
+            really like irb&#8217;s lovely echo mode:
+            </p>
+            <pre>&gt;&gt; Hirb.disable&#x000A;=&gt; nil&#x000A;&gt;&gt; Tag.all :limit=&gt;3, :order=&gt;&quot;id DESC&quot;&#x000A;=&gt; [#&lt;Tag id: 907, name: &quot;gem:tags=yaml&quot;, description: nil, created_at: &quot;2009-03-06 21:10:41&quot;,&#x000A;namespace: &quot;gem&quot;, predicate: &quot;tags&quot;, value: &quot;yaml&quot;&gt;, #&lt;Tag id: 906, name: &quot;gem:tags=nomonkey&quot;,&#x000A;description: nil, created_at: &quot;2009-03-06 08:47:04&quot;, namespace: &quot;gem&quot;, predicate: &quot;tags&quot;, value:&#x000A;&quot;nomonkey&quot;&gt;, #&lt;Tag id: 905, name: &quot;article:tags=ruby&quot;, description: nil, created_at: &quot;2009-03-04&#x000A;00:30:10&quot;, namespace: &quot;article&quot;, predicate: &quot;tags&quot;, value: &quot;ruby&quot;&gt;]</pre>
+            <h2>Views: Anytime, Anywhere</h2>
+            <p>
+            While preconfigured tables are great for database records, sometimes you
+            just want to create tables/views for any output object:
+            </p>
+            <pre>#These examples don't need to have Hirb::View enabled.&#x000A;&gt;&gt; Hirb.disable&#x000A;=&gt; nil&#x000A;&#x000A;# Imports table() and view()&#x000A;&gt;&gt; extend Hirb::Console&#x000A;=&gt; main&#x000A;&#x000A;# Create a table of Dates comparing them with different formats.&#x000A;&gt;&gt; table [Date.today, Date.today.next_month], :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;| to_s       | ld     | ajd       | amjd  | asctime                  |&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;| 2009-03-11 | 155742 | 4909803/2 | 54901 | Wed Mar 11 00:00:00 2009 |&#x000A;| 2009-04-11 | 155773 | 4909865/2 | 54932 | Sat Apr 11 00:00:00 2009 |&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;2 rows in set&#x000A;&#x000A;# Same table as the previous method. However view() will be able to call any helper.&#x000A;&gt;&gt; view [Date.today, Date.today.next_month], :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]</pre>
+            <p>
+            If these console methods weren&#8217;t convenient enough, try:
+            </p>
+            <pre># Imports view() to all objects.&#x000A;&gt;&gt; require 'hirb/import_object'&#x000A;=&gt;true&#x000A;# Yields same table as above examples.&#x000A;&gt;&gt; [Date.today, Date.today.next_month].view :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]</pre>
+            <p>
+            Although views by default are printed to STDOUT, they can be easily
+            modified to write anywhere:
+            </p>
+            <pre># Setup views to write to file 'console.log'.&#x000A;&gt;&gt; Hirb::View.render_method = lambda {|output| File.open(&quot;console.log&quot;, 'w') {|f| f.write(output) } }&#x000A;&#x000A;# Writes to file with same table output as above example.&#x000A;&gt;&gt; view [Date.today, Date.today.next_month], :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]&#x000A;&#x000A;# Doesn't write to file because Symbol doesn't have a view and thus defaults to irb's echo mode.&#x000A;&gt;&gt; :blah&#x000A;=&gt;:blah&#x000A;&#x000A;# Go back to printing Hirb views to STDOUT.&#x000A;&gt;&gt; Hirb::View.reset_render_method</pre>
             <h2>Pager</h2>
             <p>
             <a href="../classes/Hirb.html">Hirb</a> has both pager and formatter
@@ -72,62 +135,12 @@
             or toggle their state at runtime:
             </p>
             <pre>Hirb::View.toggle_pager&#x000A;Hirb::View.toggle_formatter</pre>
-            <h2>Create and Configure Views</h2>
+            <h2>Sharing Helpers and Views</h2>
             <p>
-            If you&#8217;d like to learn how to create and configure views, <a
-            href="http://tagaholic.me/hirb/doc/classes/Hirb/Formatter.html">read the
-            docs</a>.
-            </p>
-            <h2>Rails Formatter Example</h2>
-            <p>
-            Let&#8217;s load and enable the view framework:
-            </p>
-            <pre>bash&gt; script/console&#x000A;Loading local environment (Rails 2.2.2)&#x000A;irb&gt;&gt; require 'hirb'&#x000A;=&gt; true&#x000A;irb&gt;&gt; Hirb.enable&#x000A;=&gt; nil</pre>
-            <p>
-            The default configuration provides table views for ActiveRecord::Base
-            descendants. If a class isn&#8217;t configured, <a
-            href="../classes/Hirb.html">Hirb</a> reverts to irb&#8217;s default echo
-            mode.
-            </p>
-            <pre>irb&gt;&gt; Hirb::View.formatter_config&#x000A;=&gt; {&quot;ActiveRecord::Base&quot;=&gt;{:class=&gt;&quot;Hirb::Views::ActiveRecord_Base&quot;, :ancestor=&gt;true}}&#x000A;&#x000A;# Tag is a model class and descendant of ActiveRecord::Base&#x000A;irb&gt;&gt; Tag.last&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;| id  | created_at              | description | name          | namespace | predicate | value |&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;| 907 | 2009-03-06 21:10:41 UTC |             | gem:tags=yaml | gem       | tags      | yaml  |&#x000A;+-----+-------------------------+-------------+---------------+-----------+-----------+-------+&#x000A;1 row in set&#x000A;&#x000A;irb&gt;&gt; 'plain ol irb'&#x000A;=&gt; 'plain ol irb'&#x000A;irb&gt;&gt; :blah&#x000A;=&gt; :blah</pre>
-            <p>
-            From above you can see there were no views configured for a String or a
-            Symbol so <a href="../classes/Hirb.html">Hirb</a> defaulted to irb&#8217;s
-            echo mode. Also note that Tag was able to inherit its view from the
-            ActiveRecord::Base config because it had an :ancestor option.
-            </p>
-            <p>
-            Now that you understand that <a href="../classes/Hirb.html">Hirb</a>
-            displays views based on an output object&#8217;s class, you may appreciate
-            it also detects configured output objects in an array:
-            </p>
-            <pre>irb&gt;&gt; Tag.all :limit=&gt;3, :order=&gt;&quot;id DESC&quot;&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;| id  | created_at              | description | name              | namespace | predicate | value    |&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;| 907 | 2009-03-06 21:10:41 UTC |             | gem:tags=yaml     | gem       | tags      | yaml     |&#x000A;| 906 | 2009-03-06 08:47:04 UTC |             | gem:tags=nomonkey | gem       | tags      | nomonkey |&#x000A;| 905 | 2009-03-04 00:30:10 UTC |             | article:tags=ruby | article   | tags      | ruby     |&#x000A;+-----+-------------------------+-------------+-------------------+-----------+-----------+----------+&#x000A;3 rows in set</pre>
-            <p>
-            At any time you can disable <a href="../classes/Hirb.html">Hirb</a> if you
-            really like irb&#8217;s lovely echo mode:
-            </p>
-            <pre>irb&gt;&gt; Hirb.disable&#x000A;=&gt; nil&#x000A;irb&gt;&gt; Tag.all :limit=&gt;3, :order=&gt;&quot;id DESC&quot;&#x000A;=&gt; [#&lt;Tag id: 907, name: &quot;gem:tags=yaml&quot;, description: nil, created_at: &quot;2009-03-06 21:10:41&quot;,&#x000A;namespace: &quot;gem&quot;, predicate: &quot;tags&quot;, value: &quot;yaml&quot;&gt;, #&lt;Tag id: 906, name: &quot;gem:tags=nomonkey&quot;,&#x000A;description: nil, created_at: &quot;2009-03-06 08:47:04&quot;, namespace: &quot;gem&quot;, predicate: &quot;tags&quot;, value:&#x000A;&quot;nomonkey&quot;&gt;, #&lt;Tag id: 905, name: &quot;article:tags=ruby&quot;, description: nil, created_at: &quot;2009-03-04&#x000A;00:30:10&quot;, namespace: &quot;article&quot;, predicate: &quot;tags&quot;, value: &quot;ruby&quot;&gt;]</pre>
-            <h2>Views: Anytime, Anywhere</h2>
-            <p>
-            While preconfigured tables are great for database records, sometimes you
-            just want to create tables/views for any output object:
-            </p>
-            <pre>#These examples don't need to have Hirb::View enabled.&#x000A;irb&gt;&gt;Hirb.disable&#x000A;=&gt;nil&#x000A;&#x000A;# Imports table() and view()&#x000A;irb&gt;&gt;extend Hirb::Console&#x000A;=&gt;main&#x000A;&#x000A;# Create a table of Dates comparing them with different formats.&#x000A;irb&gt;&gt; table [Date.today, Date.today.next_month], :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;| to_s       | ld     | ajd       | amjd  | asctime                  |&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;| 2009-03-11 | 155742 | 4909803/2 | 54901 | Wed Mar 11 00:00:00 2009 |&#x000A;| 2009-04-11 | 155773 | 4909865/2 | 54932 | Sat Apr 11 00:00:00 2009 |&#x000A;+------------+--------+-----------+-------+--------------------------+&#x000A;2 rows in set&#x000A;&#x000A;# Same table as the previous method. However view() will be able to call any helper.&#x000A;irb&gt;&gt; view [Date.today, Date.today.next_month], :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]</pre>
-            <p>
-            If these console methods weren&#8217;t convenient enough, try:
-            </p>
-            <pre># Imports view() to all objects.&#x000A;irb&gt;&gt; require 'hirb/import_object'&#x000A;=&gt;true&#x000A;# Yields same table as above examples.&#x000A;irb&gt;&gt; [Date.today, Date.today.next_month].view :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]</pre>
-            <p>
-            Although views by default are printed to STDOUT, they can be easily
-            modified to write anywhere:
-            </p>
-            <pre># Setup views to write to file 'console.log'.&#x000A;irb&gt;&gt; Hirb::View.render_method = lambda {|output| File.open(&quot;console.log&quot;, 'w') {|f| f.write(output) } }&#x000A;&#x000A;# Writes to file with same table output as above example.&#x000A;irb&gt;&gt; view [Date.today, Date.today.next_month], :class=&gt;:object_table,&#x000A;  :fields=&gt;[:to_s, :ld, :ajd, :amjd, :asctime]&#x000A;&#x000A;# Doesn't write to file because Symbol isn't configured to use Hirb::View and thus defaults to irb's echo mode.&#x000A;irb&gt;&gt; :blah&#x000A;=&gt;:blah&#x000A;&#x000A;# Go back to printing Hirb views to STDOUT.&#x000A;irb&gt;&gt; Hirb::View.reset_render_method</pre>
-            <h2>Sharing Views</h2>
-            <p>
-            If you have tested views you&#8217;d like to share, fork <a
-            href="../classes/Hirb.html">Hirb</a> and put your views under the
-            lib/hirb/views/ and/or helpers files under lib/hirb/helpers/. If not
-            tested, feel free to share them on the wiki.
+            If you have tested helpers you&#8217;d like to share, fork <a
+            href="../classes/Hirb.html">Hirb</a> and put them under lib/hirb/helpers.
+            To share views for certain classes, put them under lib/hirb/views. Please
+            submit views for gems that have a nontrivial number of users.
             </p>
             <h2>Limitations</h2>
             <p>
@@ -171,16 +184,13 @@
             </ul>
             <h2>Todo</h2>
             <ul>
-            <li>Consider applying multiple views/filters to output.
+            <li>Consider generating views based on methods an object responds to.
             
             </li>
-            <li>Consider mapping a class&#8217; methods to their own views.
+            <li>Provide helper methods to all views.
             
             </li>
-            <li>Provides helper methods to all view classes.
-            
-            </li>
-            <li>Consider adding a template system as needed.
+            <li>Consider adding a template helper.
             
             </li>
             </ul>

@@ -45,7 +45,7 @@
             <p>
             This class provides a menu using Hirb&#8217;s table helpers by default to
             display choices. <a href="Menu.html">Menu</a> choices (syntax at <a
-            href="Util.html#M000020">Hirb::Util.choose_from_array</a>) refer to rows.
+            href="Util.html#M000021">Hirb::Util.choose_from_array</a>) refer to rows.
             However, when in two_d mode, choices refer to specific cells by appending a
             &#8217;:field&#8217; to a choice. A field name can be an abbreviated. Menus
             can also have an action mode, which turns the menu prompt into a
@@ -57,7 +57,7 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000045">render</a></li>
+              <li><a href="#M000049">render</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -94,8 +94,8 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000045'>
-                <a name='M000045'>      </a>
+              <div class='public-class method' id='method-M000049'>
+                <a name='M000049'>      </a>
                 <div class='synopsis'>
                   <span class='name'>render</span>
                   <span class='arguments'>(output, options={}, &amp;block)</span>
@@ -158,10 +158,10 @@
                   <pre>&gt;&gt; extend Hirb::Console&#x000A;=&gt; self&#x000A;&gt;&gt; menu [1,2,3], :prompt=&gt; &quot;So many choices, so little time: &quot;&#x000A;&gt;&gt; menu [{:a=&gt;1, :b=&gt;2}, {:a=&gt;3, :b=&gt;4}], :fields=&gt;[:a,b], :two_d=&gt;true)</pre>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000045-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000049-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000045-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 40</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Error</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">e</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error: #{e.message}&quot;</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000049-source'><span class="ruby-comment cmt"># File lib/hirb/menu.rb, line 40</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>).<span class="ruby-identifier">render</span>(<span class="ruby-identifier">output</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Error</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">e</span>&#x000A;      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error: #{e.message}&quot;</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

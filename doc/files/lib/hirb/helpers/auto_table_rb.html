@@ -31,15 +31,23 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Thu Jan 14 04:48:34 -0500 2010</span>
+          <span class='datetime'>Mon Mar 08 18:30:50 -0500 2010</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
             <p>
-            Detects the table class the output should use and delegates rendering to
-            it.
+            This helper wraps around the other table helpers i.e. <a
+            href="../../../../classes/Hirb/Helpers/Table.html">Hirb::Helpers::Table</a>
+            while providing default helper options via <a
+            href="../../../../classes/Hirb/DynamicView.html">Hirb::DynamicView</a>.
+            Using these default options, this helper supports views for the following
+            modules/classes: ActiveRecord::Base, CouchFoo::Base,
+            CouchPotato::Persistence, CouchRest::ExtendedDocument, DBI::Row,
+            DataMapper::Resource, Friendly::Document, MongoMapper::Document,
+            MongoMapper::EmbeddedDocument, Mongoid::Document, Ripple::Document,
+            Sequel::Model.
             </p>
           </div>
           <div id='section'>

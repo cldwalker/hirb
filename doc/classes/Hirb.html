@@ -34,6 +34,9 @@
             <a href="../files/lib/hirb/console_rb.html">lib/hirb/console.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/hirb/dynamic_view_rb.html">lib/hirb/dynamic_view.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/hirb/formatter_rb.html">lib/hirb/formatter.rb</a>
           </li>
           <li class='other'>
@@ -58,7 +61,13 @@
             <a href="../files/lib/hirb/util_rb.html">lib/hirb/util.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/hirb/version_rb.html">lib/hirb/version.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/hirb/view_rb.html">lib/hirb/view.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/hirb/views_rb.html">lib/hirb/views.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/hirb_rb.html">lib/hirb.rb</a>
@@ -72,35 +81,38 @@
         <div id='text'>
           <div id='description'>
             <p>
-            Most of Hirb&#8217;s functionality currently resides in <a
-            href="Hirb/View.html">Hirb::View</a>. For an in-depth tutorial on creating
-            and configuring views see <a
-            href="Hirb/Formatter.html">Hirb::Formatter</a>. <a
-            href="Hirb.html">Hirb</a> can have multiple config files defined by <a
-            href="Hirb.html#M000003">config_files</a>(). These config files have the
+            Most of Hirb&#8217;s functionality is in <a
+            href="Hirb/View.html">Hirb::View</a>. For a tutorial on configuring and
+            creating views see <a href="Hirb/View.html">Hirb::View</a>. For a tutorial
+            on dynamic views see <a href="Hirb/DynamicView.html">Hirb::DynamicView</a>.
+            </p>
+            <h2>Config Files</h2>
+            <p>
+            <a href="Hirb.html">Hirb</a> can have multiple config files defined by <a
+            href="Hirb.html#M000005">config_files</a>(). These config files have the
             following top level keys:
             </p>
             <dl>
-            <dt>:output</dt><dd>This hash is used by the formatter object. See <a
-            href="Hirb/Formatter.html#M000047">Hirb::Formatter.config</a> for its
+            <dt><b>:output</b></dt><dd>This hash is used by the formatter object. See <a
+            href="Hirb/Formatter.html#M000050">Hirb::Formatter.config</a> for its
             format.
             
             </dd>
-            <dt>:width</dt><dd>Width of the terminal/console. Defaults to DEFAULT_WIDTH or possibly
-            autodetected when <a href="Hirb.html">Hirb</a> is enabled.
+            <dt><b>:width</b></dt><dd>Width of the terminal/console. Defaults to Hirb::View::DEFAULT_WIDTH or
+            possibly autodetected when <a href="Hirb.html">Hirb</a> is enabled.
             
             </dd>
-            <dt>:height</dt><dd>Height of the terminal/console. Defaults to DEFAULT_HEIGHT or possibly
-            autodetected when <a href="Hirb.html">Hirb</a> is enabled.
+            <dt><b>:height</b></dt><dd>Height of the terminal/console. Defaults to Hirb::View::DEFAULT_HEIGHT or
+            possibly autodetected when <a href="Hirb.html">Hirb</a> is enabled.
             
             </dd>
-            <dt>:formatter</dt><dd>Boolean which determines if the formatter is enabled. Defaults to true.
+            <dt><b>:formatter</b></dt><dd>Boolean which determines if the formatter is enabled. Defaults to true.
             
             </dd>
-            <dt>:pager</dt><dd>Boolean which determines if the pager is enabled. Defaults to true.
+            <dt><b>:pager</b></dt><dd>Boolean which determines if the pager is enabled. Defaults to true.
             
             </dd>
-            <dt>:pager_command</dt><dd>Command to be used for paging. Command can have options after it i.e.
+            <dt><b>:pager_command</b></dt><dd>Command to be used for paging. Command can have options after it i.e.
             &#8216;less -r&#8217;. Defaults to common pagers i.e. less and more if
             detected.
             
@@ -111,7 +123,9 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000003">config_files</a></li>
+              <li><a href="#M000004">add_dynamic_view</a></li>
+              <li><a href="#M000003">add_view</a></li>
+              <li><a href="#M000005">config_files</a></li>
               <li><a href="#M000002">disable</a></li>
               <li><a href="#M000001">enable</a></li>
             </ol>
@@ -120,6 +134,7 @@
             <div id='class-list'>
               <h2>Classes and Modules</h2>
               Module <a href="Hirb/Console.html" class="link">Hirb::Console</a><br />
+              Module <a href="Hirb/DynamicView.html" class="link">Hirb::DynamicView</a><br />
               Module <a href="Hirb/ObjectMethods.html" class="link">Hirb::ObjectMethods</a><br />
               Module <a href="Hirb/String.html" class="link">Hirb::String</a><br />
               Module <a href="Hirb/Util.html" class="link">Hirb::Util</a><br />
@@ -128,6 +143,18 @@
               Class <a href="Hirb/Formatter.html" class="link">Hirb::Formatter</a><br />
               Class <a href="Hirb/Menu.html" class="link">Hirb::Menu</a><br />
               Class <a href="Hirb/Pager.html" class="link">Hirb::Pager</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>VERSION</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'0.3.0'</td>
+                  </tr>
+                </table>
+              </div>
             </div>
             <div id='attribute-list'>
               <h2 class='section-bar'>Attributes</h2>
@@ -148,8 +175,46 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000004'>
+                <a name='M000004'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>add_dynamic_view</span>
+                  <span class='arguments'>(view, options, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Adds views. See <a
+                  href="Hirb/DynamicView.html#M000027">Hirb::DynamicView.add</a> for details.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 52</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_dynamic_view</span>(<span class="ruby-identifier">view</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">DynamicView</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">view</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
               <div class='public-class method' id='method-M000003'>
                 <a name='M000003'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>add_view</span>
+                  <span class='arguments'>(view, options, &amp;block)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Adds views. See <a href="Hirb/View.html#M000043">Hirb::View.add</a> for
+                  details.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 47</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_view</span>(<span class="ruby-identifier">view</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">view</span>, <span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000005'>
+                <a name='M000005'>      </a>
                 <div class='synopsis'>
                   <span class='name'>config_files</span>
                   <span class='arguments'>()</span>
@@ -161,10 +226,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 47</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_files</span>&#x000A;      <span class="ruby-ivar">@config_files</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">default_config_files</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 58</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_files</span>&#x000A;      <span class="ruby-ivar">@config_files</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">default_config_files</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000002'>
@@ -176,14 +241,14 @@
                 <div class='description'>
                   <p>
                   Disables view functionality. See <a
-                  href="Hirb/View.html#M000028">Hirb::View.disable</a> for details.
+                  href="Hirb/View.html#M000032">Hirb::View.disable</a> for details.
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 41</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">disable</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 42</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">disable</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000001'>
@@ -195,14 +260,14 @@
                 <div class='description'>
                   <p>
                   Enables view functionality. See <a
-                  href="Hirb/View.html#M000026">Hirb::View.enable</a> for details.
+                  href="Hirb/View.html#M000030">Hirb::View.enable</a> for details.
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000001-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 36</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000001-source'><span class="ruby-comment cmt"># File lib/hirb.rb, line 37</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-constant">View</span>.<span class="ruby-identifier">enable</span>(<span class="ruby-identifier">options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
