@@ -1,4 +1,4 @@
-module Hirb::Views::MongoDb
+module Hirb::Views::MongoDb #:nodoc:
   def mongoid__document_view(obj)
     {:fields=>['_id'] + obj.class.fields.keys}
   end

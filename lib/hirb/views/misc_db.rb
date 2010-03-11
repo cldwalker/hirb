@@ -1,4 +1,4 @@
-module Hirb::Views::MiscDb
+module Hirb::Views::MiscDb #:nodoc:
   def friendly__document_view(obj)
     {:fields=>obj.class.attributes.keys - [:id]}
   end

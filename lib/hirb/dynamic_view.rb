@@ -11,7 +11,7 @@ module Hirb
   #    {:fields=>obj.class.column_names} }
   #
   # From this dynamic view definition, _any_ ActiveRecord model class will render a table with the correct fields, since the fields
-  # are extracted from the output object's class at runtime.
+  # are extracted from the output object's class at runtime. Note that dynamic view definitions should return a hash of helper options.
   #
   # To define multiple dynamic views, create a Views module where each method ending in '\_view' maps to a class/module:
   #

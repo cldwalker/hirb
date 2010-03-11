@@ -1,4 +1,4 @@
-module Hirb::Views::CouchDb
+module Hirb::Views::CouchDb #:nodoc:
   def default_couch(obj)
     {:fields=>([:_id] + obj.class.properties.map {|e| e.name }) }
   end

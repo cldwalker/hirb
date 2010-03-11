@@ -157,7 +157,7 @@ module Hirb
         config ? config[:height] : DEFAULT_HEIGHT
       end
 
-      # Current formatter config
+      # Current formatter config, storing a hash of all static views
       def formatter_config
         formatter.config
       end
