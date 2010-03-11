@@ -480,10 +480,6 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
       table([[1,2],[2,3]], :change_fields=>['name', 'value','time']).should == expected_table
     end
 
-    test "return_rows option returns rows" do
-      table([[1,2],[2,3]], :return_rows=>true).should == [{0=>"1", 1=>"2"}, {0=>"2", 1=>"3"}]
-    end
-
     test "filter_any option filters any value" do
       expected_table = <<-TABLE.unindent
       +---------+
