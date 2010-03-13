@@ -53,6 +53,10 @@ module Hirb
       end
     end
 
+    test "class_to_method converts correctly" do
+      DynamicView.class_to_method("DBI::Row").should == 'd_b_i__row_view'
+    end
+
     context "dynamic_view" do
       def define_view(mod_name= :Blah, &block)
         mod = Views.const_set(mod_name, Module.new)

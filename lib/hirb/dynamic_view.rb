@@ -53,15 +53,16 @@ module Hirb
     end
 
     def self.generate_single_view_module(output_mod, &block) #:nodoc:
-      mod_name = class_to_method output_mod.to_s
-      Views::Single.send(:remove_const, mod_name) if Views::Single.const_defined?(mod_name)
-      mod = Views::Single.const_set(mod_name, Module.new)
-      mod.send(:define_method, mod_name.downcase, block)
+      meth = class_to_method output_mod.to_s
+      view_mod = meth.capitalize
+      Views::Single.send(:remove_const, view_mod) if Views::Single.const_defined?(view_mod)
+      mod = Views::Single.const_set(view_mod, Module.new)
+      mod.send(:define_method, meth, block)
       mod
     end
 
     def self.class_to_method(mod) #:nodoc:
-      mod.gsub("::","__").gsub(/([A-Z])/, '_\1').gsub(/(^|::)_/,'\1') + '_view'
+      mod.gsub(/(?!^)([A-Z])/) {|e| '_'+e }.gsub('::_', '__').downcase + '_view'
     end
 
     # Returns a hash of options based on dynamic views defined for the object's ancestry. If no config is found returns nil.
