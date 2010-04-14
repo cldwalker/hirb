@@ -1,12 +1,12 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "DynamicView" do
+describe "DynamicView" do
   def output_expects(output, expects)
     Helpers::ObjectTable.expects(:render).with(output, expects)
     Helpers::AutoTable.render(output)
   end
 
-  context "add" do
+  describe "add" do
     before_all { View.load_config }
 
     test "raises error if no :helper option" do
@@ -52,7 +52,7 @@ context "DynamicView" do
     DynamicView.class_to_method("DBI::Row").should == 'd_b_i__row_view'
   end
 
-  context "dynamic_view" do
+  describe "dynamic_view" do
     def define_view(mod_name= :Blah, &block)
       mod = Views.const_set(mod_name, Module.new)
       mod_block = block_given? ? block : lambda {|obj| {:fields=>obj.class::DAYNAMES}}

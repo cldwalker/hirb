@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Resizer" do
+describe "Resizer" do
   def table(options)
     @table = Helpers::Table.new [options[:field_lengths].keys.inject({}) {|t,e| t[e] = '1'; t}]
     @table.field_lengths = options[:field_lengths]
@@ -30,7 +30,7 @@ context "Resizer" do
     @field_lengths.values.each {|e| e.should <= 4 }
   end
 
-  context "add_extra_width and max_fields" do
+  describe "add_extra_width and max_fields" do
     def table_and_resize(options={})
       defaults = {:field_lengths=>{:f1=>135, :f2=>30, :f3=>4, :f4=>100}, :width=>195, :max_fields=>{:f1=>80, :f4=>30} }
       @table = table defaults.merge(options)

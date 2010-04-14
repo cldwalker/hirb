@@ -1,13 +1,13 @@
 # encoding: UTF-8
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Table" do
+describe "Table" do
   def table(*args)
     Helpers::Table.render(*args)
   end
   before_all { reset_config }
   
-  context "basic table" do
+  describe "basic table" do
     test "renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -137,7 +137,7 @@ context "Table" do
     end
   end
 
-  context "table with" do
+  describe "table with" do
     test "fields option renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -506,7 +506,7 @@ context "Table" do
     end
   end
 
-  context "table with callbacks" do
+  describe "table with callbacks" do
     before_all {
       Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
         obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }

@@ -13,12 +13,11 @@ module BaconExtensions
       end
 
       alias_method :test, :it
-      alias_method :context, :describe
     end
   end
 
   def xtest(*args); end
-  def xcontext(*args); end
+  def xdescribe(*args); end
   def before_all; yield; end
   def after_all; yield; end
   def assert(description, &block)
@@ -26,8 +25,4 @@ module BaconExtensions
       block.call.should == true
     end
   end
-end
-
-class <<self
-  alias_method :context, :describe
 end

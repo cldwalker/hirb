@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "parse_input" do
+describe "parse_input" do
   test "config is set if it wasn't before" do
     reset_config
     View.expects(:render_output)

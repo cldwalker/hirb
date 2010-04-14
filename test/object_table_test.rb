@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "object table" do
+describe "object table" do
   def table(*args)
     Helpers::ObjectTable.render(*args)
   end

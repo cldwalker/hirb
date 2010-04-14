@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "View" do
+describe "View" do
   def formatter_config
     View.formatter.config
   end
@@ -29,7 +29,7 @@ context "View" do
     Hirb.disable
   end
 
-  context "enable" do
+  describe "enable" do
     before { reset_config }
     after { Hirb.disable }
     test "redefines irb output_value" do
@@ -100,7 +100,7 @@ context "View" do
     end
   end
 
-  context "resize" do
+  describe "resize" do
     def pager; View.pager; end
     before { View.pager = nil; reset_config; Hirb.enable }
     after { Hirb.disable}

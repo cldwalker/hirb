@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "auto table" do
+describe "auto table" do
   test "converts nonarrays to arrays and renders" do
     require 'set'
     expected_table = <<-TABLE.unindent

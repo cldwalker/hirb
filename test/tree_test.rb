@@ -1,11 +1,11 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Tree helpers:" do
+describe "Tree helpers:" do
   def tree(*args)
     Helpers::Tree.render(*args)
   end
   
-  context "basic tree" do
+  describe "basic tree" do
     test "with hash nodes renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
@@ -132,7 +132,7 @@ context "Tree helpers:" do
     mock(value_method=>value, :children=>children.map {|e| mock_node(e, value_method)})
   end
 
-  context "parent_child_tree" do
+  describe "parent_child_tree" do
     test "with name value renders" do
       expected_tree = <<-TREE.unindent
       0.0

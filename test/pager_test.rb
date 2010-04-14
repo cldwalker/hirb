@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Pager" do
+describe "Pager" do
   def pager; View.pager; end
 
   def create_pageable_string(inspect_mode=false, size={})
@@ -25,7 +25,7 @@ context "Pager" do
     Pager.command_pager 'blah', :pager_command=>'moreless'
   end
 
-  context "default_pager" do
+  describe "default_pager" do
     before_all { reset_config; Hirb.enable :pager=>true }
     before { View.pager = nil; Pager.stubs(:pager_command).returns(nil) }
 
@@ -57,7 +57,7 @@ context "Pager" do
     after_all { Hirb.disable }
   end
 
-  context "pager" do
+  describe "pager" do
     before_all { reset_config; Hirb.enable }
     before { View.pager = nil; View.formatter = nil }
 
@@ -67,7 +67,7 @@ context "Pager" do
     end
 
     # this mode is called within @irb.output_value
-    context "in inspect_mode" do
+    describe "in inspect_mode" do
       test "activates when output is wide enough" do
         output = create_pageable_string(true)
         pager.expects(:page).with(output.inspect, true)
@@ -99,7 +99,7 @@ context "Pager" do
     end
 
     # this mode is called within View.render_output
-    context "in normal mode" do
+    describe "in normal mode" do
       test "activates when output is long enough" do
         output = create_pageable_string
         View.formatter.expects(:format_output).returns(output)

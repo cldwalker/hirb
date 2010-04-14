@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Menu" do
+describe "Menu" do
   before_all { View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
 
   def menu(*args, &block)
@@ -18,7 +18,7 @@ context "Menu" do
     $stdin.expects(:gets).returns(input)
   end
 
-  context "menu" do
+  describe "menu" do
     test "by default renders table menu" do
       expected_menu = <<-MENU.unindent
       +--------+-------+
@@ -114,7 +114,7 @@ context "Menu" do
     }
   end
 
-  context "2d menu" do
+  describe "2d menu" do
     test "with default field from last_table renders" do
       menu_input "1"
       two_d_menu.should == [1]
@@ -156,7 +156,7 @@ context "Menu" do
     end
   end
 
-  context "action menu" do
+  describe "action menu" do
     test "invokes" do
       menu_input "p 1 2:bro"
       two_d_menu(:action=>true, :invoke=>[[1,4]])

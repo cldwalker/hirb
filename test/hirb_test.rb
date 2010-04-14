@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Hirb" do
+describe "Hirb" do
   before_all { Hirb.config_files = nil }
   before { Hirb.config = nil }
 

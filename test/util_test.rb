@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Util" do
+describe "Util" do
   test "camelize converts underscore lowercase to camelcase" do
     Util.camelize('hirb/util').should == "Hirb::Util"
     Util.camelize('hirb_hash').should == "HirbHash"

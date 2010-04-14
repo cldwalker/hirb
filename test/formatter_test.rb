@@ -1,11 +1,11 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-context "Formatter" do
+describe "Formatter" do
   def set_formatter(hash={})
     @formatter = Formatter.new(hash)
   end
 
-  context "klass_config" do
+  describe "klass_config" do
     test "recursively merges ancestor options" do
       @formatter = set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
         "Object"=>{:method=>:object_output, :ancestor=>true, :options=>{:vertical=>true}},
@@ -24,7 +24,7 @@ context "Formatter" do
       set_formatter.klass_config(::String).should == {}
     end
 
-    context "with dynamic_config" do
+    describe "with dynamic_config" do
       def set_formatter(hash={})
         @formatter = Formatter.new(hash)
       end
@@ -50,7 +50,7 @@ context "Formatter" do
     end
   end
 
-  context "formatter methods:" do
+  describe "formatter methods:" do
     before_all { eval "module ::Dooda; end" }
 
     test "add_view sets formatter config" do
@@ -73,7 +73,7 @@ context "Formatter" do
     end
   end
 
-  context "format_output" do
+  describe "format_output" do
     def view_output(*args, &block); View.view_output(*args, &block); end
     def render_method(*args); View.render_method(*args); end
 
