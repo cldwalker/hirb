@@ -1,11 +1,15 @@
 require 'rubygems'
-require 'test/unit'
-require 'context' #gem install jeremymcanally-context -s http://gems.github.com
-require 'matchy' #gem install jeremymcanally-matchy -s http://gems.github.com
+require 'bacon'
+require 'mocha-on-bacon'
+require File.dirname(__FILE__)+'/bacon_extensions'
+#require 'test/unit'
+#require 'context' #gem install jeremymcanally-context -s http://gems.github.com
+#require 'matchy' #gem install jeremymcanally-matchy -s http://gems.github.com
 require 'mocha'
 require 'hirb'
+include Hirb
 
-class Test::Unit::TestCase
+module TestHelpers
   # set these to avoid invoking stty multiple times which doubles test suite running time
   ENV["LINES"] = ENV["COLUMNS"] = "20"
   def reset_terminal_size
@@ -37,6 +41,11 @@ class Test::Unit::TestCase
   def reset_config
     Hirb::View.instance_eval "@config = nil"
   end
+end
+
+class Bacon::Context
+  include TestHelpers
+  include BaconExtensions
 end
 
 class String
