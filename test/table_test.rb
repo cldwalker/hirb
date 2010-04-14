@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class Hirb::Helpers::TableTest < Test::Unit::TestCase
+context "Table" do
   def table(*args)
     Hirb::Helpers::Table.render(*args)
   end
-  before(:all) { reset_config }
+  before_all { reset_config }
   
   context "basic table" do
     test "renders" do
@@ -77,7 +77,7 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
     end
 
     test "with invalid rows raises an argumenterror" do
-      assert_raises(ArgumentError) { table(:a=>1) }.message.should =~ /Table must/
+      lambda { table(:a=>1) }.should.raise(ArgumentError).message.should =~ /Table must/
     end
 
     test "renders utf8" do
@@ -507,14 +507,12 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
   end
 
   context "table with callbacks" do
-    before(:all) {
+    before_all {
       Hirb::Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
         obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }
         obj
       end
     }
-    after(:all) { Hirb::Helpers::Table.send(:remove_method, :and_one_callback) }
-
     test "detects and runs them" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -547,5 +545,6 @@ class Hirb::Helpers::TableTest < Test::Unit::TestCase
 
       Hirb::Helpers::Table.send(:remove_method, :and_two_callback)
     end
+    after_all { Hirb::Helpers::Table.send(:remove_method, :and_one_callback) }
   end
 end

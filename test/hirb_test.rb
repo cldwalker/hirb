@@ -1,8 +1,8 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class HirbTest < Test::Unit::TestCase
-  before(:all) { Hirb.config_files = nil }
-  before(:each) { Hirb.config = nil }
+context "Hirb" do
+  before_all { Hirb.config_files = nil }
+  before { Hirb.config = nil }
 
   test "config converts yaml when config file exists" do
     yaml_data = {:blah=>'blah'}

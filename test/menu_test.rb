@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class Hirb::MenuTest < Test::Unit::TestCase
-  before(:all) { Hirb::View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
+context "Menu" do
+  before_all { Hirb::View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
 
   def menu(*args, &block)
     # testing via menu's main use case (through console) instead of Hirb::Menu.render
@@ -96,7 +96,7 @@ class Hirb::MenuTest < Test::Unit::TestCase
 
     test "with directions option turns off directions" do
       menu_input('blah')
-      capture_stdout { menu([1], :directions=>false) }.should_not =~ /range.*all/
+      capture_stdout { menu([1], :directions=>false) }.should.not =~ /range.*all/
     end
   end
 

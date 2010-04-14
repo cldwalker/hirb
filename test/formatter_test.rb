@@ -1,14 +1,13 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-module Hirb
-class FormatterTest < Test::Unit::TestCase
+context "Formatter" do
   def set_formatter(hash={})
     @formatter = Formatter.new(hash)
   end
 
   context "klass_config" do
     test "recursively merges ancestor options" do
-      set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
+      @formatter = set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
         "Object"=>{:method=>:object_output, :ancestor=>true, :options=>{:vertical=>true}},
         "Kernel"=>{:method=>:default_output}
       expected_result = {:method=>:object_output, :args=>[1, 2], :ancestor=>true, :options=>{:fields=>[:to_s], :vertical=>true}}
@@ -16,7 +15,8 @@ class FormatterTest < Test::Unit::TestCase
     end
 
     test "doesn't merge ancestor options" do
-      set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output}, "Kernel"=>{:method=>:default_output}
+      @formatter = set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output},
+       "Kernel"=>{:method=>:default_output}
       @formatter.klass_config(::String).should == {:args=>[1, 2]}
     end
 
@@ -25,7 +25,10 @@ class FormatterTest < Test::Unit::TestCase
     end
 
     context "with dynamic_config" do
-      after(:each) { Formatter.dynamic_config = {}}
+      def set_formatter(hash={})
+        @formatter = Formatter.new(hash)
+      end
+      after { Formatter.dynamic_config = {}}
 
       test "merges ancestor options and sets local config" do
         Formatter.dynamic_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
@@ -48,22 +51,22 @@ class FormatterTest < Test::Unit::TestCase
   end
 
   context "formatter methods:" do
-    before(:all) { eval "module ::Dooda; end" }
+    before_all { eval "module ::Dooda; end" }
 
     test "add_view sets formatter config" do
-      set_formatter
+      @formatter = set_formatter
       @formatter.add_view ::Dooda, :class=>"DoodaView"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView"}
     end
 
     test "add_view overwrites existing formatter config" do
-      set_formatter "Dooda"=>{:class=>"DoodaView"}
+      @formatter = set_formatter "Dooda"=>{:class=>"DoodaView"}
       @formatter.add_view ::Dooda, :class=>"DoodaView2"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
 
     test "parse_console_options passes all options except for formatter options into :options" do
-      set_formatter
+      @formatter = set_formatter
       options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :blah=>'blah'}
       expected_options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :options=>{:blah=>'blah'}}
       @formatter.parse_console_options(options).should == expected_options
@@ -78,7 +81,7 @@ class FormatterTest < Test::Unit::TestCase
       Hirb.enable :output=>value
     end
 
-    before(:all) { 
+    before_all {
       eval %[module ::Commify
         def self.render(strings)
           strings = [strings] unless strings.is_a?(Array)
@@ -87,8 +90,8 @@ class FormatterTest < Test::Unit::TestCase
       end]
       reset_config
     }
-    before(:each) { View.formatter = nil; reset_config }
-    after(:each) { Hirb.disable }
+    before { View.formatter = nil; reset_config }
+    after { Hirb.disable }
     
     test "formats with method option" do
       eval "module ::Kernel; def commify(string); string.split('').join(','); end; end"
@@ -158,5 +161,4 @@ class FormatterTest < Test::Unit::TestCase
       view_output('dude', :options=>{:max_width=>10})
     end
   end
-end
 end
