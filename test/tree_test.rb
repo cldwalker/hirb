@@ -6,7 +6,7 @@ describe "Tree helpers:" do
   end
   
   describe "basic tree" do
-    test "with hash nodes renders" do
+    it "with hash nodes renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
           1.1
@@ -18,7 +18,7 @@ describe "Tree helpers:" do
          {:level=>1, :value=>'4.1'}]).should == expected_tree
     end
   
-    test "with array nodes renders" do
+    it "with array nodes renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
           1.1
@@ -29,7 +29,7 @@ describe "Tree helpers:" do
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]]).should == expected_tree
     end
     
-    test "with non-string values renders" do
+    it "with non-string values renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
           1.1
@@ -40,7 +40,7 @@ describe "Tree helpers:" do
       tree([[0,0.0],[1,1.1],[2,2.2],[2,3.2],[1,4.1]]).should == expected_tree
     end
 
-    test "with indent option renders" do
+    it "with indent option renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
         1.1
@@ -51,7 +51,7 @@ describe "Tree helpers:" do
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :indent=>2).should == expected_tree
     end
 
-    test "with limit option renders" do
+    it "with limit option renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
           1.1
@@ -60,7 +60,7 @@ describe "Tree helpers:" do
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :limit=>1).should == expected_tree
     end
 
-    test "with description option renders" do
+    it "with description option renders" do
       expected_tree = <<-TREE.unindent(6)
       0.0
           1.1
@@ -73,7 +73,7 @@ describe "Tree helpers:" do
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :description=>true).should == expected_tree
     end
 
-    test "with type directory renders" do
+    it "with type directory renders" do
       expected_tree = <<-TREE.unindent
       0.0
       |-- 1.1
@@ -84,7 +84,7 @@ describe "Tree helpers:" do
       tree([[0, "0.0"], [1, "1.1"], [2, "2.2"], [2, "3.2"], [1, "4.1"]], :type=>:directory).should == expected_tree
     end
 
-    test "with type directory and multiple children per level renders" do
+    it "with type directory and multiple children per level renders" do
       expected_tree = <<-TREE.unindent
       0.0
       |-- 1.1
@@ -97,7 +97,7 @@ describe "Tree helpers:" do
       tree([[0,'0.0'], [1,'1.1'], [2,'2.2'],[3,'3.3'],[2,'4.2'],[3,'5.3'],[1,'6.1']], :type=>:directory).should == expected_tree
     end
 
-    test "with type number renders" do
+    it "with type number renders" do
       expected_tree = <<-TREE.unindent(6)
       1. 0
           1. 1
@@ -108,7 +108,7 @@ describe "Tree helpers:" do
       tree([[0,'0'],[1,'1'],[2,'2'],[2,'3'],[1,'4']], :type=>:number).should == expected_tree
     end
 
-    test "with multi-line nodes option renders" do
+    it "with multi-line nodes option renders" do
       expected_tree = <<-TREE.unindent(6)
       parent
           +-------+
@@ -133,7 +133,7 @@ describe "Tree helpers:" do
   end
 
   describe "parent_child_tree" do
-    test "with name value renders" do
+    it "with name value renders" do
       expected_tree = <<-TREE.unindent
       0.0
       |-- 1.1
@@ -145,7 +145,7 @@ describe "Tree helpers:" do
       Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
     end
     
-    test "with value_method option renders" do
+    it "with value_method option renders" do
       expected_tree = <<-TREE.unindent
       0.0
       |-- 1.1
@@ -157,7 +157,7 @@ describe "Tree helpers:" do
       Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
 
-    test "with children_method proc option renders" do
+    it "with children_method proc option renders" do
       expected_tree = <<-TREE.unindent
       1
       |-- 2
@@ -170,15 +170,15 @@ describe "Tree helpers:" do
     end
   end
 
-  test "tree with parentless nodes renders ParentlessNodeError" do
+  it "tree with parentless nodes renders ParentlessNodeError" do
     lambda { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }.should.raise(Helpers::Tree::ParentlessNodeError)
   end
   
-  test "tree with hash nodes missing level raises MissingLevelError" do
+  it "tree with hash nodes missing level raises MissingLevelError" do
     lambda { tree([{:value=>'ok'}]) }.should.raise(Helpers::Tree::Node::MissingLevelError)
   end
 
-  test "tree with hash nodes missing level raises MissingValueError" do
+  it "tree with hash nodes missing level raises MissingValueError" do
     lambda { tree([{:level=>0}]) }.should.raise(Helpers::Tree::Node::MissingValueError)
   end
 end

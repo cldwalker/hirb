@@ -6,7 +6,7 @@ describe "Formatter" do
   end
 
   describe "klass_config" do
-    test "recursively merges ancestor options" do
+    it "recursively merges ancestor options" do
       @formatter = set_formatter "String"=>{:args=>[1,2], :options=>{:fields=>[:to_s]}},
         "Object"=>{:method=>:object_output, :ancestor=>true, :options=>{:vertical=>true}},
         "Kernel"=>{:method=>:default_output}
@@ -14,13 +14,13 @@ describe "Formatter" do
       @formatter.klass_config(::String).should == expected_result
     end
 
-    test "doesn't merge ancestor options" do
+    it "doesn't merge ancestor options" do
       @formatter = set_formatter "String"=>{:args=>[1,2]}, "Object"=>{:method=>:object_output},
        "Kernel"=>{:method=>:default_output}
       @formatter.klass_config(::String).should == {:args=>[1, 2]}
     end
 
-    test "returns hash when nothing found" do
+    it "returns hash when nothing found" do
       set_formatter.klass_config(::String).should == {}
     end
 
@@ -30,19 +30,19 @@ describe "Formatter" do
       end
       after { Formatter.dynamic_config = {}}
 
-      test "merges ancestor options and sets local config" do
+      it "merges ancestor options and sets local config" do
         Formatter.dynamic_config = {"Object"=>{:method=>:blah}, "Kernel"=>{:args=>[1,2], :ancestor=>true}}
         set_formatter.klass_config(::String).should == {:args=>[1,2], :ancestor=>true}
         @formatter.config['Kernel'].should == {:args=>[1,2], :ancestor=>true}
       end
 
-      test "uses local config over dynamic_config" do
+      it "uses local config over dynamic_config" do
         Formatter.dynamic_config = {"String"=>{:method=>:blah}}
         set_formatter "String"=>{:args=>[1,2]}
         @formatter.klass_config(::String).should == {:args=>[1,2]}
       end
 
-      test "uses dynamic_config and sets local config" do
+      it "uses dynamic_config and sets local config" do
         Formatter.dynamic_config = {"String"=>{:method=>:blah}}
         set_formatter.klass_config(::String).should == {:method=>:blah}
         @formatter.config['String'].should == {:method=>:blah}
@@ -53,19 +53,19 @@ describe "Formatter" do
   describe "formatter methods:" do
     before_all { eval "module ::Dooda; end" }
 
-    test "add_view sets formatter config" do
+    it "add_view sets formatter config" do
       @formatter = set_formatter
       @formatter.add_view ::Dooda, :class=>"DoodaView"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView"}
     end
 
-    test "add_view overwrites existing formatter config" do
+    it "add_view overwrites existing formatter config" do
       @formatter = set_formatter "Dooda"=>{:class=>"DoodaView"}
       @formatter.add_view ::Dooda, :class=>"DoodaView2"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
 
-    test "parse_console_options passes all options except for formatter options into :options" do
+    it "parse_console_options passes all options except for formatter options into :options" do
       @formatter = set_formatter
       options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :blah=>'blah'}
       expected_options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :options=>{:blah=>'blah'}}
@@ -93,69 +93,69 @@ describe "Formatter" do
     before { View.formatter = nil; reset_config }
     after { Hirb.disable }
     
-    test "formats with method option" do
+    it "formats with method option" do
       eval "module ::Kernel; def commify(string); string.split('').join(','); end; end"
       enable_with_output "String"=>{:method=>:commify}
       render_method.expects(:call).with('d,u,d,e')
       view_output('dude')
     end
     
-    test "formats with class option" do
+    it "formats with class option" do
       enable_with_output "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
       view_output('dude')
     end
     
-    test "formats with class option as symbol" do
+    it "formats with class option as symbol" do
       enable_with_output "String"=>{:class=>:auto_table}
       Helpers::AutoTable.expects(:render)
       view_output('dude')
     end
 
-    test "formats output array" do
+    it "formats output array" do
       enable_with_output "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
       view_output(['dude'])
     end
     
-    test "formats with options option" do
+    it "formats with options option" do
       eval "module ::Blahify; def self.render(*args); end; end"
       enable_with_output "String"=>{:class=>"Blahify", :options=>{:fields=>%w{a b}}}
       Blahify.expects(:render).with('dude', :fields=>%w{a b})
       view_output('dude')
     end
     
-    test "doesn't format and returns false when no format method found" do
+    it "doesn't format and returns false when no format method found" do
       Hirb.enable
       render_method.expects(:call).never
       view_output(Date.today).should == false
     end
     
-    test "formats with output_method option as method" do
+    it "formats with output_method option as method" do
       enable_with_output 'String'=>{:class=>"Commify", :output_method=>:chop}
       render_method.expects(:call).with('d,u,d')
       view_output('dude')
     end
 
-    test "formats with output_method option as proc" do
+    it "formats with output_method option as proc" do
       enable_with_output 'String'=>{:class=>"Commify", :output_method=>lambda {|e| e.chop}}
       render_method.expects(:call).with('d,u,d')
       view_output('dude')
     end
 
-    test "formats output array with output_method option" do
+    it "formats output array with output_method option" do
       enable_with_output 'String'=>{:class=>"Commify", :output_method=>:chop}
       render_method.expects(:call).with("d,u,d\nm,a")
       view_output(['dude', 'man'])
     end
 
-    test "formats with explicit class option" do
+    it "formats with explicit class option" do
       enable_with_output 'String'=>{:class=>"Blahify"}
       render_method.expects(:call).with('d,u,d,e')
       view_output('dude', :class=>"Commify")
     end
     
-    test "formats with explicit options option merges with existing options" do
+    it "formats with explicit options option merges with existing options" do
       enable_with_output "String"=>{:class=>"Commify", :options=>{:fields=>%w{f1 f2}}}
       Commify.expects(:render).with('dude', :max_width=>10, :fields=>%w{f1 f2})
       view_output('dude', :options=>{:max_width=>10})

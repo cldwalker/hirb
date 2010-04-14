@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "auto table" do
-  test "converts nonarrays to arrays and renders" do
+  it "converts nonarrays to arrays and renders" do
     require 'set'
     expected_table = <<-TABLE.unindent
     +-------+
@@ -16,7 +16,7 @@ describe "auto table" do
     Helpers::AutoTable.render(::Set.new([1,2,3])).should == expected_table
   end
 
-  test "renders hash" do
+  it "renders hash" do
     expected_table = <<-TABLE.unindent
     +---+-------+
     | 0 | 1     |

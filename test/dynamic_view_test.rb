@@ -9,29 +9,29 @@ describe "DynamicView" do
   describe "add" do
     before_all { View.load_config }
 
-    test "raises error if no :helper option" do
+    it "raises error if no :helper option" do
       lambda { Hirb.add_dynamic_view 'Blah', {} }.should.raise(ArgumentError).
         message.should =~ /:helper.*required/
     end
 
-    test "raises error if :helper option not a dynamic_view module" do
+    it "raises error if :helper option not a dynamic_view module" do
       lambda { Hirb.add_dynamic_view('Blah', :helper=>:table) {|obj| } }.
         should.raise(ArgumentError).message.should =~ /:helper.*must/
     end
 
-    test "raises error if views module not a module" do
+    it "raises error if views module not a module" do
       lambda { Hirb.add_dynamic_view 'Blah', :helper=>:auto_table }.should.raise(ArgumentError).
         message.should =~ /must be a module/
     end
 
-    test "adds a view with block" do
+    it "adds a view with block" do
       Hirb.add_dynamic_view('Date', :helper=>:auto_table) do |obj|
         {:fields=>obj.class::DAYNAMES}
       end
       output_expects [Date.new], :fields=>Date::DAYNAMES
     end
 
-    test "when adding views with a block, second view for same class overrides first one" do
+    it "when adding views with a block, second view for same class overrides first one" do
       Hirb.add_dynamic_view('Date', :helper=>:auto_table) do |obj|
         {:fields=>obj.class::DAYNAMES}
       end
@@ -42,13 +42,13 @@ describe "DynamicView" do
     end
   end
 
-  test "class_to_method and method_to_class convert to each other" do
+  it "class_to_method and method_to_class convert to each other" do
     ["DBI::Row", "Hirb::View"].each do |e|
       Helpers::AutoTable.method_to_class(DynamicView.class_to_method(e).downcase).should == e
     end
   end
 
-  test "class_to_method converts correctly" do
+  it "class_to_method converts correctly" do
     DynamicView.class_to_method("DBI::Row").should == 'd_b_i__row_view'
   end
 
@@ -64,24 +64,24 @@ describe "DynamicView" do
     before { Formatter.dynamic_config = {} }
     after { Views.send(:remove_const, :Blah) }
 
-    test "sets a view's options" do
+    it "sets a view's options" do
       define_view
       output_expects [Date.new], :fields=>Date::DAYNAMES
     end
 
-    test "does override existing formatter dynamic_config" do
+    it "does override existing formatter dynamic_config" do
       Formatter.dynamic_config["Date"] = {:class=>Helpers::Table}
       define_view
       Formatter.dynamic_config["Date"].should == {:class=>Hirb::Helpers::AutoTable, :ancestor=>true}
     end
 
-    test "raises a readable error when error occurs in a view" do
+    it "raises a readable error when error occurs in a view" do
       define_view {|obj| raise 'blah' }
       lambda { Helpers::AutoTable.render([Date.new]) }.should.raise(RuntimeError).
         message.should =~ /'Date'.*date_view.*\nblah/
     end
 
-    test "another view can reuse an old view's options" do
+    it "another view can reuse an old view's options" do
       define_view
       define_view(:Blah2) do |obj|
         {:fields=>obj.class::DAYNAMES + ['blah']}

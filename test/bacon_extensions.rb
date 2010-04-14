@@ -11,12 +11,10 @@ module BaconExtensions
         @after.each { |b| context.after(&b) }
         context.run
       end
-
-      alias_method :test, :it
     end
   end
 
-  def xtest(*args); end
+  def xit(*args); end
   def xdescribe(*args); end
   def before_all; yield; end
   def after_all; yield; end

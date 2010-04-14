@@ -4,7 +4,7 @@ describe "Hirb" do
   before_all { Hirb.config_files = nil }
   before { Hirb.config = nil }
 
-  test "config converts yaml when config file exists" do
+  it "config converts yaml when config file exists" do
     yaml_data = {:blah=>'blah'}
     File.stubs('exists?').returns(true)
     Hirb.config_files = ['ok']
@@ -12,25 +12,25 @@ describe "Hirb" do
     Hirb.config.should == yaml_data
   end
   
-  test "config defaults to hash when no config file" do
+  it "config defaults to hash when no config file" do
     File.stubs('exists?').returns(false)
     Hirb.config.should == {}
   end
   
-  test "config reloads if given explicit reload" do
+  it "config reloads if given explicit reload" do
     Hirb.config
     Hirb.expects(:read_config_file).returns({})
     Hirb.config(true)
   end
 
-  test "config reads multiple config files and merges them" do
+  it "config reads multiple config files and merges them" do
     Hirb.config_files = %w{one two}
     Hirb.expects(:read_config_file).times(2).returns({:output=>{"String"=>:auto_table}}, {:output=>{"Array"=>:auto_table}})
     Hirb.config.should == {:output=>{"Array"=>:auto_table, "String"=>:auto_table}}
     Hirb.config_files = nil
   end
 
-  test "config_file sets correctly when no ENV['HOME']" do
+  it "config_file sets correctly when no ENV['HOME']" do
     Hirb.config_files = nil
     home = ENV.delete('HOME')
     Hirb.config_files[0].class.should == String

@@ -19,7 +19,7 @@ describe "Menu" do
   end
 
   describe "menu" do
-    test "by default renders table menu" do
+    it "by default renders table menu" do
       expected_menu = <<-MENU.unindent
       +--------+-------+
       | number | value |
@@ -33,7 +33,7 @@ describe "Menu" do
       basic_menu([1,2,3]).include?(expected_menu).should == true
     end
 
-    test "with block renders" do
+    it "with block renders" do
       menu_input "1,2"
       expected_result = [1,2]
       capture_stdout { 
@@ -41,7 +41,7 @@ describe "Menu" do
       }
     end
 
-    test "with block and no chosen doesn't call block" do
+    it "with block and no chosen doesn't call block" do
       menu_input ""
       block = lambda {|e| @called = true }
       capture_stdout {
@@ -50,12 +50,12 @@ describe "Menu" do
       assert !@called
     end
 
-    test "with valid helper_class option renders" do
+    it "with valid helper_class option renders" do
       Helpers::Table.expects(:render)
       basic_menu [1,2,3], :helper_class=>"Hirb::Helpers::Table"
     end
 
-    test "with invalid helper_class option renders default menu" do
+    it "with invalid helper_class option renders default menu" do
       expected_menu = <<-MENU.unindent
       1: 1
       2: 2
@@ -64,7 +64,7 @@ describe "Menu" do
       basic_menu([1,2,3], :helper_class=>"SomeHelper").include?(expected_menu).should == true
     end
 
-    test "with false helper_class option renders default menu" do
+    it "with false helper_class option renders default menu" do
       expected_menu = <<-MENU.unindent
       1: 1
       2: 2
@@ -73,28 +73,28 @@ describe "Menu" do
       basic_menu([1,2,3], :helper_class=>false).include?(expected_menu).should == true
     end
 
-    test "prints prompt option" do
+    it "prints prompt option" do
       prompt = "Input or else ..."
       basic_menu([1,2,3], :prompt=>prompt).include?(prompt).should == true
     end
 
-    test "converts non-array inputs to array" do
+    it "converts non-array inputs to array" do
       Helpers::AutoTable.expects(:render).with([1], anything)
       basic_menu 1
     end
 
-    test "with false ask option returns one choice without asking" do
+    it "with false ask option returns one choice without asking" do
       $stdin.expects(:gets).never
       menu([1], :ask=>false).should == [1]
     end
 
-    test "with no items to choose from always return without asking" do
+    it "with no items to choose from always return without asking" do
       $stdin.expects(:gets).never
       menu([], :ask=>false).should == []
       menu([], :ask=>true).should == []
     end
 
-    test "with directions option turns off directions" do
+    it "with directions option turns off directions" do
       menu_input('blah')
       capture_stdout { menu([1], :directions=>false) }.should.not =~ /range.*all/
     end
@@ -115,106 +115,106 @@ describe "Menu" do
   end
 
   describe "2d menu" do
-    test "with default field from last_table renders" do
+    it "with default field from last_table renders" do
       menu_input "1"
       two_d_menu.should == [1]
     end
 
-    test "with default field from fields option renders" do
+    it "with default field from fields option renders" do
       menu_input "1"
       two_d_menu(:fields=>[:bro, :a]).should == [2]
     end
 
-    test "with default field option renders" do
+    it "with default field option renders" do
       menu_input "1"
       two_d_menu(:default_field=>:bro).should == [2]
     end
 
-    test "with non-table helper class renders" do
+    it "with non-table helper class renders" do
       menu_input "1"
       two_d_menu(:helper_class=>false, :fields=>[:a,:bro]).should == [1]
     end
 
-    test "with no default field prints error" do
+    it "with no default field prints error" do
       menu_input "1"
       capture_stderr { two_d_menu(:fields=>[]) }.should =~ /No default.*found/
     end
 
-    test "with invalid field prints error" do
+    it "with invalid field prints error" do
       menu_input "1:z"
       capture_stderr { two_d_menu }.should =~ /Invalid.*'z'/
     end
 
-    test "with choice from abbreviated field" do
+    it "with choice from abbreviated field" do
       menu_input "2:b"
       two_d_menu.should == [4]
     end
 
-    test "with choices from multiple fields renders" do
+    it "with choices from multiple fields renders" do
       menu_input "1 2:bro"
       two_d_menu.should == [1,4]
     end
   end
 
   describe "action menu" do
-    test "invokes" do
+    it "invokes" do
       menu_input "p 1 2:bro"
       two_d_menu(:action=>true, :invoke=>[[1,4]])
     end
 
-    test "with 1d invokes" do
+    it "with 1d invokes" do
       menu_input "p 1"
       two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a=>1, :bro=>2}]])
     end
 
-    test "with non-choice arguments invokes" do
+    it "with non-choice arguments invokes" do
       menu_input "p arg1 1"
       two_d_menu :action=>true, :invoke=>['arg1', [1]]
     end
 
-    test "with multiple choice arguments flattens them into arg" do
+    it "with multiple choice arguments flattens them into arg" do
       menu_input "p arg1 1 2:bro arg2"
       two_d_menu :action=>true, :invoke=>['arg1', [1,4], 'arg2']
     end
 
-    test "with nothing chosen prints error" do
+    it "with nothing chosen prints error" do
       menu_input "cmd"
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No rows chosen/
     end
 
-    test "with no command given prints error" do
+    it "with no command given prints error" do
       menu_input "1"
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No command given/
     end
 
-    test "with multi_action option invokes" do
+    it "with multi_action option invokes" do
       menu_input "p 1 2:bro"
       two_d_menu(:action=>true, :multi_action=>true, :invokes=>[[1], [4]])
     end
 
-    test "with command option invokes" do
+    it "with command option invokes" do
       menu_input "1"
       two_d_menu(:action=>true, :command=>'p', :invoke=>[[1]])
     end
 
-    test "with command option and empty input doesn't invoke action and exists silently" do
+    it "with command option and empty input doesn't invoke action and exists silently" do
       Menu.any_instance.expects(:invoke).never
       menu_input ""
       two_d_menu(:action=>true, :command=>'p').should == nil
     end
 
-    test "with action_object option invokes" do
+    it "with action_object option invokes" do
       obj = mock(:blah=>true)
       menu_input "blah 1"
       two_d_menu(:action=>true, :action_object=>obj)
     end
 
-    test "with ask false and defaults invokes" do
+    it "with ask false and defaults invokes" do
       two_d_menu(:output=>[{:a=>1, :bro=>2}], :action=>true, :ask=>false, :default_field=>:a,
         :command=>'p', :invoke=>[[1]])
     end
 
-    test "with ask false and no defaults prints error" do
+    it "with ask false and no defaults prints error" do
       capture_stderr {
         two_d_menu(:output=>[{:a=>1, :bro=>2}], :action=>true, :ask=>false, :command=>'p')
       }.should =~ /Default.*required/

@@ -8,7 +8,7 @@ describe "object table" do
   before_all {
     @pets = [stub(:name=>'rufus', :age=>7, :to_s=>'rufus'), stub(:name=>'alf', :age=>101, :to_s=>'alf')]
   }
-  test "renders" do
+  it "renders" do
     expected_table = <<-TABLE.unindent
     +-------+-----+
     | name  | age |
@@ -21,7 +21,7 @@ describe "object table" do
     table(@pets, :fields=>[:name, :age]).should == expected_table
   end
   
-  test "with no options defaults to to_s field" do
+  it "with no options defaults to to_s field" do
     expected_table = <<-TABLE.unindent
     +-------+
     | value |
@@ -34,7 +34,7 @@ describe "object table" do
     table(@pets).should == expected_table
   end
 
-  test "renders simple arrays" do
+  it "renders simple arrays" do
     expected_table = <<-TABLE.unindent
     +-------+
     | value |
@@ -49,7 +49,7 @@ describe "object table" do
     table([1,2,3,4]).should == expected_table
   end
 
-  test "renders simple arrays with custom header" do
+  it "renders simple arrays with custom header" do
     expected_table = <<-TABLE.unindent
     +-----+
     | num |
@@ -64,7 +64,7 @@ describe "object table" do
     table([1,2,3,4], :headers=>{:to_s=>'num'}).should == expected_table
   end
 
-  test "with empty fields" do
+  it "with empty fields" do
     expected_table = <<-TABLE.unindent
     0 rows in set
     TABLE

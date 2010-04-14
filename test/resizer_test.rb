@@ -10,20 +10,20 @@ describe "Resizer" do
     @table
   end
 
-  test "resize ensures columns total doesn't exceed max width" do
+  it "resize ensures columns total doesn't exceed max width" do
     table :field_lengths=>{:f1=>135, :f2=>45, :f3=>4, :f4=>55}, :width=>195
     Helpers::Table::Resizer.resize!(@table)
     @field_lengths.values.inject {|a,e| a+=e}.should <= @width
   end
 
-  test "resize sets columns by relative lengths" do
+  it "resize sets columns by relative lengths" do
     table :field_lengths=>{:a=>30, :b=>30, :c=>40}, :width=>60
     Helpers::Table::Resizer.resize!(@table)
     @field_lengths.values.inject {|a,e| a+=e}.should <= @width
     @field_lengths.values.uniq.size.should.not == 1
   end
 
-  test "resize sets all columns roughly equal when adusting long fields don't work" do
+  it "resize sets all columns roughly equal when adusting long fields don't work" do
     table :field_lengths=>{:field1=>10, :field2=>15, :field3=>100}, :width=>20
     Helpers::Table::Resizer.resize!(@table)
     @field_lengths.values.inject {|a,e| a+=e}.should <= @width
@@ -39,22 +39,22 @@ describe "Resizer" do
       Helpers::Table::Resizer.resize! @table
     end
 
-    test "doesn't add to already maxed out field" do
+    it "doesn't add to already maxed out field" do
       table_and_resize
       @field_lengths[:f3].should == 4
     end
 
-    test "restricted before adding width" do
+    it "restricted before adding width" do
       table_and_resize
       @field_lengths[:f4].should <= 30
     end
 
-    test "adds to restricted field" do
+    it "adds to restricted field" do
       table_and_resize
       @field_lengths[:f1].should <= 80
     end
 
-    test "adds to unrestricted field" do
+    it "adds to unrestricted field" do
       table_and_resize :field_lengths=>{:f1=>135, :f2=>70, :f3=>4, :f4=>100}
       @field_lengths[:f2].should == 70
     end
