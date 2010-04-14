@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class Hirb::Helpers::TreeTest < Test::Unit::TestCase
+context "Tree helpers:" do
   def tree(*args)
     Hirb::Helpers::Tree.render(*args)
   end
@@ -103,13 +103,13 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
           1. 1
               1. 2
               2. 3
-          2. 4 
+          2. 4
       TREE
-      tree([[0,'0'],[1,'1'],[2,'2'],[2,'3'],[1,'4']], :type=>:number)
+      tree([[0,'0'],[1,'1'],[2,'2'],[2,'3'],[1,'4']], :type=>:number).should == expected_tree
     end
 
     test "with multi-line nodes option renders" do
-      expected_tree = <<-TREE.unindent
+      expected_tree = <<-TREE.unindent(6)
       parent
           +-------+
           | value |
@@ -122,7 +122,7 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
               stuff
       TREE
       node1 = "+-------+\n| value |\n+-------+\n| 1     |\n| 2     |\n| 3     |\n+-------+"
-      tree([ [0, 'parent'],[1, node1],[2, "indented\nstuff"]], :multi_line_nodes=>true)
+      tree([ [0, 'parent'],[1, node1],[2, "indented\nstuff"]], :multi_line_nodes=>true).should == expected_tree
     end
   end
 
@@ -178,19 +178,19 @@ class Hirb::Helpers::TreeTest < Test::Unit::TestCase
       `-- 5
       TREE
       Hirb::Helpers::ParentChildTree.render(1, :type=>:directory,
-        :children_method=>lambda {|e| e == 1 ? (2..5).to_a : []}, :value_method=>:to_s)
+        :children_method=>lambda {|e| e == 1 ? (2..5).to_a : []}, :value_method=>:to_s).should == expected_tree
     end
   end
 
   test "tree with parentless nodes renders ParentlessNodeError" do
-    assert_raises(Hirb::Helpers::Tree::ParentlessNodeError) { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }
+    lambda { tree([[0, "0.0"], [2, '1.2']], :validate=>true) }.should.raise(Helpers::Tree::ParentlessNodeError)
   end
   
   test "tree with hash nodes missing level raises MissingLevelError" do
-    assert_raises(Hirb::Helpers::Tree::Node::MissingLevelError) { tree([{:value=>'ok'}]) }
+    lambda { tree([{:value=>'ok'}]) }.should.raise(Helpers::Tree::Node::MissingLevelError)
   end
 
   test "tree with hash nodes missing level raises MissingValueError" do
-    assert_raises(Hirb::Helpers::Tree::Node::MissingValueError) { tree([{:level=>0}]) }
+    lambda { tree([{:level=>0}]) }.should.raise(Helpers::Tree::Node::MissingValueError)
   end
 end
