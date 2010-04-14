@@ -1,11 +1,8 @@
 require 'rubygems'
 require 'bacon'
-require 'mocha-on-bacon'
 require File.dirname(__FILE__)+'/bacon_extensions'
-#require 'test/unit'
-#require 'context' #gem install jeremymcanally-context -s http://gems.github.com
-#require 'matchy' #gem install jeremymcanally-matchy -s http://gems.github.com
 require 'mocha'
+require 'mocha-on-bacon'
 require 'hirb'
 include Hirb
 

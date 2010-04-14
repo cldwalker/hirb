@@ -1,5 +1,4 @@
 require 'rake'
-require 'rake/testtask'
 require 'rake/rdoctask'
 begin
   require 'rcov/rcovtask'
@@ -36,12 +35,6 @@ rescue LoadError
   puts "Jeweler not available. Install it for jeweler-related tasks with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-Rake::TestTask.new do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = false
-end
-
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'test'
@@ -51,3 +44,8 @@ Rake::RDocTask.new do |rdoc|
 end
 
 task :default => :test
+
+desc 'Run specs with unit test style output'
+task :test do |t|
+  sh 'bacon -q -Ilib test/*_test.rb'
+end
