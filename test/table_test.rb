@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Table" do
@@ -115,13 +116,12 @@ context "Table" do
       +----+------+
       | a  | b    |
       +----+------+
-      | 12 | 1, 2 |
+      | 1  | 1, 2 |
       | ok | 3, 4 |
       +----+------+
       2 rows in set
       TABLE
-      # depends on 1.8 Array#to_s
-      table([{:a=>[1,2], :b=>[1,2]}, {:a=>'ok', :b=>[3,4]}]).should == expected_table
+      table([{:a=>1, :b=>[1,2]}, {:a=>'ok', :b=>[3,4]}]).should == expected_table
     end
 
     test "with filter class default doesn't override explicit filters" do
@@ -129,11 +129,11 @@ context "Table" do
       +------+-------+
       | name | value |
       +------+-------+
-      | a    | b1    |
+      | a    | 1     |
       +------+-------+
       1 row in set
       TABLE
-      table([{:name=>'a', :value=>{:b=>1}}], :filters=>{:value=>:to_s}).should == expected_table
+      table([{:name=>'a', :value=>{:b=>1}}], :filters=>{:value=>:size}).should == expected_table
     end
   end
 
@@ -495,14 +495,14 @@ context "Table" do
 
     test "filter_classes option overrides class-wide filter_classes" do
       expected_table = <<-TABLE.unindent
-      +----+
-      | a  |
-      +----+
-      | b1 |
-      +----+
+      +---+
+      | a |
+      +---+
+      | 1 |
+      +---+
       1 row in set
       TABLE
-      table([{:a=>{:b=>1}}], :filter_classes=>{Hash=>:to_s}).should == expected_table
+      table([{:a=>{:b=>1}}], :filter_classes=>{Hash=>:size}).should == expected_table
     end
   end
 

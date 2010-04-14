@@ -141,22 +141,10 @@ context "Tree helpers:" do
       |   `-- 3.2
       `-- 4.1
       TREE
-      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :name)
+      root = mock_node(['0.0', ['1.1', ['2.1', ['3.2']], '4.1']], :name)
       Hirb::Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
     end
     
-    test "with object_id value renders" do
-      expected_tree = <<-TREE.unindent
-      0.0
-      |-- 1.1
-      |-- 2.1
-      |   `-- 3.2
-      `-- 4.1
-      TREE
-      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :object_id)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
-    end
-
     test "with value_method option renders" do
       expected_tree = <<-TREE.unindent
       0.0
@@ -165,7 +153,7 @@ context "Tree helpers:" do
       |   `-- 3.2
       `-- 4.1
       TREE
-      root = mock_node(['0.0', ['1.1', ['2.1', '3.2'], '4.1']], :blah)
+      root = mock_node(['0.0', ['1.1', ['2.1', ['3.2']], '4.1']], :blah)
       Hirb::Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
 
