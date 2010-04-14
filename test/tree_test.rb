@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Tree helpers:" do
   def tree(*args)
-    Hirb::Helpers::Tree.render(*args)
+    Helpers::Tree.render(*args)
   end
   
   context "basic tree" do
@@ -142,7 +142,7 @@ context "Tree helpers:" do
       `-- 4.1
       TREE
       root = mock_node(['0.0', ['1.1', ['2.1', ['3.2']], '4.1']], :name)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
+      Helpers::ParentChildTree.render(root, :type=>:directory).should == expected_tree
     end
     
     test "with value_method option renders" do
@@ -154,7 +154,7 @@ context "Tree helpers:" do
       `-- 4.1
       TREE
       root = mock_node(['0.0', ['1.1', ['2.1', ['3.2']], '4.1']], :blah)
-      Hirb::Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
+      Helpers::ParentChildTree.render(root, :type=>:directory, :value_method=>:blah).should == expected_tree
     end
 
     test "with children_method proc option renders" do
@@ -165,7 +165,7 @@ context "Tree helpers:" do
       |-- 4
       `-- 5
       TREE
-      Hirb::Helpers::ParentChildTree.render(1, :type=>:directory,
+      Helpers::ParentChildTree.render(1, :type=>:directory,
         :children_method=>lambda {|e| e == 1 ? (2..5).to_a : []}, :value_method=>:to_s).should == expected_tree
     end
   end

@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Resizer" do
   def table(options)
-    @table = Hirb::Helpers::Table.new [options[:field_lengths].keys.inject({}) {|t,e| t[e] = '1'; t}]
+    @table = Helpers::Table.new [options[:field_lengths].keys.inject({}) {|t,e| t[e] = '1'; t}]
     @table.field_lengths = options[:field_lengths]
     @table.width = options[:width]
     @table.max_fields = options[:max_fields] if options[:max_fields]

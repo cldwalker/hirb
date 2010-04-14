@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Menu" do
-  before_all { Hirb::View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
+  before_all { View.instance_variable_set("@config", :width=>Hirb::View::DEFAULT_WIDTH) }
 
   def menu(*args, &block)
-    # testing via menu's main use case (through console) instead of Hirb::Menu.render
+    # testing via menu's main use case (through console) instead of Menu.render
     @console ||= Object.new.extend(Hirb::Console)
     @console.menu(*args, &block)
   end
@@ -51,7 +51,7 @@ context "Menu" do
     end
 
     test "with valid helper_class option renders" do
-      Hirb::Helpers::Table.expects(:render)
+      Helpers::Table.expects(:render)
       basic_menu [1,2,3], :helper_class=>"Hirb::Helpers::Table"
     end
 
@@ -79,7 +79,7 @@ context "Menu" do
     end
 
     test "converts non-array inputs to array" do
-      Hirb::Helpers::AutoTable.expects(:render).with([1], anything)
+      Helpers::AutoTable.expects(:render).with([1], anything)
       basic_menu 1
     end
 
@@ -104,7 +104,7 @@ context "Menu" do
     if options[:invokes] || options[:invoke]
       cmd = options[:command] || 'p'
       (options[:invokes] || [options[:invoke]]).each {|e|
-        Hirb::Menu.any_instance.expects(:invoke).with(cmd, e)
+        Menu.any_instance.expects(:invoke).with(cmd, e)
       }
     end
 
@@ -198,7 +198,7 @@ context "Menu" do
     end
 
     test "with command option and empty input doesn't invoke action and exists silently" do
-      Hirb::Menu.any_instance.expects(:invoke).never
+      Menu.any_instance.expects(:invoke).never
       menu_input ""
       two_d_menu(:action=>true, :command=>'p').should == nil
     end

@@ -98,7 +98,7 @@ context "Pager" do
       end
     end
 
-    # this mode is called within Hirb::View.render_output
+    # this mode is called within View.render_output
     context "in normal mode" do
       test "activates when output is long enough" do
         output = create_pageable_string

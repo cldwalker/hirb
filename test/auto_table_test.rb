@@ -13,7 +13,7 @@ context "auto table" do
     +-------+
     3 rows in set
     TABLE
-    Hirb::Helpers::AutoTable.render(::Set.new([1,2,3])).should == expected_table
+    Helpers::AutoTable.render(::Set.new([1,2,3])).should == expected_table
   end
 
   test "renders hash" do
@@ -25,6 +25,6 @@ context "auto table" do
     +---+-------+
     1 row in set
     TABLE
-    Hirb::Helpers::AutoTable.render({:a=>12345}).should == expected_table
+    Helpers::AutoTable.render({:a=>12345}).should == expected_table
   end
 end

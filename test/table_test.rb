@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Table" do
   def table(*args)
-    Hirb::Helpers::Table.render(*args)
+    Helpers::Table.render(*args)
   end
   before_all { reset_config }
   
@@ -69,7 +69,7 @@ context "Table" do
 
     test "with too many fields defaults to vertical table" do
       rows = [Array.new(25, "A"* 10)]
-      Hirb::Helpers::VerticalTable.expects(:render).with(rows, anything)
+      Helpers::VerticalTable.expects(:render).with(rows, anything)
       capture_stderr { table(rows)}.should =~ /Error/
     end
 
@@ -263,8 +263,8 @@ context "Table" do
       +-----------+---+------------+
       1 row in set
       TABLE
-      Hirb::View.load_config
-      Hirb::View.resize(30)
+      View.load_config
+      View.resize(30)
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}]).should == expected_table
       reset_config
     end
@@ -508,7 +508,7 @@ context "Table" do
 
   context "table with callbacks" do
     before_all {
-      Hirb::Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
+      Helpers::Table.send(:define_method, :and_one_callback) do |obj, opt|
         obj.each {|row| row.each {|k,v| row[k] += opt[:add] } }
         obj
       end
@@ -527,7 +527,7 @@ context "Table" do
     end
 
     test "doesn't run callbacks in delete_callbacks option" do
-      Hirb::Helpers::Table.send(:define_method, :and_two_callback) do |obj, opt|
+      Helpers::Table.send(:define_method, :and_two_callback) do |obj, opt|
         obj.each {|row| row.each {|k,v| row[k] = row[k] * 2 } }
         obj
       end
@@ -543,8 +543,8 @@ context "Table" do
       TABLE
       table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}], :add=>1, :delete_callbacks=>[:and_two]).should == expected_table
 
-      Hirb::Helpers::Table.send(:remove_method, :and_two_callback)
+      Helpers::Table.send(:remove_method, :and_two_callback)
     end
-    after_all { Hirb::Helpers::Table.send(:remove_method, :and_one_callback) }
+    after_all { Helpers::Table.send(:remove_method, :and_one_callback) }
   end
 end

@@ -69,16 +69,16 @@ context "View" do
 
       Hirb.config_files.include?('ok').should == true
       output_keys = %w{ActiveRecord::Base Array Regexp String Struct}
-      Hirb::View.config[:output].keys.sort.should == output_keys
+      View.config[:output].keys.sort.should == output_keys
     end
 
     test "when called multiple times without config doesn't affect config" do
       Hirb.enable
-      old_config = Hirb::View.config
+      old_config = View.config
       Hirb.expects(:read_config_file).never
-      Hirb::View.expects(:load_config).never
+      View.expects(:load_config).never
       Hirb.enable
-      Hirb::View.config.should == old_config
+      View.config.should == old_config
     end
 
     test "works without irb" do

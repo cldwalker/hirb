@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "object table" do
   def table(*args)
-    Hirb::Helpers::ObjectTable.render(*args)
+    Helpers::ObjectTable.render(*args)
   end
 
   before_all {

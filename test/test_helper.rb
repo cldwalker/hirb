@@ -36,7 +36,7 @@ module TestHelpers
   end
 
   def reset_config
-    Hirb::View.instance_eval "@config = nil"
+    View.instance_eval "@config = nil"
   end
 end
 
