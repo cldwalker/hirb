@@ -20,7 +20,7 @@ end
 
 desc "Build the gem"
 task :gem=>:gemspec do
-  sh "gem build hirb.gemspec"
+  sh "gem build #{gemspec.name}.gemspec"
 end
 
 desc "Install the gem locally"
@@ -44,19 +44,3 @@ task :test do |t|
 end
 
 task :default => :test
-
-# begin
-#   require 'rake/gempackagetask'
-# rescue LoadError
-#   task(:gem) { $stderr.puts '`gem install rake` to package gems' }
-# else
-#   Rake::GemPackageTask.new(gemspec) do |pkg|
-#     pkg.gem_spec = gemspec
-#   end
-#   task :gem => :gemspec
-# end
-
-# desc "install the gem locally"
-# task :install => :package do
-#   sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
-# end
