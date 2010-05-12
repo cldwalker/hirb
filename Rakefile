@@ -1,15 +1,5 @@
 require 'rake'
-begin
-  require 'rcov/rcovtask'
-
-  Rcov::RcovTask.new do |t|
-    t.libs << 'test'
-    t.test_files = FileList['test/**/*_test.rb']
-    t.rcov_opts = ["-T -x '/Library/Ruby/*'"]
-    t.verbose = true
-  end
-rescue LoadError
-end
+require 'fileutils'
 
 def gemspec
   @gemspec ||= begin
@@ -21,11 +11,13 @@ end
 desc "Build the gem"
 task :gem=>:gemspec do
   sh "gem build #{gemspec.name}.gemspec"
+  FileUtils.mkdir_p 'pkg'
+  FileUtils.mv "#{gemspec.name}-#{gemspec.version}.gem", 'pkg'
 end
 
 desc "Install the gem locally"
 task :install => :gem do
-  sh %{gem install #{gemspec.name}-#{gemspec.version}}
+  sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
 end
 
 desc "Generate the gemspec"
