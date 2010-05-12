@@ -1,5 +1,4 @@
 require 'rake'
-require 'rake/rdoctask'
 begin
   require 'rcov/rcovtask'
 
@@ -10,42 +9,54 @@ begin
     t.verbose = true
   end
 rescue LoadError
-  puts "Rcov not available. Install it for rcov-related tasks with: sudo gem install rcov"
 end
 
-begin
-  require 'jeweler'
-  require File.dirname(__FILE__) + "/lib/hirb/version"
-
-  Jeweler::Tasks.new do |s|
-    s.name = "hirb"
-    s.version = Hirb::VERSION
-    s.summary = "A mini view framework for console/irb that's easy to use, even while under its influence."
-    s.description = "Hirb currently provides a mini view framework for console applications, designed to improve irb's default output.  Hirb improves console output by providing a smart pager and auto-formatting output. The smart pager detects when an output exceeds a screenful and thus only pages output as needed. Auto-formatting adds a view to an output's class. This is helpful in separating views from content (MVC anyone?). The framework encourages reusing views by letting you package them in classes and associate them with any number of output classes."
-    s.email = "gabriel.horner@gmail.com"
-    s.homepage = "http://tagaholic.me/hirb/"
-    s.authors = ["Gabriel Horner"]
-    s.rubyforge_project = 'tagaholic'
-    s.has_rdoc = true
-    s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
-    s.files = FileList["[A-Z]*", "{bin,lib,test}/**/*"]
+def gemspec
+  @gemspec ||= begin
+    file = File.expand_path('../hirb.gemspec', __FILE__)
+    eval(File.read(file), binding, file)
   end
-
-rescue LoadError
-  puts "Jeweler not available. Install it for jeweler-related tasks with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'test'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+desc "Build the gem"
+task :gem=>:gemspec do
+  sh "gem build hirb.gemspec"
 end
 
-task :default => :test
+desc "Install the gem locally"
+task :install => :gem do
+  sh %{gem install #{gemspec.name}-#{gemspec.version}}
+end
+
+desc "Generate the gemspec"
+task :generate do
+  puts gemspec.to_ruby
+end
+
+desc "Validate the gemspec"
+task :gemspec do
+  gemspec.validate
+end
 
 desc 'Run specs with unit test style output'
 task :test do |t|
   sh 'bacon -q -Ilib test/*_test.rb'
 end
+
+task :default => :test
+
+# begin
+#   require 'rake/gempackagetask'
+# rescue LoadError
+#   task(:gem) { $stderr.puts '`gem install rake` to package gems' }
+# else
+#   Rake::GemPackageTask.new(gemspec) do |pkg|
+#     pkg.gem_spec = gemspec
+#   end
+#   task :gem => :gemspec
+# end
+
+# desc "install the gem locally"
+# task :install => :package do
+#   sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
+# end
