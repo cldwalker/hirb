@@ -2,15 +2,12 @@ require 'rake'
 require 'fileutils'
 
 def gemspec
-  @gemspec ||= begin
-    file = File.expand_path('../hirb.gemspec', __FILE__)
-    eval(File.read(file), binding, file)
-  end
+  @gemspec ||= eval(File.read('gemspec'), binding, 'gemspec')
 end
 
 desc "Build the gem"
 task :gem=>:gemspec do
-  sh "gem build #{gemspec.name}.gemspec"
+  sh "gem build gemspec"
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv "#{gemspec.name}-#{gemspec.version}.gem", 'pkg'
 end
@@ -30,7 +27,7 @@ task :gemspec do
   gemspec.validate
 end
 
-desc 'Run specs with unit test style output'
+desc 'Run tests'
 task :test do |t|
   sh 'bacon -q -Ilib test/*_test.rb'
 end
