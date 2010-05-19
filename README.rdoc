@@ -1,3 +1,5 @@
+To read a linked version of this README, {click here}[http://tagaholic.me/hirb/doc/].
+
 == Description
 
 Hirb provides a mini view framework for console applications and uses it to improve irb's default inspect output.
@@ -7,8 +9,6 @@ for generating ascii tables and trees. Using Hirb::Helpers::AutoTable, hirb has 
 i.e. Rails' ActiveRecord::Base. Other than views, hirb offers a smart pager and a console menu. The smart pager
 only pages when the output exceeds the current screen size. The menu is used in conjunction with tables to offer
 {two dimensional menus}[http://tagaholic.me/2010/02/16/two-dimensional-console-menus-with-hirb.html].
-
-Note: To read a linked version of this README, {click here}[http://tagaholic.me/hirb/doc/].
 
 == Install
 
