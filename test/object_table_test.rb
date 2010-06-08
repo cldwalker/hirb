@@ -70,4 +70,10 @@ describe "object table" do
     TABLE
     table(@pets, :fields => []).should == expected_table
   end
+
+  it "doesn't raise error for objects that don't have :send defined" do
+    object = Object.new
+    class<<object; self; end.send :undef_method, :send
+    should.not.raise(NoMethodError) { table([object], :fields=>[:to_s]) }
+  end
 end
