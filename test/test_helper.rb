@@ -1,5 +1,5 @@
 require 'bacon'
-require File.dirname(__FILE__)+'/bacon_extensions'
+require 'bacon/bits'
 require 'mocha'
 require 'mocha-on-bacon'
 require 'hirb'
@@ -41,7 +41,6 @@ end
 
 class Bacon::Context
   include TestHelpers
-  include BaconExtensions
 end
 
 class String
