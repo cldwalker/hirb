@@ -126,7 +126,9 @@ module Hirb
     def map_tokens(tokens)
       if return_cell_values?
         @output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
-          tokens.map {|arr,f| arr.map {|e| e.send(f) } }.flatten
+          tokens.map {|arr,f|
+            arr.map {|e| e.is_a?(Array) && f.is_a?(Integer) ? e[f] : e.send(f) }
+          }.flatten
       else
         tokens.map {|e| e[0] }.flatten
       end

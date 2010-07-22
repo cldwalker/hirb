@@ -187,6 +187,12 @@ describe "Menu" do
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No command given/
     end
 
+    it "with array menu items" do
+      menu_input "p 1"
+      two_d_menu :action=>true, :output=>[['some', 'choice'], ['and', 'another']],
+        :invokes=>[[['some']]]
+    end
+
     it "with multi_action option invokes" do
       menu_input "p 1 2:bro"
       two_d_menu(:action=>true, :multi_action=>true, :invokes=>[[1], [4]])
