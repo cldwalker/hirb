@@ -98,6 +98,12 @@ describe "View" do
       capture_stdout { ::Mini.output(:yoyo) }.should == "yoyo\n"
       capture_stdout { ::Mini.output('blah') }.should == "\"blah\"\n"
     end
+
+    it "with silence_errors enable option" do
+      Hirb.enable :silence_errors => true
+      View.stubs(:render_output).raises(Exception, "Ex mesg")
+      capture_stderr {View.view_output("").should == false}.should =~ /Ex mesg/
+    end
   end
 
   describe "resize" do

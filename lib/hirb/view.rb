@@ -125,9 +125,14 @@ module Hirb
       def view_output(output, options={})
         enabled? && config[:formatter] && render_output(output, options)
       rescue Exception=>e
-        index = (obj = e.backtrace.find {|f| f =~ /^\(eval\)/}) ? e.backtrace.index(obj) : e.backtrace.length
-        $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|e| "    " + e }
-        true
+        unless config[:silence_errors]
+          index = (obj = e.backtrace.find {|f| f =~ /^\(eval\)/}) ? e.backtrace.index(obj) : e.backtrace.length
+          $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|e| "    " + e }
+          true
+        else
+          warn e
+          false
+        end
       end
 
       # Captures STDOUT and renders it using render_method(). The main use case is to conditionally page captured stdout.
