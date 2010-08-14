@@ -1,3 +1,8 @@
+== 0.3.3
+* Added ignore_errors option to ignore view errors and continue with original view.
+* Added support for array menu items.
+* Added support to ObjectTable for objects with an undefined :send method.
+
 == 0.3.2
 * Added irb autocompletions for bond.
 * Fixed tests for ruby 1.9.

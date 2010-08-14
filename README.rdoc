@@ -21,6 +21,16 @@ Install the gem with:
 * To create and configure views, see Hirb::View or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/View.html].
 * To create dynamic views, see Hirb::DynamicView or {here if on the web}[http://tagaholic.me/hirb/doc/classes/Hirb/DynamicView.html].
 
+== Printing Ascii Tables
+
+To print ascii tables from an array of arrays, hashes or any objects:
+
+  puts Hirb::Helper::AutoTable.render(ARRAY_OF_OBJECTS)
+
+Hirb will intelligently pick up on field names from an array of hashes and create properly-aligned
+fields from an array of arrays. See
+{here}[http://tagaholic.me/2009/10/15/boson-and-hirb-interactions.html#hirbs_handy_tables] for examples.
+
 == Rails Example
 
 Let's load and enable the view framework:
@@ -156,7 +166,7 @@ Table code from http://gist.github.com/72234 and {my console app's needs}[http:/
 
 == Credits
 * Chrononaut for vertical table helper.
-* crafterm, spastorino, xaviershay and joshua for bug fixes.
+* crafterm, spastorino, xaviershay, bogdan and joshua for patches.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
