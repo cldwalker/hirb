@@ -26,6 +26,8 @@ require 'hirb/version'
 # [*:pager*] Boolean which determines if the pager is enabled. Defaults to true.
 # [*:pager_command*] Command to be used for paging. Command can have options after it i.e. 'less -r'.
 #                    Defaults to common pagers i.e. less and more if detected.
+# [*:ignore_errors*] Boolean which ignores internal view errors and continues with original view
+#                    (i.e. #inspect for irb). Defaults to false.
 module Hirb
   class <<self
     attr_accessor :config_files, :config

@@ -99,10 +99,10 @@ describe "View" do
       capture_stdout { ::Mini.output('blah') }.should == "\"blah\"\n"
     end
 
-    it "with silence_errors enable option" do
-      Hirb.enable :silence_errors => true
+    it "with ignore_errors enable option" do
+      Hirb.enable :ignore_errors => true
       View.stubs(:render_output).raises(Exception, "Ex mesg")
-      capture_stderr {View.view_output("").should == false}.should =~ /Ex mesg/
+      capture_stderr { View.view_output("").should == false }.should =~ /Error: Ex mesg/
     end
   end
 

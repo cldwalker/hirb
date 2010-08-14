@@ -125,13 +125,13 @@ module Hirb
       def view_output(output, options={})
         enabled? && config[:formatter] && render_output(output, options)
       rescue Exception=>e
-        unless config[:silence_errors]
+        if config[:ignore_errors]
+          $stderr.puts "Hirb Error: #{e.message}"
+          false
+        else
           index = (obj = e.backtrace.find {|f| f =~ /^\(eval\)/}) ? e.backtrace.index(obj) : e.backtrace.length
           $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|e| "    " + e }
           true
-        else
-          warn e
-          false
         end
       end
 
