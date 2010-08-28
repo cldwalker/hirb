@@ -10,5 +10,6 @@ complete(:method=>"Hirb::Helpers::Tree.render") {
   %w{type validate indent limit description multi_line_nodes value_method children_method}
 }
 complete(:methods=>%w{Hirb::Menu.render menu}) {
-  %w{helper_class prompt ask directions readline two_d default_field action multi_action action_object command}
+  %w{helper_class prompt ask directions readline two_d default_field action multi_action} +
+    %w{action_object command reopen}
 }

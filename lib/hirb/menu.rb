@@ -32,6 +32,8 @@ module Hirb
     # [*:multi_action*] Execute action menu multiple times iterating over the menu choices. Default is false.
     # [*:action_object*] Object that takes method/command calls. Default is main.
     # [*:command*] Default method/command to call when no command given.
+    # [*:reopen*] Reopens $stdin with given file or with /dev/tty when set to true. Use when
+    #             $stdin is already reading in piped data.
     # Examples:
     #     >> extend Hirb::Console
     #     => self
@@ -47,6 +49,7 @@ module Hirb
     def initialize(options={})
       @options = {:helper_class=>Hirb::Helpers::AutoTable, :prompt=>"Choose: ", :ask=>true,
         :directions=>true}.merge options
+      @options[:reopen] = '/dev/tty' if @options[:reopen] == true
     end
 
     def render(output, &block)
@@ -60,6 +63,7 @@ module Hirb
     def get_input
       prompt = pre_prompt + @options[:prompt]
       prompt = DIRECTIONS+"\n"+prompt if @options[:directions]
+      $stdin.reopen @options[:reopen] if @options[:reopen]
 
       if @options[:readline] && readline_loads?
         get_readline_input(prompt)

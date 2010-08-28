@@ -98,6 +98,16 @@ describe "Menu" do
       menu_input('blah')
       capture_stdout { menu([1], :directions=>false) }.should.not =~ /range.*all/
     end
+
+    it "with true reopen option reopens" do
+      $stdin.expects(:reopen).with('/dev/tty')
+      basic_menu [1], :reopen=>true
+    end
+
+    it "with string reopen option reopens" do
+      $stdin.expects(:reopen).with('/dev/blah')
+      basic_menu [1], :reopen=>'/dev/blah'
+    end
   end
 
   def two_d_menu(options={})
