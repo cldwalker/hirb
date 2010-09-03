@@ -75,7 +75,7 @@ module Hirb
     end
 
     def determine_output_class(output)
-      output.is_a?(Array) ? output[0].class : output.class
+      output.respond_to?(:to_a) ? Array(output)[0].class : output.class
     end
 
     def call_output_method(output_method, output)

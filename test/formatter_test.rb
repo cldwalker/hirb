@@ -84,7 +84,7 @@ describe "Formatter" do
     before_all {
       eval %[module ::Commify
         def self.render(strings)
-          strings = [strings] unless strings.is_a?(Array)
+          strings = Array(strings)
           strings.map {|e| e.split('').join(',')}.join("\n")
         end
       end]
@@ -112,10 +112,17 @@ describe "Formatter" do
       view_output('dude')
     end
 
-    it "formats output array" do
+    it "formats arrays" do
       enable_with_output "String"=>{:class=>"Commify"}
       render_method.expects(:call).with('d,u,d,e')
       view_output(['dude'])
+    end
+
+    it "formats array-like objects" do
+      enable_with_output "String"=>{:class=>"Commify"}
+      render_method.expects(:call).with('d,u,d,e')
+      require 'set'
+      view_output Set.new(['dude'])
     end
     
     it "formats with options option" do
