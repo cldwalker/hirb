@@ -1,3 +1,8 @@
+== 0.3.4
+* Added auto format of array-like objects i.e. ActiveRecord::Relation and Set.
+* Fixed bug when Hirb::Console#table is used without Hirb enabled.
+* Fixed bug when hirb is running within cron and uses tput.
+
 == 0.3.3
 * Added ignore_errors option to ignore view errors and continue with original view.
 * Added support for array menu items.
