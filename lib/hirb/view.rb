@@ -154,12 +154,12 @@ module Hirb
       
       # Current console width
       def width
-        config ? config[:width] : DEFAULT_WIDTH
+        config && config[:width] ? config[:width] : DEFAULT_WIDTH
       end
 
       # Current console height
       def height
-        config ? config[:height] : DEFAULT_HEIGHT
+        config && config[:height] ? config[:height] : DEFAULT_HEIGHT
       end
 
       # Current formatter config, storing a hash of all static views
