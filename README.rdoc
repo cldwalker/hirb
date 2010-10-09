@@ -25,7 +25,7 @@ Install the gem with:
 
 To print ascii tables from an array of arrays, hashes or any objects:
 
-  puts Hirb::Helper::AutoTable.render(ARRAY_OF_OBJECTS)
+  puts Hirb::Helpers::AutoTable.render(ARRAY_OF_OBJECTS)
 
 Hirb will intelligently pick up on field names from an array of hashes and create properly-aligned
 fields from an array of arrays. See
