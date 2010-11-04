@@ -2,6 +2,8 @@ module Hirb
   # A Formatter object formats an output object (using Formatter.format_output) into a string based on the views defined
   # for its class and/or ancestry.
   class Formatter
+    TO_A_EXCEPTIONS = ['Hash', 'IO']
+
     class<<self
       # This config is used by Formatter.format_output to lazily load dynamic views defined with Hirb::DynamicView.
       # This hash has the same format as Formatter.config.
@@ -75,7 +77,8 @@ module Hirb
     end
 
     def determine_output_class(output)
-      output.respond_to?(:to_a) ? Array(output)[0].class : output.class
+      output.respond_to?(:to_a) && !TO_A_EXCEPTIONS.include?(output.class.to_s) ?
+        Array(output)[0].class : output.class
     end
 
     def call_output_method(output_method, output)

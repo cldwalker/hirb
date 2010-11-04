@@ -53,23 +53,28 @@ describe "Formatter" do
   describe "formatter methods:" do
     before_all { eval "module ::Dooda; end" }
 
-    it "add_view sets formatter config" do
+    it "#add_view sets formatter config" do
       @formatter = set_formatter
       @formatter.add_view ::Dooda, :class=>"DoodaView"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView"}
     end
 
-    it "add_view overwrites existing formatter config" do
+    it "#add_view overwrites existing formatter config" do
       @formatter = set_formatter "Dooda"=>{:class=>"DoodaView"}
       @formatter.add_view ::Dooda, :class=>"DoodaView2"
       @formatter.klass_config(::Dooda).should == {:class=>"DoodaView2"}
     end
 
-    it "parse_console_options passes all options except for formatter options into :options" do
+    it "#parse_console_options passes all options except for formatter options into :options" do
       @formatter = set_formatter
       options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :blah=>'blah'}
       expected_options = {:class=>'blah', :method=>'blah', :output_method=>'blah', :options=>{:blah=>'blah'}}
       @formatter.parse_console_options(options).should == expected_options
+    end
+
+    it "#determine_output_class has exceptions for to_a" do
+      @formatter.determine_output_class(STDOUT).should == IO
+      @formatter.determine_output_class({:a=>1}).should == Hash
     end
   end
 
@@ -124,7 +129,7 @@ describe "Formatter" do
       require 'set'
       view_output Set.new(['dude'])
     end
-    
+
     it "formats with options option" do
       eval "module ::Blahify; def self.render(*args); end; end"
       enable_with_output "String"=>{:class=>"Blahify", :options=>{:fields=>%w{a b}}}
