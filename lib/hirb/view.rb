@@ -80,7 +80,7 @@ module Hirb
           @new_config_file = true
           Hirb.config_files << e
         }
-        enable_output_method
+        enable_output_method unless @output_method
         merge_or_load_config options
         resize(config[:width], config[:height])
         @enabled = true
@@ -94,7 +94,7 @@ module Hirb
       # Disable's Hirb's output and revert's irb's output method if irb exists.
       def disable
         @enabled = false
-        unalias_output_method if @output_method
+        disable_output_method if @output_method
         false
       end
 
@@ -175,8 +175,10 @@ module Hirb
 
       #:stopdoc:
       def enable_output_method
-        return if @output_method
-        if defined?(IRB)
+        if defined? Ripl
+          @output_method = true
+          require 'ripl/hirb'
+        elsif defined? IRB
           @output_method = true
           ::IRB::Irb.class_eval do
             alias_method :non_hirb_view_output, :output_value
@@ -187,8 +189,8 @@ module Hirb
         end
       end
 
-      def unalias_output_method
-        if defined?(IRB)
+      def disable_output_method
+        if defined?(IRB) && !defined? Ripl
           ::IRB::Irb.send :alias_method, :output_value, :non_hirb_view_output
         end
         @output_method = nil
