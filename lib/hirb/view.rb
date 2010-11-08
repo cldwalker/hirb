@@ -72,18 +72,15 @@ module Hirb
       # or as options to this method. In addition to the config keys mentioned in Hirb, options also take the following keys:
       # ==== Options:
       # * config_file: Name of config file(s) that are merged into existing config
-      # * output_method: Specify an object's class and instance method (separated by a period) to be realiased with
-      #   hirb's view system. The instance method should take a string to be output. Default is IRB::Irb.output_value
-      #   if using irb.
       # Examples:
       #   Hirb.enable
-      #   Hirb.enable :formatter=>false, :output_method=>"Mini.output"
+      #   Hirb.enable :formatter=>false
       def enable(options={}, &block)
         Array(options.delete(:config_file)).each {|e|
           @new_config_file = true
           Hirb.config_files << e
         }
-        enable_output_method(options.delete(:output_method))
+        enable_output_method
         merge_or_load_config options
         resize(config[:width], config[:height])
         @enabled = true
@@ -97,7 +94,7 @@ module Hirb
       # Disable's Hirb's output and revert's irb's output method if irb exists.
       def disable
         @enabled = false
-        unalias_output_method(@output_method) if @output_method
+        unalias_output_method if @output_method
         false
       end
 
@@ -177,41 +174,28 @@ module Hirb
       end
 
       #:stopdoc:
-      def enable_output_method(meth)
-        if (meth ||= Object.const_defined?(:IRB) ? "IRB::Irb.output_value" : false) && !@output_method
-          @output_method = meth
-          alias_output_method(@output_method)
+      def enable_output_method
+        return if @output_method
+        if defined?(IRB)
+          @output_method = true
+          ::IRB::Irb.class_eval do
+            alias_method :non_hirb_view_output, :output_value
+            def output_value #:nodoc:
+              Hirb::View.view_or_page_output(@context.last_value) || non_hirb_view_output
+            end
+          end
         end
       end
 
-      def unalias_output_method(output_method)
-        klass, klass_method = output_method.split(".")
-        eval %[
-          ::#{klass}.class_eval do
-            alias_method :#{klass_method}, :non_hirb_view_output
-          end
-        ]
+      def unalias_output_method
+        if defined?(IRB)
+          ::IRB::Irb.send :alias_method, :output_value, :non_hirb_view_output
+        end
         @output_method = nil
       end
 
-      def alias_output_method(output_method)
-        klass, klass_method = output_method.split(".")
-        eval %[
-          ::#{klass}.class_eval do
-            alias_method :non_hirb_view_output, :#{klass_method}
-            if '#{klass}' == "IRB::Irb"
-              def #{klass_method} #:nodoc:
-                Hirb::View.view_output(@context.last_value) || Hirb::View.page_output(@context.last_value.inspect, true) ||
-                  non_hirb_view_output
-              end
-            else
-              def #{klass_method}(output_string) #:nodoc:
-                Hirb::View.view_output(output_string) || Hirb::View.page_output(output_string.inspect, true) ||
-                  non_hirb_view_output(output_string)
-              end
-            end
-          end
-        ]
+      def view_or_page_output(str)
+        view_output(str) || page_output(str.inspect, true)
       end
 
       def render_output(output, options={})

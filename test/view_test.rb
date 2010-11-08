@@ -92,13 +92,6 @@ describe "View" do
       Hirb.config_files.include?('test_file').should == true
     end
 
-    it "with output_method option realiases output_method" do
-      eval %[module ::Mini; extend self; def output(str); puts(str.inspect); end; end]
-      Hirb.enable :output_method=>"Mini.output", :output=>{"Symbol"=>{:output_method=>lambda {|e| e.to_s }}}
-      capture_stdout { ::Mini.output(:yoyo) }.should == "yoyo\n"
-      capture_stdout { ::Mini.output('blah') }.should == "\"blah\"\n"
-    end
-
     it "with ignore_errors enable option" do
       Hirb.enable :ignore_errors => true
       View.stubs(:render_output).raises(Exception, "Ex mesg")
