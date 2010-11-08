@@ -1,3 +1,9 @@
+== 0.3.5
+* Add ripl support
+* Fix Formatter#determine_output_class for IO and Hash
+* Remove :output_method option for Hirb.enable
+* Allow rubygems 1.3.5
+
 == 0.3.4
 * Added auto format of array-like objects i.e. ActiveRecord::Relation and Set.
 * Fixed bug when Hirb::Console#table is used without Hirb enabled.
