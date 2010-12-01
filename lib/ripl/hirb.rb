@@ -1,7 +1,8 @@
+require 'hirb'
+
 module Ripl::Hirb
   def before_loop
     super
-    require 'hirb'
     Hirb.enable(Ripl.config[:hirb] || {}) unless Hirb::View.enabled?
   end
 
