@@ -1,9 +1,15 @@
 require 'hirb'
 
 module Ripl::Hirb
+  class << self
+    def enable
+      Hirb.enable(Ripl.config[:hirb] || {}) unless Hirb::View.enabled?
+    end
+  end
+
   def before_loop
     super
-    Hirb.enable(Ripl.config[:hirb] || {}) unless Hirb::View.enabled?
+    Ripl::Hirb.enable
   end
 
   def format_result(result)
@@ -13,3 +19,4 @@ module Ripl::Hirb
 end
 
 Ripl::Shell.send :include, Ripl::Hirb
+Ripl::Hirb.enable if Ripl.instance_variable_get(:@shell) # TODO non hacky way to detect if in ripl session or not
