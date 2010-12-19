@@ -128,7 +128,7 @@ module Hirb
     @rows = set_rows(rows)
     @headers = set_headers
     if @options[:number]
-      @headers[:hirb_number] = "number"
+      @headers[:hirb_number] ||= "number"
       @fields.unshift :hirb_number
     end
     Helpers::Table.last_table = self

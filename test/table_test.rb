@@ -361,6 +361,19 @@ describe "Table" do
       table([['a','b'], ['c', 'd']], :number=>true).should == expected_table
     end
 
+    it "number option renders with header that can be overridden" do
+      expected_table = <<-TABLE.unindent
+      +----+---+---+
+      | SR | 0 | 1 |
+      +----+---+---+
+      | 1  | a | b |
+      | 2  | c | d |
+      +----+---+---+
+      2 rows in set
+      TABLE
+      table([['a','b'], ['c', 'd']], :number=>true, :headers => {:hirb_number => "SR"}).should == expected_table
+    end
+
     it "description option false renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
