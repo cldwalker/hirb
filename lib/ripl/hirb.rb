@@ -3,7 +3,7 @@ require 'hirb'
 module Ripl::Hirb
   def before_loop
     super
-    Hirb.enable(Ripl.config[:hirb] || {}) unless Hirb::View.enabled?
+    Hirb.enable(Ripl.config[:hirb] || {})
   end
 
   def format_result(result)
