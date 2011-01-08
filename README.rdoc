@@ -2,7 +2,7 @@ To read a linked version of this README, {click here}[http://tagaholic.me/hirb/d
 
 == Description
 
-Hirb provides a mini view framework for console applications and uses it to improve irb's default inspect output.
+Hirb provides a mini view framework for console applications and uses it to improve ripl(irb)'s default inspect output.
 Given an object or array of objects, hirb renders a view based on the object's class and/or ancestry. Hirb offers reusable
 views in the form of helper classes. The two main helpers, Hirb::Helpers::Table and Hirb::Helpers::Tree, provide several options
 for generating ascii tables and trees. Using Hirb::Helpers::AutoTable, hirb has useful default views for at least ten popular database gems
@@ -14,7 +14,7 @@ only pages when the output exceeds the current screen size. The menu is used in 
 
 Install the gem with:
 
-    sudo gem install hirb
+    gem install hirb
 
 == View Tutorials
 
@@ -159,7 +159,7 @@ views for certain classes, put them under lib/hirb/views. Please submit views fo
 number of users.
 
 == Limitations
-If using Wirble, you should call Hirb after it since they both override irb's default output.
+If using Wirble and irb, you should call Hirb after it since they both override irb's default output.
 
 == Motivation
 Table code from http://gist.github.com/72234 and {my console app's needs}[http://github.com/cldwalker/tag-tree].
