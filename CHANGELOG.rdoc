@@ -1,3 +1,8 @@
+== 0.3.6
+* Tweak ripl support
+* Allow override of :hirb_number thanks to asanghi.
+* Fix Hirb.add_view to work with class which inherits Hash
+
 == 0.3.5
 * Add ripl support
 * Fix Formatter#determine_output_class for IO and Hash

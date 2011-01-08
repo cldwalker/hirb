@@ -166,7 +166,7 @@ Table code from http://gist.github.com/72234 and {my console app's needs}[http:/
 
 == Credits
 * Chrononaut for vertical table helper.
-* crafterm, spastorino, xaviershay, bogdan and joshua for patches.
+* crafterm, spastorino, xaviershay, bogdan, asanghi and joshua for patches.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
