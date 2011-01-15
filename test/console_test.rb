@@ -21,7 +21,7 @@ describe "Console" do
   it ".render_output sets config if it wasn't before" do
     reset_config
     View.expects(:render_output)
-    Console.render_output('blah')
+    Hirb::Console.render_output('blah')
     View.config.is_a?(Hash).should == true
   end
 end

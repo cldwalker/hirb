@@ -12,6 +12,7 @@ require 'hirb/console'
 require 'hirb/pager'
 require 'hirb/menu'
 require 'hirb/version'
+require 'hirb/unicode'
 
 # Most of Hirb's functionality is in Hirb::View.
 # For a tutorial  on configuring and creating views see Hirb::View. For a tutorial on dynamic views see Hirb::DynamicView.
