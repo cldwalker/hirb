@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "Console" do
@@ -5,12 +6,12 @@ describe "Console" do
     extend Hirb::Console
     reset_config
     expected_table = <<-TABLE.unindent
-    +-------+
-    | value |
-    +-------+
-    | 5     |
-    | 3     |
-    +-------+
+    ┌───────┐
+    │ value │
+    ├───────┤
+    │ 5     │
+    │ 3     │
+    └───────┘
     2 rows in set
     TABLE
     capture_stdout {

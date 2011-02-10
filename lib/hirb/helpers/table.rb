@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'hirb/helpers/table/filters'
 require 'hirb/helpers/table/resizer'
 
@@ -62,6 +63,12 @@ module Hirb
   MIN_FIELD_LENGTH = 3
   class TooManyFieldsForWidthError < StandardError; end
 
+  CHARS = {
+    :top    => {:left => '┌', :center => '┬', :right => '┐', :horizontal => '─', :vertical => {:outside => '│', :inside => '│'} },
+    :middle => {:left => '├', :center => '┼', :right => '┤', :horizontal => '─'},
+    :bottom => {:left => '└', :center => '┴', :right => '┘', :horizontal => '─', :vertical => {:outside => '│', :inside => '╎'} },
+  }
+  
   class << self
     
     # Main method which returns a formatted table.
@@ -198,22 +205,27 @@ module Hirb
   end
 
   def render_header
-    @headers ? render_table_header : [render_border]
+    @headers ? render_table_header : [render_border(:top)]
   end
 
   def render_footer
-    [render_border]
+    [render_border(:bottom)]
   end
 
   def render_table_header
-    title_row = '| ' + @fields.map {|f|
+    title_row = CHARS[:top][:vertical][:outside] + ' ' + @fields.map {|f|
       format_cell(@headers[f], @field_lengths[f])
-    }.join(' | ') + ' |'
-    [render_border, title_row, render_border]
+    }.join(' ' + CHARS[:top][:vertical][:inside] +' ') + ' ' + CHARS[:top][:vertical][:outside]
+    [render_border(:top), title_row, render_border(:middle)]
   end
   
-  def render_border
-    '+-' + @fields.map {|f| '-' * @field_lengths[f] }.join('-+-') + '-+'
+  def render_border(which)
+    CHARS[which][:left] + CHARS[which][:horizontal] +
+      @fields.map {|f|
+        CHARS[which][:horizontal] * @field_lengths[f]
+      }.join(
+         CHARS[which][:horizontal] + CHARS[which][:center] + CHARS[which][:horizontal]
+      ) + CHARS[which][:horizontal] + CHARS[which][:right]
   end
   
   def format_cell(value, cell_width)
@@ -226,9 +238,9 @@ module Hirb
 
   def render_rows
     @rows.map do |row|
-      row = '| ' + @fields.map {|f|
+      row = CHARS[:bottom][:vertical][:outside] + ' ' + @fields.map {|f|
         format_cell(row[f], @field_lengths[f])
-      }.join(' | ') + ' |'
+      }.join(' ' +CHARS[:bottom][:vertical][:inside] + ' ') + ' ' + CHARS[:bottom][:vertical][:outside]
     end
   end
   
