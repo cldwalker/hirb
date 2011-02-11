@@ -1,3 +1,4 @@
+# coding: utf-8
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "String" do
@@ -35,7 +36,7 @@ describe "String" do
     end
   end
 
-  describe ".rjust returns truncated string" do
+  describe ".truncate returns truncated string" do
     it "given non-unicode string" do
       Hirb::String.truncate("Hello, world.", 10).should == "Hello, wor"
     end
@@ -50,12 +51,15 @@ describe "String" do
   describe ".split_at_display_width returns 2 strings splitted at specified width" do
     it "given non-unicode string" do
       Hirb::String.split_at_display_width("Hello, world.", 5).should == ["Hello", ", world."]
+      Hirb::String.split_at_display_width("Hello, world.", 100).should == ["Hello, world.", ""]
     end
     it "given unicode string that could exactly match the length" do
       Hirb::String.split_at_display_width("頭獎上看六億", 10).should == ["頭獎上看六", "億"]
+      Hirb::String.split_at_display_width("頭獎上看六億", 100).should == ["頭獎上看六億", ""]
     end
     it "given unicode string that couldn't exactly match the length" do
       Hirb::String.split_at_display_width("可是你不會中獎", 7).should == ["可是你", "不會中獎"]
+      Hirb::String.split_at_display_width("可是你不會中獎", 100).should == ["可是你不會中獎", ""]
     end
   end
 
