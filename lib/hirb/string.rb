@@ -25,6 +25,8 @@ module Hirb
         truncated
       end
 
+      # Split the original string into 2 string.
+      # The first string has most possible length but can't be longer than width
       def split_at_display_width(string, width)
         head = string.scan(/./).slice(0, width).join('')
         tail = string.scan(/./).slice(width, self.display_width(string)).join('')
