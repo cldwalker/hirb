@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = "Hirb provides a mini view framework for console applications and uses it to improve ripl(irb)'s default inspect output. Given an object or array of objects, hirb renders a view based on the object's class and/or ancestry. Hirb offers reusable views in the form of helper classes. The two main helpers, Hirb::Helpers::Table and Hirb::Helpers::Tree, provide several options for generating ascii tables and trees. Using Hirb::Helpers::AutoTable, hirb has useful default views for at least ten popular database gems i.e. Rails' ActiveRecord::Base. Other than views, hirb offers a smart pager and a console menu. The smart pager only pages when the output exceeds the current screen size. The menu is used in conjunction with tables to offer two dimensional menus."
   s.required_rubygems_version = ">= 1.3.5"
   s.rubyforge_project = 'tagaholic'
+  s.add_dependency 'unicode-display_width'
   s.add_development_dependency 'bacon', '>= 1.1.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'mocha-on-bacon'

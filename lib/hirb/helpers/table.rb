@@ -217,7 +217,7 @@ module Hirb
   end
   
   def format_cell(value, cell_width)
-    text = String.size(value) > cell_width ?
+    text = String.display_width(value) > cell_width ?
       (
       (cell_width < 5) ? String.slice(value, 0, cell_width) : String.slice(value, 0, cell_width - 3) + '...'
       ) : value
@@ -267,11 +267,11 @@ module Hirb
 
   # find max length for each field; start with the headers
   def default_field_lengths
-    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = String.size(v); h} :
+    field_lengths = @headers ? @headers.inject({}) {|h,(k,v)| h[k] = String.display_width(v); h} :
       @fields.inject({}) {|h,e| h[e] = 1; h }
     @rows.each do |row|
       @fields.each do |field|
-        len = String.size(row[field])
+        len = String.display_width(row[field])
         field_lengths[field] = len if len > field_lengths[field].to_i
       end
     end

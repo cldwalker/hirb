@@ -73,7 +73,7 @@ module Hirb
       effective_height = @height - 2 # takes into account pager prompt
       if inspect_mode
         sliced_output = String.slice(output, 0, @width * effective_height)
-        output.replace String.slice(output, @width * effective_height, String.size(output))
+        output.replace String.slice(output, @width * effective_height, String.display_width(output))
         sliced_output
       else
         # could use output.scan(/[^\n]*\n?/) instead of split
@@ -85,7 +85,7 @@ module Hirb
 
     # Determines if string should be paged based on configured width and height.
     def activated_by?(string_to_page, inspect_mode=false)
-      inspect_mode ? (String.size(string_to_page) > @height * @width) : (string_to_page.count("\n") > @height)
+      inspect_mode ? (String.display_width(string_to_page) > @height * @width) : (string_to_page.count("\n") > @height)
     end
 
     def resize(width, height) #:nodoc:
