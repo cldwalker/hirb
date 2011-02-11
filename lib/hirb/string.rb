@@ -28,9 +28,11 @@ module Hirb
       # Split the original string into 2 string.
       # The first string has most possible length but can't be longer than width
       def split_at_display_width(string, width)
+        chars = string.chars.to_a
+
         current_length = 0
         split_at = nil
-        string.chars.each_with_index do |c, i|
+        chars.each_with_index do |c, i|
           char_width = display_width(c)
           if current_length + char_width > width
             split_at = i
@@ -38,9 +40,10 @@ module Hirb
           end
           current_length += char_width
         end
-        split_at ||= string.chars.count
-        head = string.scan(/./).slice(0, split_at).join('')
-        tail = string.scan(/./).slice(split_at, string.chars.count).join('')
+
+        split_at ||= chars.count
+        head = chars[0, split_at].to_s
+        tail = chars[split_at, chars.count].to_s
         [head, tail]
       end
 
