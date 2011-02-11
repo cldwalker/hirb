@@ -20,13 +20,17 @@ module Hirb
         leftover > 0 ? " " * leftover + string : string
       end
 
-      # def split_at_display_width(string, start, width)
-        # string.scan(/./).slice(start, finish).join('')
-      # end
-
-      def slice(string, start, finish)
-        string.scan(/./).slice(start, finish).join('')
+      def truncate(string, width)
+        truncated, remaining = split_at_display_width(string, width)
+        truncated
       end
+
+      def split_at_display_width(string, width)
+        head = string.scan(/./).slice(0, width).join('')
+        tail = string.scan(/./).slice(width, self.display_width(string)).join('')
+        [head, tail]
+      end
+
     else
       def size(string)
         string.length

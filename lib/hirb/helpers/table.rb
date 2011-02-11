@@ -219,7 +219,7 @@ module Hirb
   def format_cell(value, cell_width)
     text = String.display_width(value) > cell_width ?
       (
-      (cell_width < 5) ? String.slice(value, 0, cell_width) : String.slice(value, 0, cell_width - 3) + '...'
+      (cell_width < 5) ? String.truncate(value, cell_width) : String.truncate(value, cell_width - 3) + '...'
       ) : value
     String.ljust(text, cell_width)
   end

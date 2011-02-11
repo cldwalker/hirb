@@ -72,8 +72,10 @@ module Hirb
     def slice!(output, inspect_mode=false) #:nodoc:
       effective_height = @height - 2 # takes into account pager prompt
       if inspect_mode
-        sliced_output = String.slice(output, 0, @width * effective_height)
-        output.replace String.slice(output, @width * effective_height, String.display_width(output))
+        # sliced_output = String.slice(output, 0, @width * effective_height)
+        # output.replace String.slice(output, @width * effective_height, String.display_width(output))
+        sliced_output, remaining = String.split_at_display_width(output, @width*effective_height)
+        output.replace(remaining)
         sliced_output
       else
         # could use output.scan(/[^\n]*\n?/) instead of split
