@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "object table" do
@@ -11,12 +10,12 @@ describe "object table" do
   }
   it "renders" do
     expected_table = <<-TABLE.unindent
-    ┌───────┬─────┐
-    │ name  │ age │
-    ├───────┼─────┤
-    │ rufus ╎ 7   │
-    │ alf   ╎ 101 │
-    └───────┴─────┘
+    +-------+-----+
+    | name  | age |
+    +-------+-----+
+    | rufus | 7   |
+    | alf   | 101 |
+    +-------+-----+
     2 rows in set
     TABLE
     table(@pets, :fields=>[:name, :age]).should == expected_table
@@ -24,12 +23,12 @@ describe "object table" do
   
   it "with no options defaults to to_s field" do
     expected_table = <<-TABLE.unindent
-    ┌───────┐
-    │ value │
-    ├───────┤
-    │ rufus │
-    │ alf   │
-    └───────┘
+    +-------+
+    | value |
+    +-------+
+    | rufus |
+    | alf   |
+    +-------+
     2 rows in set
     TABLE
     table(@pets).should == expected_table
@@ -37,14 +36,14 @@ describe "object table" do
 
   it "renders simple arrays" do
     expected_table = <<-TABLE.unindent
-    ┌───────┐
-    │ value │
-    ├───────┤
-    │ 1     │
-    │ 2     │
-    │ 3     │
-    │ 4     │
-    └───────┘
+    +-------+
+    | value |
+    +-------+
+    | 1     |
+    | 2     |
+    | 3     |
+    | 4     |
+    +-------+
     4 rows in set
     TABLE
     table([1,2,3,4]).should == expected_table
@@ -52,14 +51,14 @@ describe "object table" do
 
   it "renders simple arrays with custom header" do
     expected_table = <<-TABLE.unindent
-    ┌─────┐
-    │ num │
-    ├─────┤
-    │ 1   │
-    │ 2   │
-    │ 3   │
-    │ 4   │
-    └─────┘
+    +-----+
+    | num |
+    +-----+
+    | 1   |
+    | 2   |
+    | 3   |
+    | 4   |
+    +-----+
     4 rows in set
     TABLE
     table([1,2,3,4], :headers=>{:to_s=>'num'}).should == expected_table

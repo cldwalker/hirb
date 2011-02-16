@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "Menu" do
@@ -22,13 +21,13 @@ describe "Menu" do
   describe "menu" do
     it "by default renders table menu" do
       expected_menu = <<-MENU.unindent
-      ┌────────┬───────┐
-      │ number │ value │
-      ├────────┼───────┤
-      │ 1      ╎ 1     │
-      │ 2      ╎ 2     │
-      │ 3      ╎ 3     │
-      └────────┴───────┘
+      +--------+-------+
+      | number | value |
+      +--------+-------+
+      | 1      | 1     |
+      | 2      | 2     |
+      | 3      | 3     |
+      +--------+-------+
       3 rows in set
       MENU
       basic_menu([1,2,3]).include?(expected_menu).should == true

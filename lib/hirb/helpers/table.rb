@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'hirb/helpers/table/filters'
 require 'hirb/helpers/table/resizer'
+require 'hirb/helpers/unicode_table'
 
 module Hirb
 # Base Table class from which other table classes inherit.
@@ -64,9 +65,9 @@ module Hirb
   class TooManyFieldsForWidthError < StandardError; end
 
   CHARS = {
-    :top    => {:left => '┌', :center => '┬', :right => '┐', :horizontal => '─', :vertical => {:outside => '│', :inside => '│'} },
-    :middle => {:left => '├', :center => '┼', :right => '┤', :horizontal => '─'},
-    :bottom => {:left => '└', :center => '┴', :right => '┘', :horizontal => '─', :vertical => {:outside => '│', :inside => '╎'} },
+    :top    => {:left => '+', :center => '+', :right => '+', :horizontal => '-', :vertical => {:outside => '|', :inside => '|'} },
+    :middle => {:left => '+', :center => '+', :right => '+', :horizontal => '-'},
+    :bottom => {:left => '+', :center => '+', :right => '+', :horizontal => '-', :vertical => {:outside => '|', :inside => '|'} },
   }
   
   class << self
@@ -106,6 +107,7 @@ module Hirb
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
       options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
+      options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
       new(rows, options).render
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Error: Too many fields for the current width. Configure your width " +
@@ -123,6 +125,10 @@ module Hirb
     attr_accessor :last_table
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
+
+  def chars
+    self.class.const_get(:CHARS)
+  end
 
   #:stopdoc:
   attr_accessor :width, :max_fields, :field_lengths, :fields
@@ -213,19 +219,19 @@ module Hirb
   end
 
   def render_table_header
-    title_row = CHARS[:top][:vertical][:outside] + ' ' + @fields.map {|f|
+    title_row = chars[:top][:vertical][:outside] + ' ' + @fields.map {|f|
       format_cell(@headers[f], @field_lengths[f])
-    }.join(' ' + CHARS[:top][:vertical][:inside] +' ') + ' ' + CHARS[:top][:vertical][:outside]
+    }.join(' ' + chars[:top][:vertical][:inside] +' ') + ' ' + chars[:top][:vertical][:outside]
     [render_border(:top), title_row, render_border(:middle)]
   end
   
   def render_border(which)
-    CHARS[which][:left] + CHARS[which][:horizontal] +
+    chars[which][:left] + chars[which][:horizontal] +
       @fields.map {|f|
-        CHARS[which][:horizontal] * @field_lengths[f]
+        chars[which][:horizontal] * @field_lengths[f]
       }.join(
-         CHARS[which][:horizontal] + CHARS[which][:center] + CHARS[which][:horizontal]
-      ) + CHARS[which][:horizontal] + CHARS[which][:right]
+         chars[which][:horizontal] + chars[which][:center] + chars[which][:horizontal]
+      ) + chars[which][:horizontal] + chars[which][:right]
   end
   
   def format_cell(value, cell_width)
@@ -238,9 +244,9 @@ module Hirb
 
   def render_rows
     @rows.map do |row|
-      row = CHARS[:bottom][:vertical][:outside] + ' ' + @fields.map {|f|
+      row = chars[:bottom][:vertical][:outside] + ' ' + @fields.map {|f|
         format_cell(row[f], @field_lengths[f])
-      }.join(' ' +CHARS[:bottom][:vertical][:inside] + ' ') + ' ' + CHARS[:bottom][:vertical][:outside]
+      }.join(' ' +chars[:bottom][:vertical][:inside] + ' ') + ' ' + chars[:bottom][:vertical][:outside]
     end
   end
   
