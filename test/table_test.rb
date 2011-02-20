@@ -70,7 +70,7 @@ describe "Table" do
     it "with too many fields defaults to vertical table" do
       rows = [Array.new(25, "A"* 10)]
       Helpers::VerticalTable.expects(:render).with(rows, anything)
-      capture_stderr { table(rows)}.should =~ /Error/
+      capture_stderr { table(rows)}.should =~ /Warning:/
     end
 
     it "with no rows renders" do

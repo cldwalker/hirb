@@ -101,7 +101,7 @@ module Hirb
       options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
       new(rows, options).render
     rescue TooManyFieldsForWidthError
-      $stderr.puts "", "** Error: Too many fields for the current width. Configure your width " +
+      $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
       Helpers::VerticalTable.render(rows, options)
     end
