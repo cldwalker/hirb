@@ -73,7 +73,7 @@ module Hirb
       effective_height = @height - 2 # takes into account pager prompt
       if inspect_mode
         sliced_output = String.slice(output, 0, @width * effective_height)
-        output.replace String.slice(output, @width * effective_height, String.size(output))
+        output.replace String.slice(output, sliced_output.chars.count, String.size(output))
         sliced_output
       else
         # could use output.scan(/[^\n]*\n?/) instead of split
