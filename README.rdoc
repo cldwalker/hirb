@@ -34,8 +34,8 @@ fields from an array of arrays. See
 == Rails Example
 
 Let's load and enable the view framework:
-  $ script/console
-  Loading local environment (Rails 2.3.5)
+  $ rails console
+  Loading local environment (Rails 3.0.3)
   >> require 'hirb'
   => true
   >> Hirb.enable
@@ -102,6 +102,15 @@ tables/views for any output object:
   >> extend Hirb::Console
   => main
 
+  # Create a unicode table
+  >> table [[:a, :b, :c]], :unicode => true
+  ┌───┬───┬───┐
+  │ 0 │ 1 │ 2 │
+  ├───┼───┼───┤
+  │ a ╎ b ╎ c │
+  └───┴───┴───┘
+  1 row in set
+
   # Create a table of Dates comparing them with different formats.
   >> table [Date.today, Date.today.next_month], :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
   +------------+--------+-----------+-------+--------------------------+
@@ -120,7 +129,7 @@ If these console methods weren't convenient enough, try:
 
   # Imports view() to all objects.
   >> require 'hirb/import_object'
-  =>true
+  => true
   # Yields same table as above examples.
   >> [Date.today, Date.today.next_month].view :class=>:object_table,
     :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
@@ -135,7 +144,7 @@ Although views by default are printed to STDOUT, they can be easily modified to 
 
   # Doesn't write to file because Symbol doesn't have a view and thus defaults to irb's echo mode.
   >> :blah
-  =>:blah
+  => :blah
 
   # Go back to printing Hirb views to STDOUT.
   >> Hirb::View.reset_render_method
@@ -166,6 +175,7 @@ Table code from http://gist.github.com/72234 and {my console app's needs}[http:/
 
 == Credits
 * Chrononaut for vertical table helper.
+* janlelis for unicode table helper.
 * crafterm, spastorino, xaviershay, bogdan, asanghi and joshua for patches.
 
 == Bugs/Issues
