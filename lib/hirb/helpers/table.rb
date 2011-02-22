@@ -1,7 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'hirb/helpers/table/filters'
 require 'hirb/helpers/table/resizer'
-require 'hirb/helpers/unicode_table'
 
 module Hirb
 # Base Table class from which other table classes inherit.
@@ -65,11 +64,13 @@ module Hirb
   class TooManyFieldsForWidthError < StandardError; end
 
   CHARS = {
-    :top    => {:left => '+', :center => '+', :right => '+', :horizontal => '-', :vertical => {:outside => '|', :inside => '|'} },
+    :top => {:left => '+', :center => '+', :right => '+', :horizontal => '-',
+      :vertical => {:outside => '|', :inside => '|'} },
     :middle => {:left => '+', :center => '+', :right => '+', :horizontal => '-'},
-    :bottom => {:left => '+', :center => '+', :right => '+', :horizontal => '-', :vertical => {:outside => '|', :inside => '|'} },
+    :bottom => {:left => '+', :center => '+', :right => '+', :horizontal => '-',
+      :vertical => {:outside => '|', :inside => '|'} }
   }
-  
+
   class << self
     
     # Main method which returns a formatted table.
@@ -94,6 +95,7 @@ module Hirb
     #                 Default Hirb::Helpers::Table.filter_any().
     # [*:filter_classes*] Hash which maps classes to filters. Default is Hirb::Helpers::Table.filter_classes().
     # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
+    # [*:unicode*] When set to true, renders a unicode table using Hirb::Helpers::UnicodeTable. Default is false.
     # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [*:description*] When set to true, renders row count description at bottom. Default is true.
     # [*:escape_special_chars*] When set to true, escapes special characters \n,\t,\r so they don't disrupt tables. Default is false for
@@ -219,19 +221,18 @@ module Hirb
   end
 
   def render_table_header
-    title_row = chars[:top][:vertical][:outside] + ' ' + @fields.map {|f|
-      format_cell(@headers[f], @field_lengths[f])
-    }.join(' ' + chars[:top][:vertical][:inside] +' ') + ' ' + chars[:top][:vertical][:outside]
+    title_row = chars[:top][:vertical][:outside] + ' ' +
+      @fields.map {|f| format_cell(@headers[f], @field_lengths[f]) }.
+      join(' ' + chars[:top][:vertical][:inside] +' ') +
+      ' ' + chars[:top][:vertical][:outside]
     [render_border(:top), title_row, render_border(:middle)]
   end
   
   def render_border(which)
     chars[which][:left] + chars[which][:horizontal] +
-      @fields.map {|f|
-        chars[which][:horizontal] * @field_lengths[f]
-      }.join(
-         chars[which][:horizontal] + chars[which][:center] + chars[which][:horizontal]
-      ) + chars[which][:horizontal] + chars[which][:right]
+      @fields.map {|f| chars[which][:horizontal] * @field_lengths[f] }.
+      join(chars[which][:horizontal] + chars[which][:center] + chars[which][:horizontal]) +
+      chars[which][:horizontal] + chars[which][:right]
   end
   
   def format_cell(value, cell_width)

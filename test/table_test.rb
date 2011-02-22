@@ -439,6 +439,19 @@ describe "Table" do
       table([{:a=>'', :b=>2}, {:a=>3, :b=>nil}], :hide_empty=>true, :vertical=>true).should == expected_table
     end
 
+    it "unicode option renders" do
+      expected_table = <<-TABLE.unindent
+      ┌───┬───┐
+      │ a │ b │
+      ├───┼───┤
+      │ 1 ╎ 2 │
+      │ 3 ╎ 4 │
+      └───┴───┘
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :unicode => true).should == expected_table
+    end
+
     it "all_fields option renders all fields" do
       expected_table = <<-TABLE.unindent
       +---+---+---+

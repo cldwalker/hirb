@@ -12,6 +12,7 @@ module Hirb
   end
 end
 
-%w{table object_table auto_table tree parent_child_tree vertical_table}.each do |e|
+%w{table object_table auto_table tree parent_child_tree vertical_table
+  unicode_table}.each do |e|
   require "hirb/helpers/#{e}"
 end
