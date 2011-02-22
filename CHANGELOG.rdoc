@@ -1,3 +1,7 @@
+== 0.4.0
+* Add unicode table helper thanks to janlelis
+* Make pager compatible with full width characters
+
 == 0.3.6
 * Tweak ripl support
 * Allow override of :hirb_number thanks to asanghi.
