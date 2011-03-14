@@ -178,7 +178,7 @@ module Hirb
         if defined? Ripl
           @output_method = true
           require 'ripl/hirb'
-        elsif defined? IRB
+        elsif defined? IRB::Irb
           @output_method = true
           ::IRB::Irb.class_eval do
             alias_method :non_hirb_view_output, :output_value
@@ -190,7 +190,7 @@ module Hirb
       end
 
       def disable_output_method
-        if defined?(IRB) && !defined? Ripl
+        if defined?(IRB::Irb) && !defined? Ripl
           ::IRB::Irb.send :alias_method, :output_value, :non_hirb_view_output
         end
         @output_method = nil
