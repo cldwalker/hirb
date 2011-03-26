@@ -54,6 +54,18 @@ describe "Table" do
       table([{'a'=>1, 'b'=>2}, {'a'=>3, 'b'=>4}]).should == expected_table
     end
 
+    it "with no keys renders" do
+      expected_table = <<-TABLE.unindent
+      +--+
+      |  |
+      +--+
+      |  |
+      +--+
+      1 row in set
+      TABLE
+      table([{}]).should == expected_table
+    end
+
     it "with array only rows renders" do
       expected_table = <<-TABLE.unindent
       +---+---+

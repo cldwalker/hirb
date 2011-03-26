@@ -75,7 +75,7 @@ class Hirb::Helpers::Table
     end
 
     def sum(arr)
-      arr.inject {|t,e| t += e }
+      arr.inject {|t,e| t += e } || 0
     end
     #:startdoc:
   end
