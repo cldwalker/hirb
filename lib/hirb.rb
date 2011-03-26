@@ -1,6 +1,7 @@
 # Needed by Hirb::String to handle multibyte characters
 $KCODE = 'u' if RUBY_VERSION < '1.9'
 
+require 'yaml'
 require 'hirb/util'
 require 'hirb/string'
 require 'hirb/formatter' # must come before helpers/auto_table
