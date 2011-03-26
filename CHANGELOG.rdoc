@@ -1,3 +1,7 @@
+== 0.4.1
+* Fix bug with rendering empty hash
+* Add missing yaml require
+
 == 0.4.0
 * Add unicode table helper thanks to janlelis
 * Make pager compatible with full width characters
