@@ -12,4 +12,4 @@ module Ripl::Hirb
   end
 end
 
-Ripl::Shell.send :include, Ripl::Hirb
+Ripl::Shell.include Ripl::Hirb
