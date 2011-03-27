@@ -3,6 +3,7 @@ module Hirb
   # for its class and/or ancestry.
   class Formatter
     TO_A_EXCEPTIONS = [Hash, IO]
+    POSSIBLE_TO_A_EXCEPTIONS = %w{Tempfile}
 
     class<<self
       # This config is used by Formatter.format_output to lazily load dynamic views defined with Hirb::DynamicView.
@@ -53,6 +54,12 @@ module Hirb
       _format_output(output, options, &block)
     end
 
+    # Array of classes whose objects respond to :to_a and are exceptions to the Formatter's array algorithm.
+    def to_a_exceptions
+      @to_a_exceptions ||= TO_A_EXCEPTIONS + POSSIBLE_TO_A_EXCEPTIONS.select {|e|
+        Object.const_defined?(e) }.map {|e| Object.const_get(e) }
+    end
+
     #:stopdoc:
     def _format_output(output, options, &block)
       output = options[:output_method] ? (output.is_a?(Array) ?
@@ -77,7 +84,7 @@ module Hirb
     end
 
     def determine_output_class(output)
-      output.respond_to?(:to_a) && !TO_A_EXCEPTIONS.any? {|e| output.is_a?(e) } ?
+      output.respond_to?(:to_a) && !to_a_exceptions.any? {|e| output.is_a?(e) } ?
         Array(output)[0].class : output.class
     end
 
