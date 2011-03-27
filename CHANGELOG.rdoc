@@ -1,3 +1,6 @@
+== 0.4.2
+* Fix bug with Tempfile and to_a_exceptions
+
 == 0.4.1
 * Fix bug with rendering empty hash
 * Add missing yaml require
