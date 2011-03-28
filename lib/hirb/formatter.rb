@@ -2,15 +2,17 @@ module Hirb
   # A Formatter object formats an output object (using Formatter.format_output) into a string based on the views defined
   # for its class and/or ancestry.
   class Formatter
-    TO_A_EXCEPTIONS = [Hash, IO]
-    POSSIBLE_TO_A_EXCEPTIONS = %w{Tempfile}
-
     class<<self
       # This config is used by Formatter.format_output to lazily load dynamic views defined with Hirb::DynamicView.
       # This hash has the same format as Formatter.config.
       attr_accessor :dynamic_config
+
+      # Array of classes whose objects respond to :to_a and allow the first
+      # element of the converted array to determine the output class.
+      attr_accessor :to_a_classes
     end
     self.dynamic_config = {}
+    self.to_a_classes = %w{Array Set ActiveRecord::Relation}
 
     def initialize(additional_config={}) #:nodoc:
       @klass_config = {}
@@ -54,13 +56,11 @@ module Hirb
       _format_output(output, options, &block)
     end
 
-    # Array of classes whose objects respond to :to_a and are exceptions to the Formatter's array algorithm.
-    def to_a_exceptions
-      @to_a_exceptions ||= TO_A_EXCEPTIONS + POSSIBLE_TO_A_EXCEPTIONS.select {|e|
-        Object.const_defined?(e) }.map {|e| Object.const_get(e) }
+    #:stopdoc:
+    def to_a_classes
+      @to_a_classes ||= self.class.to_a_classes.map {|e| Util.any_const_get(e) }.compact
     end
 
-    #:stopdoc:
     def _format_output(output, options, &block)
       output = options[:output_method] ? (output.is_a?(Array) ?
         output.map {|e| call_output_method(options[:output_method], e) } :
@@ -84,7 +84,7 @@ module Hirb
     end
 
     def determine_output_class(output)
-      output.respond_to?(:to_a) && !to_a_exceptions.any? {|e| output.is_a?(e) } ?
+      output.respond_to?(:to_a) && to_a_classes.any? {|e| output.is_a?(e) } ?
         Array(output)[0].class : output.class
     end
 

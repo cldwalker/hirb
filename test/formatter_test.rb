@@ -72,19 +72,9 @@ describe "Formatter" do
       @formatter.parse_console_options(options).should == expected_options
     end
 
-    it "#determine output_class bypasses optional exceptions for to_a" do
-      require 'tempfile'
-      @formatter.determine_output_class(Tempfile.new('')).should == Tempfile
-    end
-
-    it "#determine_output_class bypasses exceptions for to_a" do
-      @formatter.determine_output_class(STDOUT).should == IO
-      @formatter.determine_output_class({:a=>1}).should == Hash
-    end
-
-    it "#determine_output_class bypasses subclasses of exceptions for to_a" do
-      class Hash2 < Hash; end
-      @formatter.determine_output_class(Hash2[1=>2]).should == Hash2
+    it "#determine_output_class recognizes subclasses of to_a classes" do
+      class Array2 < Array; end
+      @formatter.determine_output_class(Array2.new(%w{ok dude})).should == String
     end
   end
 
