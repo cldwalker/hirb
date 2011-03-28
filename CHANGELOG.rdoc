@@ -1,3 +1,6 @@
+== 0.4.3
+* Remove Formatter::TO_A_EXCEPTIONS and replace with Formatter.to_a_classes
+
 == 0.4.2
 * Fix bug with Tempfile and to_a_exceptions
 
