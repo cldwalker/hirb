@@ -177,7 +177,7 @@ module Hirb
       def enable_output_method
         if defined? Ripl
           @output_method = true
-          require 'ripl/hirb'
+          require 'ripl/hirb' unless defined? Ripl::Hirb
         elsif defined? IRB::Irb
           @output_method = true
           ::IRB::Irb.class_eval do
