@@ -1,3 +1,6 @@
+== 0.4.4
+* Fix bundler messing with ripl plugin
+
 == 0.4.3
 * Remove Formatter::TO_A_EXCEPTIONS and replace with Formatter.to_a_classes
 
