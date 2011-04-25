@@ -175,7 +175,7 @@ module Hirb
 
       #:stopdoc:
       def enable_output_method
-        if defined? Ripl && Ripl.respond_to?(:started?) && Ripl.started?
+        if defined?(Ripl) && Ripl.respond_to?(:started?) && Ripl.started?
           @output_method = true
           require 'ripl/hirb' unless defined? Ripl::Hirb
         elsif defined? IRB::Irb
