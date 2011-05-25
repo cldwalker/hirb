@@ -194,6 +194,30 @@ describe "Table" do
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :c]).should == expected_table
     end
   
+    it "grep_fields option and symbol fields" do
+      expected_table = <<-TABLE.unindent
+      +----+----+
+      | f1 | f2 |
+      +----+----+
+      | 1  | 2  |
+      +----+----+
+      1 row in set
+      TABLE
+      table([{:f1 => 1, :f2 => 2, :gf1 => 3}], :grep_fields => /^f/).should == expected_table
+    end
+
+    it "grep_fields option and non-symbol fields" do
+      expected_table = <<-TABLE.unindent
+      +---+
+      | 1 |
+      +---+
+      | 2 |
+      +---+
+      1 row in set
+      TABLE
+      table([[1,2,3]], :grep_fields => /1/).should == expected_table
+    end
+
     it "invalid field in max_fields option renders" do
       expected_table = <<-TABLE.unindent
       +------------+---+

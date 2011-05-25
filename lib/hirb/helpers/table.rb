@@ -88,6 +88,7 @@ module Hirb
     # [*:number*] When set to true, numbers rows by adding a :hirb_number column as the first column. Default is false.
     # [*:change_fields*] A hash to change old field names to new field names. This can also be an array of new names but only for array rows.
     #                    This is useful when wanting to change auto-generated keys to more user-friendly names i.e. for array rows.
+    # [*:grep_fields*] A regexp that selects which fields to display. By default this is not set and applied.
     # [*:filters*] A hash of fields and their filters, applied to every row in a field. A filter can be a proc, an instance method
     #              applied to the field value or a Filters method. Also see the filter_classes attribute below.
     # [*:header_filter*] A filter, like one in :filters, that is applied to all headers after the :headers option.
@@ -140,6 +141,7 @@ module Hirb
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
       :filter_any=>Helpers::Table.filter_any, :resize=>true}.merge(options)
     @fields = set_fields(rows)
+    @fields = @fields.select {|e| e.to_s[@options[:grep_fields]] } if @options[:grep_fields]
     @rows = set_rows(rows)
     @headers = set_headers
     if @options[:number]
