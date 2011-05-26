@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.5"
   s.rubyforge_project = 'tagaholic'
   s.add_development_dependency 'bacon', '>= 1.1.0'
-  s.add_development_dependency 'mocha'
-  s.add_development_dependency 'mocha-on-bacon'
+  s.add_development_dependency 'mocha', '>= 0.9.8'
+  s.add_development_dependency 'mocha-on-bacon', '>= 0.1.1'
   s.add_development_dependency 'bacon-bits'
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
