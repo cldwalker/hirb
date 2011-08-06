@@ -185,12 +185,10 @@ Table code from http://gist.github.com/72234 and {my console app's needs}[http:/
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].
 
+== Contributing
+{See here}[http://tagaholic.me/contributing.html]
+
 == Links
 * http://tagaholic.me/2009/03/13/hirb-irb-on-the-good-stuff.html
 * http://tagaholic.me/2009/03/18/ruby-class-trees-rails-plugin-trees-with-hirb.html
 * http://tagaholic.me/2009/06/19/page-irb-output-and-improve-ri-with-hirb.html
-
-== Todo
-* Consider generating views based on methods an object responds to.
-* Provide helper methods to all views.
-* Consider adding a template helper.
