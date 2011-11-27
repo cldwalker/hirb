@@ -17,7 +17,7 @@ module Hirb
 #   +---+---+
 #
 # By default, the fields/columns are the numerical indices of the array.
-# 
+#
 # An array of hashes ie [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], would render:
 #   +-----+--------+
 #   | age | weight |
@@ -72,7 +72,7 @@ module Hirb
   }
 
   class << self
-    
+
     # Main method which returns a formatted table.
     # ==== Options:
     # [*:fields*] An array which overrides the default fields and can be used to indicate field order.
@@ -97,6 +97,7 @@ module Hirb
     # [*:filter_classes*] Hash which maps classes to filters. Default is Hirb::Helpers::Table.filter_classes().
     # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
     # [*:unicode*] When set to true, renders a unicode table using Hirb::Helpers::UnicodeTable. Default is false.
+    # [*:tab*] When set to true, renders a tab-delimited table using Hirb::Helpers::TabTable. Default is false.
     # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [*:description*] When set to true, renders row count description at bottom. Default is true.
     # [*:escape_special_chars*] When set to true, escapes special characters \n,\t,\r so they don't disrupt tables. Default is false for
@@ -111,6 +112,7 @@ module Hirb
     def render(rows, options={})
       options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
       options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
+      options[:tab]      ? Helpers::TabTable.render(rows, options) :
       new(rows, options).render
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
@@ -224,19 +226,22 @@ module Hirb
 
   def render_table_header
     title_row = chars[:top][:vertical][:outside] + ' ' +
-      @fields.map {|f| format_cell(@headers[f], @field_lengths[f]) }.
-      join(' ' + chars[:top][:vertical][:inside] +' ') +
+      format_values(@headers).join(' ' + chars[:top][:vertical][:inside] +' ') +
       ' ' + chars[:top][:vertical][:outside]
     [render_border(:top), title_row, render_border(:middle)]
   end
-  
+
   def render_border(which)
     chars[which][:left] + chars[which][:horizontal] +
       @fields.map {|f| chars[which][:horizontal] * @field_lengths[f] }.
       join(chars[which][:horizontal] + chars[which][:center] + chars[which][:horizontal]) +
       chars[which][:horizontal] + chars[which][:right]
   end
-  
+
+  def format_values(values)
+    @fields.map {|field| format_cell(values[field], @field_lengths[field]) }
+  end
+
   def format_cell(value, cell_width)
     text = String.size(value) > cell_width ?
       (
@@ -247,17 +252,17 @@ module Hirb
 
   def render_rows
     @rows.map do |row|
-      row = chars[:bottom][:vertical][:outside] + ' ' + @fields.map {|f|
-        format_cell(row[f], @field_lengths[f])
-      }.join(' ' +chars[:bottom][:vertical][:inside] + ' ') + ' ' + chars[:bottom][:vertical][:outside]
+      chars[:bottom][:vertical][:outside] + ' ' +
+        format_values(row).join(' ' + chars[:bottom][:vertical][:inside] + ' ') +
+        ' ' + chars[:bottom][:vertical][:outside]
     end
   end
-  
+
   def render_table_description
     (@rows.length == 0) ? "0 rows in set" :
       "#{@rows.length} #{@rows.length == 1 ? 'row' : 'rows'} in set"
   end
-  
+
   def setup_field_lengths
     @field_lengths = default_field_lengths
     if @options[:resize]
@@ -334,7 +339,7 @@ module Hirb
       }
     }
   end
-  
+
   # Converts an array to a hash mapping a numerical index to its array value.
   def array_to_indices_hash(array)
     array.inject({}) {|hash,e|  hash[hash.size] = e; hash }

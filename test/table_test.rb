@@ -6,7 +6,7 @@ describe "Table" do
     Helpers::Table.render(*args)
   end
   before_all { reset_config }
-  
+
   describe "basic table" do
     it "renders" do
       expected_table = <<-TABLE.unindent
@@ -20,7 +20,7 @@ describe "Table" do
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}]).should == expected_table
     end
-    
+
     it "with no headers renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -162,7 +162,7 @@ describe "Table" do
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :a]).should == expected_table
     end
-    
+
     it "fields option and array only rows" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -180,7 +180,7 @@ describe "Table" do
       table([{:f1=>1, :f2=>2}], options)
       options[:fields].should == [:f1]
     end
-  
+
     it "invalid fields option renders empty columns" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -193,7 +193,7 @@ describe "Table" do
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :fields=>[:b, :c]).should == expected_table
     end
-  
+
     it "grep_fields option and symbol fields" do
       expected_table = <<-TABLE.unindent
       +----+----+
@@ -229,7 +229,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>10,:c=>10}).should == expected_table
     end
-  
+
     it "max_fields option with fields less than 3 characters renders" do
       expected_table = <<-TABLE.unindent
       +----+---+
@@ -241,7 +241,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>2}, :resize=>false).should == expected_table
     end
-  
+
     it "max_fields option without resize renders" do
       expected_table = <<-TABLE.unindent
       +------------+---+
@@ -265,7 +265,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A" * 50, :b=>2}], :max_fields=>{:a=>'0.15'}).should == expected_table
     end
-  
+
     it "max_width option renders" do
       expected_table = <<-TABLE.unindent
       +-----------+---+------------+
@@ -289,7 +289,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A" * 50, :b=>2, :c=>"C"*10}], :resize=>false).should == expected_table
     end
-    
+
     it "global width renders" do
       expected_table = <<-TABLE.unindent
       +-----------+---+------------+
@@ -316,7 +316,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A", :b=>2, :c=>"C"}], :headers=>{:b=>"field B", :c=>"field C"}).should == expected_table
     end
-  
+
     it "headers option and headers shortened by max_fields renders" do
       expected_table = <<-TABLE.unindent
       +-------+---+
@@ -328,7 +328,7 @@ describe "Table" do
       TABLE
       table([{:a=> "A", :b=>2}], :headers=>{:a=>"field A"}, :max_fields=>{:a=>5}, :resize=>false).should == expected_table
     end
-    
+
     it "headers option as an array renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -486,6 +486,24 @@ describe "Table" do
       2 rows in set
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :unicode => true).should == expected_table
+    end
+
+    it "tab option renders" do
+      expected_table = <<-TABLE.unindent
+      a	b
+      1	2
+      3	4
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :tab => true).should == expected_table
+    end
+
+    it "tab option with no headers renders" do
+      expected_table = <<-TABLE.unindent
+      1	2
+      3	4
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :tab => true, :headers => false).
+        should == expected_table
     end
 
     it "all_fields option renders all fields" do
