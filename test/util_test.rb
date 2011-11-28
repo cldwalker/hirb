@@ -7,7 +7,7 @@ describe "Util" do
   end
 
   it "any_const_get returns nested class" do
-    Util.any_const_get("YAML::BaseNode").should == ::YAML::BaseNode
+    Util.any_const_get("Hirb::Helpers").should == Hirb::Helpers
   end
 
   it "any_const_get returns nil for invalid class" do
