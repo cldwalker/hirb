@@ -1,3 +1,7 @@
+== 0.6.0
+* Add tab table
+* Tests pass in 1.9.3
+
 == 0.5.0
 * Add :grep_fields option to Table
 
