@@ -36,7 +36,7 @@ describe "Menu" do
     it "with block renders" do
       menu_input "1,2"
       expected_result = [1,2]
-      capture_stdout { 
+      capture_stdout {
         menu([1,2,3]) {|e| e.should == expected_result }.should == expected_result
       }
     end
@@ -200,6 +200,11 @@ describe "Menu" do
     it "with multiple all choices" do
       menu_input "p * * 2:bro"
       two_d_menu(:action=>true, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}, {:a => 1, :bro => 2}, {:a => 3, :bro => 4}, 4]])
+    end
+
+    it "with all choices with field" do
+      menu_input "p *:bro"
+      two_d_menu(:action=>true, :invoke=>[[2, 4]])
     end
 
     it "with no command given prints error" do

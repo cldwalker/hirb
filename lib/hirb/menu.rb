@@ -12,6 +12,7 @@ module Hirb
     CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
     CHOSEN_ARG = '%s'
     ALL_ARG = '*'
+    ALL_REGEXP = /^(\*)(?::)?(\S+)?/
     DIRECTIONS = "Specify individual choices (4,7), range of choices (1-3) or all choices (*)."
 
 
@@ -141,9 +142,12 @@ module Hirb
     end
 
     def map_all_args(tokens)
-      tokens.map { |t| t == ALL_ARG ? @output : t }
       tokens.map { |arr,f|
-        arr == ALL_ARG ? @output : yield(arr, f)
+        if arr == ALL_ARG
+          f.nil? ? @output : yield(@output, f)
+        else
+          yield(arr, f)
+        end
       }.flatten
     end
 
@@ -167,10 +171,10 @@ module Hirb
         @new_args << CHOSEN_ARG
         field = $3 ? unalias_field($3) : default_field ||
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
-        [Util.choose_from_array(@output, word), field ]
-      elsif word.index(ALL_ARG)
+        [Util.choose_from_array(@output, word), field]
+      elsif word[ALL_REGEXP]
         @new_args << CHOSEN_ARG
-        ALL_ARG
+        $2 ? [ALL_ARG, unalias_field($2)] : ALL_ARG
       else
         @new_args << word
         nil
