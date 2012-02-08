@@ -11,6 +11,7 @@ module Hirb
     # Detects valid choices and optional field/column
     CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
     CHOSEN_ARG = '%s'
+    ALL_ARG = '*'
     DIRECTIONS = "Specify individual choices (4,7), range of choices (1-3) or all choices (*)."
 
 
@@ -129,17 +130,29 @@ module Hirb
 
     def map_tokens(tokens)
       if return_cell_values?
-        @output[0].is_a?(Hash) ? tokens.map {|arr,f| arr.map {|e| e[f]} }.flatten :
-          tokens.map {|arr,f|
-            arr.map {|e| e.is_a?(Array) && f.is_a?(Integer) ? e[f] : e.send(f) }
-          }.flatten
+        @output[0].is_a?(Hash) ? map_hash_of_tokens(tokens) : map_array_of_tokens(tokens)
       else
-        tokens.map {|e| e[0] }.flatten
+        map_all_args(tokens) { |arr, f| arr[0] }
       end
     end
 
     def return_cell_values?
       @options[:two_d]
+    end
+
+    def map_all_args(tokens)
+      tokens.map { |t| t == ALL_ARG ? @output : t }
+      tokens.map { |arr,f|
+        arr == ALL_ARG ? @output : yield(arr, f)
+      }.flatten
+    end
+
+    def map_hash_of_tokens(tokens)
+      map_all_args(tokens) { |arr,f| arr.map {|e| e[f]} }
+    end
+
+    def map_array_of_tokens(tokens)
+      map_all_args(tokens) { |arr,f| arr.map {|e| e.is_a?(Array) && f.is_a?(Integer) ? e[f] : e.send(f) } }
     end
 
     def input_to_tokens(input)
@@ -155,6 +168,9 @@ module Hirb
         field = $3 ? unalias_field($3) : default_field ||
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
         [Util.choose_from_array(@output, word), field ]
+      elsif word.index(ALL_ARG)
+        @new_args << CHOSEN_ARG
+        ALL_ARG
       else
         @new_args << word
         nil
@@ -164,6 +180,7 @@ module Hirb
     def cleanup_new_args
       if @new_args.all? {|e| e == CHOSEN_ARG }
         @new_args = [CHOSEN_ARG]
+      elsif @new_args.index(ALL_ARG)
       else
         i = @new_args.index(CHOSEN_ARG) || raise(Error, "No rows chosen")
         @new_args.delete(CHOSEN_ARG)
