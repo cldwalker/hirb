@@ -171,7 +171,11 @@ module Hirb
         @new_args << CHOSEN_ARG
         field = $3 ? unalias_field($3) : default_field ||
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
-        [Util.choose_from_array(@output, word), field]
+        if return_cell_values?
+          [Util.choose_from_array(@output, word), field]
+        else
+          [[Util.choose_from_array(@output, word)], nil]
+        end
       elsif word[ALL_REGEXP]
         @new_args << CHOSEN_ARG
         $2 ? [ALL_ARG, unalias_field($2)] : ALL_ARG
