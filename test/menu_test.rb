@@ -177,6 +177,11 @@ describe "Menu" do
       two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a=>1, :bro=>2}]])
     end
 
+    it "with 1d invokes on multiple choices" do
+      menu_input "p 1,2 1-2"
+      two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}, {:a => 1, :bro => 2}, {:a => 3, :bro => 4}]])
+    end
+
     it "with non-choice arguments invokes" do
       menu_input "p arg1 1"
       two_d_menu :action=>true, :invoke=>['arg1', [1]]
