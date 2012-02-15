@@ -3,13 +3,17 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 describe "auto table" do
   it "converts nonarrays to arrays and renders" do
     require 'set'
+
+    # rubinius sorts Set#to_a differently
+    arr = RUBY_DESCRIPTION.include?('rubinius') ? [2,3,1] : [1,2,3]
+
     expected_table = <<-TABLE.unindent
     +-------+
     | value |
     +-------+
-    | 1     |
-    | 2     |
-    | 3     |
+    | #{arr[0]}     |
+    | #{arr[1]}     |
+    | #{arr[2]}     |
     +-------+
     3 rows in set
     TABLE
