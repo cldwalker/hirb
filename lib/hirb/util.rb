@@ -32,7 +32,7 @@ module Hirb
     # Examples:
     #    1-3,5-6 -> [1,2,3,5,6]
     #    *   -> all elements in array
-    #    ''  -> [] 
+    #    ''  -> []
     def choose_from_array(array, input, options={})
       options = {:splitter=>","}.merge(options)
       return array if input.strip == '*'

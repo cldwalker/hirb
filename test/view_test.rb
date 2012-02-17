@@ -4,7 +4,7 @@ describe "View" do
   def formatter_config
     View.formatter.config
   end
-  
+
   it "page_output pages when view is enabled" do
     Hirb.enable
     View.pager.stubs(:activated_by?).returns(true)
@@ -101,12 +101,22 @@ describe "View" do
 
   describe "resize" do
     def pager; View.pager; end
-    before { View.pager = nil; reset_config; Hirb.enable }
+    before do
+      View.pager = nil; reset_config; Hirb.enable
+    end
+
     after { Hirb.disable}
     it "changes width and height with stty" do
+      if RUBY_PLATFORM[/java/]
+        Util.expects(:command_exists?).with('tput').returns(false)
+      end
+      # stub tty? since running with rake sets
+      STDIN.stubs(:tty?).returns(true)
       Util.expects(:command_exists?).with('stty').returns(true)
       ENV['COLUMNS'] = ENV['LINES'] = nil # bypasses env usage
-      View.resize
+
+      capture_stderr { View.resize }
+
       pager.width.should.not == 10
       pager.height.should.not == 10
       reset_terminal_size
@@ -121,8 +131,11 @@ describe "View" do
 
     it "with no environment or stty still has valid width and height" do
       View.config[:width] = View.config[:height] = nil
-      Util.expects(:command_exists?).with('stty').returns(false)
+      unless RUBY_PLATFORM[/java/]
+        Util.expects(:command_exists?).with('stty').returns(false)
+      end
       ENV['COLUMNS'] = ENV['LINES'] = nil
+
       View.resize
       pager.width.is_a?(Integer).should == true
       pager.height.is_a?(Integer).should == true
@@ -150,13 +163,13 @@ describe "View" do
     View.render_method.expects(:call).with(string)
     View.capture_and_render { print string }
   end
-  
+
   it "state is toggled by toggle_pager" do
     previous_state = View.config[:pager]
     View.toggle_pager
     View.config[:pager].should == !previous_state
   end
-  
+
   it "state is toggled by toggle_formatter" do
     previous_state = View.config[:formatter]
     View.toggle_formatter
