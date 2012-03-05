@@ -1,6 +1,9 @@
 module Hirb::Views::MongoDb #:nodoc:
   def mongoid__document_view(obj)
-    {:fields=>['_id'] + obj.class.fields.keys}
+    fields = obj.class.fields.keys
+    fields.delete('_id')
+    fields.unshift('_id')
+    {:fields=>fields}
   end
 
   def mongo_mapper__document_view(obj)
