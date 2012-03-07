@@ -1,3 +1,7 @@
+== 0.6.1
+* Fix for mongoid view
+* Fix tests on rubinius + jruby
+
 == 0.6.0
 * Add tab table
 * Tests pass in 1.9.3
