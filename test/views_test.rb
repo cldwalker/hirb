@@ -11,3 +11,12 @@ describe "activerecord table" do
     Helpers::AutoTable.active_record__base_view(pet).should == {:fields=>[:name]}
   end
 end
+
+describe "mongoid table" do
+  it "only has one _id" do
+    fields = {'_id' => 'x0f0x', 'name' => 'blah'}
+    mongoid_stub = stub(:class => stub(:fields => fields))
+    Helpers::AutoTable.mongoid__document_view(mongoid_stub).should ==
+      {:fields => fields.keys.sort}
+  end
+end
