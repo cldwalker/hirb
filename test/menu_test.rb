@@ -177,9 +177,10 @@ describe "Menu" do
       two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a=>1, :bro=>2}]])
     end
 
-    it "with 1d invokes on multiple choices" do
-      menu_input "p 1,2 1-2"
-      two_d_menu(:action=>true, :two_d=>nil, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}, {:a => 1, :bro => 2}, {:a => 3, :bro => 4}]])
+    it "with 1d invokes on range of choices" do
+      menu_input "p 1,2 1-2 1..2"
+      choices =  [{:a => 1, :bro => 2}, {:a => 3, :bro => 4}]
+      two_d_menu(:action=>true, :two_d=>nil, :invoke=>[Array.new(3, choices).flatten])
     end
 
     it "with non-choice arguments invokes" do
@@ -195,6 +196,12 @@ describe "Menu" do
     it "with nothing chosen prints error" do
       menu_input "cmd"
       capture_stderr { two_d_menu(:action=>true) }.should =~ /No rows chosen/
+    end
+
+    it "with range of choices" do
+      menu_input "p 1,2:a 1-2:a 1..2:a"
+      choices =  [1,3]
+      two_d_menu(:action=>true, :invoke=>[Array.new(3, choices).flatten])
     end
 
     it "with all choices" do
