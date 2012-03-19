@@ -1,3 +1,6 @@
+== 0.6.2
+* Add * support to 1d/2d menus
+
 == 0.6.1
 * Fix for mongoid view
 * Fix tests on rubinius + jruby

@@ -144,10 +144,6 @@ module Hirb
       @options[:two_d]
     end
 
-    def map_all_args(tokens)
-      tokens.map { |arr,f| yield(arr, f) }.flatten
-    end
-
     def input_to_tokens(input)
       @new_args = []
       tokens = (@args = split_input_args(input)).map {|word| parse_word(word) }.compact
