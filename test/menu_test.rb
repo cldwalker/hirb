@@ -183,6 +183,11 @@ describe "Menu" do
       two_d_menu(:action=>true, :two_d=>nil, :invoke=>[Array.new(3, choices).flatten])
     end
 
+    it "with 1d and all choices" do
+      menu_input "p *"
+      two_d_menu(:action=>true, :two_d => nil, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}]])
+    end
+
     it "with non-choice arguments invokes" do
       menu_input "p arg1 1"
       two_d_menu :action=>true, :invoke=>['arg1', [1]]
@@ -204,14 +209,9 @@ describe "Menu" do
       two_d_menu(:action=>true, :invoke=>[Array.new(3, choices).flatten])
     end
 
-    it "with all choices" do
-      menu_input "p *"
-      two_d_menu(:action=>true, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}]])
-    end
-
     it "with multiple all choices" do
       menu_input "p * * 2:bro"
-      two_d_menu(:action=>true, :invoke=>[[{:a => 1, :bro => 2}, {:a => 3, :bro => 4}, {:a => 1, :bro => 2}, {:a => 3, :bro => 4}, 4]])
+      two_d_menu(:action=>true, :invoke=>[[1,3,1,3,4]])
     end
 
     it "with all choices with field" do
@@ -233,7 +233,7 @@ describe "Menu" do
     it "with array menu items and all choices" do
       menu_input "p 1 *"
       two_d_menu :action=>true, :output=>[['some', 'choice'], ['and', 'another']],
-        :invokes=>[[['some', 'some', 'choice', 'and', 'another']]]
+        :invokes=>[[['some', 'some', 'and']]]
     end
 
     it "with multi_action option invokes" do

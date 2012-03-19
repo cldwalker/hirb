@@ -9,10 +9,8 @@ module Hirb
     class Error < StandardError; end
 
     # Detects valid choices and optional field/column
-    CHOSEN_REGEXP = /^(\d([^:]+)?)(?::)?(\S+)?/
+    CHOSEN_REGEXP = /^(\d([^:]+)?|\*)(?::)?(\S+)?/
     CHOSEN_ARG = '%s'
-    ALL_ARG = '*'
-    ALL_REGEXP = /^(\*)(?::)?(\S+)?/
     DIRECTIONS = "Specify individual choices (4,7), range of choices (1-3) or all choices (*)."
 
 
@@ -130,11 +128,16 @@ module Hirb
     end
 
     def map_tokens(tokens)
-      if return_cell_values?
-        @output[0].is_a?(Hash) ? map_hash_of_tokens(tokens) : map_array_of_tokens(tokens)
+      values = if return_cell_values?
+        @output[0].is_a?(Hash) ?
+          tokens.map {|arr,f| arr.map {|e| e[f]} } :
+          tokens.map {|arr,f|
+            arr.map {|e| e.is_a?(Array) && f.is_a?(Integer) ? e[f] : e.send(f) }
+          }
       else
-        map_all_args(tokens) { |arr, f| arr[0] }
+        tokens.map {|arr, f| arr[0] }
       end
+      values.flatten
     end
 
     def return_cell_values?
@@ -142,21 +145,7 @@ module Hirb
     end
 
     def map_all_args(tokens)
-      tokens.map { |arr,f|
-        if arr == ALL_ARG
-          f.nil? ? @output : yield(@output, f)
-        else
-          yield(arr, f)
-        end
-      }.flatten
-    end
-
-    def map_hash_of_tokens(tokens)
-      map_all_args(tokens) { |arr,f| arr.map {|e| e[f]} }
-    end
-
-    def map_array_of_tokens(tokens)
-      map_all_args(tokens) { |arr,f| arr.map {|e| e.is_a?(Array) && f.is_a?(Integer) ? e[f] : e.send(f) } }
+      tokens.map { |arr,f| yield(arr, f) }.flatten
     end
 
     def input_to_tokens(input)
@@ -173,11 +162,8 @@ module Hirb
           raise(Error, "No default field/column found. Fields must be explicitly picked.")
 
         token = Util.choose_from_array(@output, word)
-        token = [token] if word[/-|\.\.|,/] && !return_cell_values?
+        token = [token] if word[/\*|-|\.\.|,/] && !return_cell_values?
         [token, field]
-      elsif word[ALL_REGEXP]
-        @new_args << CHOSEN_ARG
-        $2 ? [ALL_ARG, unalias_field($2)] : ALL_ARG
       else
         @new_args << word
         nil

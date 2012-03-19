@@ -35,7 +35,7 @@ module Hirb
     #    ''  -> []
     def choose_from_array(array, input, options={})
       options = {:splitter=>","}.merge(options)
-      return array if input.strip == '*'
+      return array if input[/^\s*\*/]
       result = []
       input.split(options[:splitter]).each do |e|
         if e =~ /-|\.\./
