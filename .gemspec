@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha', '>= 0.9.8'
   s.add_development_dependency 'mocha-on-bacon', '>= 0.1.1'
   s.add_development_dependency 'bacon-bits'
-  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec .travis.yml}
+  s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} {.,test,spec}/deps.rip]) + %w{Rakefile .gemspec .travis.yml}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
   s.license = 'MIT'
 end
