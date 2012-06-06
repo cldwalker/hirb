@@ -45,7 +45,7 @@ end
 
 class String
   def unindent(num=nil)
-    regex = num ? /^\s{#{num}}/ : /^\s*/
+    regex = num ? /^[ \t\r\f]{#{num}}/ : /^[ \t\r\f]*/
     gsub(regex, '').chomp
   end
 end
