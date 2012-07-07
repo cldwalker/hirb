@@ -13,6 +13,6 @@ module Hirb
 end
 
 %w{table object_table auto_table tree parent_child_tree vertical_table
-  default_table markdown_table unicode_table tab_table}.each do |e|
+  markdown_table unicode_table tab_table}.each do |e|
   require "hirb/helpers/#{e}"
 end

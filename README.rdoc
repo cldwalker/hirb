@@ -115,6 +115,12 @@ tables/views for any output object:
   └───┴───┴───┘
   1 row in set
 
+  # Creates github-markdown
+  >> table [[:a, :b :c]], :markdown => true
+  | 0 | 1 | 2 |
+  |---|---|---|
+  | a | b | c |
+
   # Create a table of Dates comparing them with different formats.
   >> table [Date.today, Date.today.next_month], :fields=>[:to_s, :ld, :ajd, :amjd, :asctime]
   +------------+--------+-----------+-------+--------------------------+

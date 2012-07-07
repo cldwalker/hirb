@@ -507,27 +507,27 @@ describe "Table" do
     end
 
     it "markdown option renders" do
-      expected_table = <<-TABLE.unindent
-      | a  |  b |
-      |--- | ---|
-      | 1  |  2 |
-      | 3  |  4 |
+      expected_table = <<-TABLE.chomp
+| a  |  b |
+|--- | ---|
+| 1  |  2 |
+| 3  |  4 |
 
-      2 rows in set
-      TABLE
+2 rows in set
+TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :markdown => true).
-        should == "\n#{expected_table}" # XXX: line-break hack to restore line break stripped by `unindent`
+        should == "\n#{expected_table}"
     end
 
     it "markdown option with no headers renders" do
-      expected_table = <<-TABLE.unindent
-      | 1  |  2 |
-      | 3  |  4 |
+      expected_table = <<-TABLE.chomp
+| 1  |  2 |
+| 3  |  4 |
 
-      2 rows in set
-      TABLE
+2 rows in set
+TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :markdown => true, :headers => false).
-        should == "\n#{expected_table}" # XXX: line-break hack to restore line break stripped by `unindent`
+        should == "\n#{expected_table}"
     end
 
     it "all_fields option renders all fields" do

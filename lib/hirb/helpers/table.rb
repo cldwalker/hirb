@@ -63,6 +63,14 @@ module Hirb
   MIN_FIELD_LENGTH = 3
   class TooManyFieldsForWidthError < StandardError; end
 
+  CHARS = {
+    :top => {:left => '+', :center => '+', :right => '+', :horizontal => '-',
+      :vertical => {:outside => '|', :inside => '|'} },
+    :middle => {:left => '+', :center => '+', :right => '+', :horizontal => '-'},
+    :bottom => {:left => '+', :center => '+', :right => '+', :horizontal => '-',
+      :vertical => {:outside => '|', :inside => '|'} }
+  }
+
   class << self
 
     # Main method which returns a formatted table.
@@ -106,7 +114,7 @@ module Hirb
       options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
       options[:tab]      ? Helpers::TabTable.render(rows, options) :
       options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
-                           Helpers::DefaultTable.render(rows, options)
+                           new(rows, options).render
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
