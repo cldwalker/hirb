@@ -1,3 +1,6 @@
+== 0.7.0
+* Add github markdown table
+
 == 0.6.2
 * Add * support to 1d/2d menus
 
