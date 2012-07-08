@@ -62,25 +62,29 @@ module Hirb
 
     def slice_colorized_string(string, slice_start, slice_end)
       # store the codes and their position in the original string
-      codes_with_position = []
-      string.scan(COLORIZED_REGEX) do |c|
-        codes_with_position << [c, Regexp.last_match.offset(0).first]
+      markers = []
+      string.scan(COLORIZED_REGEX) do |code|
+        marker = { :code     => code,
+                   :position => Regexp.last_match.offset(0).first
+                 }
+        markers << marker
       end
 
-      # sort the codes according to where they will fall in the slice
-      codes_before_slice = []
-      codes_in_slice     = []
-      codes_after_slice  = []
-      codes_with_position.size.times do
-        code = codes_with_position.shift
-        # shift remaining codes position by that of the popped code
-        codes_with_position.map! { |c| c[1] -= code.first.size; c }
-        if code.last <= slice_start
-          codes_before_slice << code
-        elsif code.last > slice_start && code.last < slice_end
-          codes_in_slice << code
+      markers_before_slice = []
+      markers_in_slice     = []
+      markers_after_slice  = []
+      # interate over elements in code_markers
+      # will be mutating array so cannot use .each
+      markers.size.times do
+        marker = markers.shift
+        # shift remaining markers position by that of the popped code
+        markers.map! { |c| c[:position] -= marker[:code].size; c }
+        if marker[:position] <= slice_start
+          markers_before_slice << marker
+        elsif marker[:position] > slice_start && marker[:position] < slice_end
+          markers_in_slice << marker
         else
-          codes_after_slice << code
+          markers_after_slice << marker
         end
       end
 
@@ -88,19 +92,14 @@ module Hirb
       slice = string.gsub(COLORIZED_REGEX, '').slice(slice_start, slice_end)
 
       # insert codes back into the slice
-      codes_in_slice.each do |code|
-        slice.insert(code.last, code.first)
-        # adjust positions of remaining codes
-        codes_in_slice.map! { |c| c[1] += code.first.size; c }
+      markers_in_slice.each do |marker|
+        slice.insert(marker[:position], marker[:code])
+        markers_in_slice.map! { |c| c[:position] += marker[:code].size; c }
       end
 
-      # prepend codes that came before slice
-      codes_before_slice.each { |code| slice.insert(0, code.first)}
+      markers_before_slice.each { |marker| slice.insert(0, marker[:code])}
+      markers_after_slice.each { |marker| slice << marker[:code] }
 
-      # append codes that came after slice
-      codes_after_slice.each { |code| slice << code.first }
-
-      # return the color coded slice
       slice
     end
     #:startdoc:
