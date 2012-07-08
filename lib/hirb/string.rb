@@ -81,7 +81,7 @@ module Hirb
           end
 
           # prepend codes that came before slice
-          codes_before_slice.each { |code| slice.prepend(code.first)}
+          codes_before_slice.each { |code| slice.insert(0, code.first)}
 
           # append codes that came after slice
           codes_after_slice.each { |code| slice << code.first }
