@@ -128,7 +128,7 @@ module Hirb
       when :markdown
         Helpers::MarkdownTable.render(rows, options)
       else
-        #puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
+        $stderr.puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
         options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
           options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
           options[:tab]      ? Helpers::TabTable.render(rows, options) :
