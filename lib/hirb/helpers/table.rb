@@ -110,11 +110,7 @@ module Hirb
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
-      options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
-      options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
-      options[:tab]      ? Helpers::TabTable.render(rows, options) :
-      options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
-                           new(rows, options).render
+      choose_style options 
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
@@ -131,6 +127,26 @@ module Hirb
     attr_accessor :last_table
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
+
+  def choose_style(options)
+    case options[:style]
+    when :vertical
+      Helpers::VerticalTable.render(rows, options)
+    when :unicode
+      Helpers::UnicodeTable.render(rows, options)
+    when :tab
+      Helpers::TabTable.render(rows, options)
+    when :markdown
+      Helpers::MarkdownTable.render(rows, options)
+    else
+      #puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
+      options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
+      options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
+      options[:tab]      ? Helpers::TabTable.render(rows, options) :
+      options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
+                           new(rows, options).render
+    end
+  end
 
   def chars
     self.class.const_get(:CHARS)
