@@ -95,13 +95,19 @@ module Hirb
     # [*:filter_any*] When set to true, any cell defaults to being filtered by its class in :filter_classes.
     #                 Default Hirb::Helpers::Table.filter_any().
     # [*:filter_classes*] Hash which maps classes to filters. Default is Hirb::Helpers::Table.filter_classes().
-    # [*:vertical*] When set to true, renders a vertical table using Hirb::Helpers::VerticalTable. Default is false.
-    # [*:unicode*] When set to true, renders a unicode table using Hirb::Helpers::UnicodeTable. Default is false.
-    # [*:tab*] When set to true, renders a tab-delimited table using Hirb::Helpers::TabTable. Default is false.
     # [*:all_fields*] When set to true, renders fields in all rows. Valid only in rows that are hashes. Default is false.
     # [*:description*] When set to true, renders row count description at bottom. Default is true.
     # [*:escape_special_chars*] When set to true, escapes special characters \n,\t,\r so they don't disrupt tables. Default is false for
     #                           vertical tables and true for anything else.
+    # [*:vertical*] When set to true, renders a vertical table using . Default is false.
+    # [*:unicode*] When set to true, renders a unicode table using . Default is false.
+    # [*:tab*] When set to true, renders a tab-delimited table using . Default is false.
+    # [*:style*] Choose style of table: simple (Keyword: :simple,
+    #            Class: Hirb::Helpers::Table), vertical (Keyword: :vertical,
+    #            Class: Hirb::Helpers::VerticalTable), unicode (Keyword: :unicode,
+    #            Class: Hirb::Helpers::UnicodeTable), tab-delimited (Keyword: :tab, Class: Hirb::Helpers::TabTable), 
+    #            markdown (Keyword: :markdown, Hirb::Helpers::MarkdownTable). Defaults to :simple.
+    #
     # Examples:
     #    Hirb::Helpers::Table.render [[1,2], [2,3]]
     #    Hirb::Helpers::Table.render [[1,2], [2,3]], :max_fields=>{0=>10}, :header_filter=>:capitalize
@@ -109,17 +115,36 @@ module Hirb
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}]
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
+    #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :style=> :simple}
     def render(rows, options={})
-      options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
-      options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
-      options[:tab]      ? Helpers::TabTable.render(rows, options) :
-      options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
-                           new(rows, options).render
+      choose_style(rows, options)
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
       Helpers::VerticalTable.render(rows, options)
     end
+
+    def choose_style(rows, options)
+      case options[:style]
+      when :vertical
+        Helpers::VerticalTable.render(rows, options)
+      when :unicode
+        Helpers::UnicodeTable.render(rows, options)
+      when :tab
+        Helpers::TabTable.render(rows, options)
+      when :markdown
+        Helpers::MarkdownTable.render(rows, options)
+      when :simple
+        new(rows, options).render
+      else
+        #support old style as well
+        options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
+          options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
+          options[:tab]      ? Helpers::TabTable.render(rows, options) :
+          options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
+          new(rows, options).render
+      end
+  end
 
     # A hash which maps a cell value's class to a filter. This serves to set a default filter per field if all of its
     # values are a class in this hash. By default, Array values are comma joined and Hashes are inspected.
@@ -131,6 +156,7 @@ module Hirb
     attr_accessor :last_table
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
+
 
   def chars
     self.class.const_get(:CHARS)
