@@ -110,12 +110,32 @@ module Hirb
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :headers=>{:weight=>"Weight(lbs)"}
     #    Hirb::Helpers::Table.render [{:age=>10, :weight=>100}, {:age=>80, :weight=>500}], :filters=>{:age=>[:to_f]}
     def render(rows, options={})
-      choose_style options 
+      choose_style(rows, options)
     rescue TooManyFieldsForWidthError
       $stderr.puts "", "** Hirb Warning: Too many fields for the current width. Configure your width " +
         "and/or fields to avoid this error. Defaulting to a vertical table. **"
       Helpers::VerticalTable.render(rows, options)
     end
+
+    def choose_style(rows, options)
+      case options[:style]
+      when :vertical
+        Helpers::VerticalTable.render(rows, options)
+      when :unicode
+        Helpers::UnicodeTable.render(rows, options)
+      when :tab
+        Helpers::TabTable.render(rows, options)
+      when :markdown
+        Helpers::MarkdownTable.render(rows, options)
+      else
+        #puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
+        options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
+          options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
+          options[:tab]      ? Helpers::TabTable.render(rows, options) :
+          options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
+          new(rows, options).render
+      end
+  end
 
     # A hash which maps a cell value's class to a filter. This serves to set a default filter per field if all of its
     # values are a class in this hash. By default, Array values are comma joined and Hashes are inspected.
@@ -128,25 +148,6 @@ module Hirb
   end
   self.filter_classes = { Array=>:comma_join, Hash=>:inspect }
 
-  def choose_style(options)
-    case options[:style]
-    when :vertical
-      Helpers::VerticalTable.render(rows, options)
-    when :unicode
-      Helpers::UnicodeTable.render(rows, options)
-    when :tab
-      Helpers::TabTable.render(rows, options)
-    when :markdown
-      Helpers::MarkdownTable.render(rows, options)
-    else
-      #puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
-      options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
-      options[:unicode]  ? Helpers::UnicodeTable.render(rows, options) :
-      options[:tab]      ? Helpers::TabTable.render(rows, options) :
-      options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
-                           new(rows, options).render
-    end
-  end
 
   def chars
     self.class.const_get(:CHARS)
