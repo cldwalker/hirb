@@ -134,6 +134,8 @@ module Hirb
         Helpers::TabTable.render(rows, options)
       when :markdown
         Helpers::MarkdownTable.render(rows, options)
+      when :simple
+        new(rows, options).render
       else
         $stderr.puts "Please use :style => <style> with :vertical, :unicode, :tab or :markdown. The use of :vertical => true, :unicode => true, :tab => true and :markdown => true is deprecated" 
         options[:vertical] ? Helpers::VerticalTable.render(rows, options) :
@@ -141,6 +143,8 @@ module Hirb
           options[:tab]      ? Helpers::TabTable.render(rows, options) :
           options[:markdown] ? Helpers::MarkdownTable.render(rows, options) :
           new(rows, options).render
+        #remove "#" and this line when support for old options is removed
+        #new(rows, options).render
       end
   end
 
