@@ -1,6 +1,5 @@
 require 'bacon'
 require 'bacon/bits'
-require 'mocha'
 require 'mocha-on-bacon'
 require 'hirb'
 include Hirb
