@@ -21,6 +21,19 @@ describe "Table" do
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}]).should == expected_table
     end
 
+    it "also renders to the same table with :simple style given" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | a | b |
+      +---+---+
+      | 1 | 2 |
+      | 3 | 4 |
+      +---+---+
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :simple).should == expected_table
+    end
+
     it "with no headers renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
@@ -433,6 +446,7 @@ describe "Table" do
       2 rows in set
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :vertical=>true).should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style=>:vertical).should == expected_table
     end
 
     it "vertical option renders vertical table with newlines" do
@@ -447,6 +461,7 @@ describe "Table" do
       2 rows in set
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>"4\nand one"}], :vertical=>true).should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>"4\nand one"}], :style=>:vertical).should == expected_table
     end
 
     it "vertical option renders vertical table successively" do
@@ -486,6 +501,7 @@ describe "Table" do
       2 rows in set
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :unicode => true).should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :unicode).should == expected_table
     end
 
     it "tab option renders" do
@@ -495,6 +511,7 @@ describe "Table" do
       3	4
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :tab => true).should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :tab).should == expected_table
     end
 
     it "tab option with no headers renders" do
@@ -503,6 +520,8 @@ describe "Table" do
       3	4
       TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :tab => true, :headers => false).
+        should == expected_table
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :tab, :headers => false).
         should == expected_table
     end
 
@@ -517,6 +536,8 @@ describe "Table" do
 TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :markdown => true).
         should == "\n#{expected_table}"
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :markdown).
+        should == "\n#{expected_table}"
     end
 
     it "markdown option with no headers renders" do
@@ -527,6 +548,8 @@ TABLE
 2 rows in set
 TABLE
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :markdown => true, :headers => false).
+        should == "\n#{expected_table}"
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :markdown, :headers => false).
         should == "\n#{expected_table}"
     end
 
