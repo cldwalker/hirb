@@ -116,7 +116,7 @@ tables/views for any output object:
   1 row in set
 
   # Creates github-markdown
-  >> table [[:a, :b :c]], :markdown => true
+  >> table [[:a, :b, :c]], :markdown => true
   | 0 | 1 | 2 |
   |---|---|---|
   | a | b | c |
