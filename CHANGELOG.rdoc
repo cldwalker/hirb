@@ -1,3 +1,7 @@
+== 0.7.1
+* Add :style option
+* Fix mocha dep issue
+
 == 0.7.0
 * Add github markdown table
 
