@@ -21,6 +21,19 @@ describe "Table" do
       table([{:a=>1, :b=>2}, {:a=>3, :b=>4}]).should == expected_table
     end
 
+    it "also renders to the same table with :simple style given" do
+      expected_table = <<-TABLE.unindent
+      +---+---+
+      | a | b |
+      +---+---+
+      | 1 | 2 |
+      | 3 | 4 |
+      +---+---+
+      2 rows in set
+      TABLE
+      table([{:a=>1, :b=>2}, {:a=>3, :b=>4}], :style => :simple).should == expected_table
+    end
+
     it "with no headers renders" do
       expected_table = <<-TABLE.unindent
       +---+---+
