@@ -15,8 +15,9 @@ end
 describe "mongoid table" do
   it "only has one _id" do
     fields = {'_id' => 'x0f0x', 'name' => 'blah'}
-    mongoid_stub = stub(:class => stub(:fields => fields))
+    dynamic_fields = {'email' => 'test@test.com', 'phone' => '02'}
+    mongoid_stub = stub(:class => stub(:fields => fields), :attributes => fields.merge(dynamic_fields))
     Helpers::AutoTable.mongoid__document_view(mongoid_stub).should ==
-      {:fields => fields.keys.sort}
+      {:fields => (fields.keys | dynamic_fields.keys)}
   end
 end
