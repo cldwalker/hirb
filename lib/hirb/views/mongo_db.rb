@@ -1,6 +1,8 @@
 module Hirb::Views::MongoDb #:nodoc:
   def mongoid__document_view(obj)
     fields = obj.class.fields.keys
+    dynamic_fields = obj.attributes.keys.reject {|field| fields.include? field}
+    fields |= dynamic_fields
     fields.delete('_id')
     fields.unshift('_id')
     {:fields=>fields}
@@ -14,4 +16,4 @@ module Hirb::Views::MongoDb #:nodoc:
   alias_method :mongo_mapper__embedded_document_view, :mongo_mapper__document_view
 end
 
-Hirb::DynamicView.add Hirb::Views::MongoDb, :helper=>:auto_table
+Hirb::DynamicView.add Hirb::Views::MongoDb, :helper=>:mongo_table
