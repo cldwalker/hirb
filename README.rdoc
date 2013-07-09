@@ -161,8 +161,11 @@ Although views by default are printed to STDOUT, they can be easily modified to 
 
 == Pager
 
-Hirb has both pager and formatter functionality enabled by default.
-If you want to turn off the functionality of either you can pass that in at startup:
+Hirb has both pager and formatter functionality enabled by default. Note - if you copy and paste
+into your ruby console and think that one of your lines will kick off the pager, be aware that subsequent
+characters will go to your pager and could cause side effects like saving a file.
+
+If you want to turn off the functionality of either pager or formatter, pass that in at startup:
 
   Hirb.enable :pager=>false
   Hirb.enable :formatter=>false
