@@ -1,3 +1,7 @@
+== 0.7.2
+* Allow full paths on $PAGER
+* Fix AR tables with no id column
+
 == 0.7.1
 * Add :style option
 * Fix mocha dep issue
