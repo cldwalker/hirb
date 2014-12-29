@@ -22,7 +22,7 @@ module Hirb
   #   >> {:a=>1, :b=>{:c=>3}}
   #   ---
   #   :a : 1
-  #   :b : 
+  #   :b :
   #     :c : 3
   #   => true
   #
@@ -115,9 +115,9 @@ module Hirb
         config[:width], config[:height] = determine_terminal_size(width, height)
         pager.resize(config[:width], config[:height])
       end
-      
+
       # This is the main method of this class. When view is enabled, this method searches for a formatter it can use for the output and if
-      # successful renders it using render_method(). The options this method takes are helper config hashes as described in 
+      # successful renders it using render_method(). The options this method takes are helper config hashes as described in
       # Hirb::Formatter.format_output(). Returns true if successful and false if no formatting is done or if not enabled.
       def view_output(output, options={})
         enabled? && config[:formatter] && render_output(output, options)
@@ -127,7 +127,7 @@ module Hirb
           false
         else
           index = (obj = e.backtrace.find {|f| f =~ /^\(eval\)/}) ? e.backtrace.index(obj) : e.backtrace.length
-          $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|e| "    " + e }
+          $stderr.puts "Hirb Error: #{e.message}", e.backtrace.slice(0,index).map {|_e| "    " + _e }
           true
         end
       end
@@ -140,6 +140,7 @@ module Hirb
       # A lambda or proc which handles the final formatted object.
       # Although this pages/puts the object by default, it could be set to do other things
       # i.e. write the formatted object to a file.
+      undef :render_method
       def render_method
         @render_method ||= default_render_method
       end
@@ -148,7 +149,7 @@ module Hirb
       def reset_render_method
         @render_method = default_render_method
       end
-      
+
       # Current console width
       def width
         config && config[:width] ? config[:width] : DEFAULT_WIDTH
@@ -253,10 +254,11 @@ module Hirb
 
       def config_loaded?; !!@config; end
 
+      undef :config
       def config
         @config
       end
-      
+
       def default_render_method
         lambda {|output| page_output(output) || puts(output) }
       end

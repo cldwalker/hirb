@@ -48,7 +48,7 @@ class Hirb::Helpers::Table
 
       # set all fields the same if relative doesn't work
       unless new_lengths.values.all? {|e| e > MIN_FIELD_LENGTH} && (sum(new_lengths.values) <= @width)
-        new_lengths = @field_lengths.inject({}) {|t,(k,v)| t[k] = @width / @field_size; t }
+        new_lengths = @field_lengths.inject({}) {|t,(k,_v)| t[k] = @width / @field_size; t }
       end
       @field_lengths.each {|k,v| @field_lengths[k] = new_lengths[k] }
     end

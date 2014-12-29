@@ -29,7 +29,7 @@ module Hirb
     # [*:options*] Options to pass the helper method or class.
     # [*:ancestor*] Boolean which when true causes subclasses of the output class to inherit its config. This doesn't effect the current
     #               output class. Defaults to false. This is used by ActiveRecord classes.
-    # 
+    #
     #   Examples:
     #     {'WWW::Delicious::Element'=>{:class=>'Hirb::Helpers::ObjectTable', :ancestor=>true, :options=>{:max_width=>180}}}
     #     {'Date'=>{:class=>:auto_table, :ancestor=>true}}
@@ -101,10 +101,10 @@ module Hirb
     def build_klass_config(output_class)
       output_ancestors = output_class.ancestors.map {|e| e.to_s}.reverse
       output_ancestors.pop
-      hash = output_ancestors.inject({}) {|h, klass|
-        add_klass_config_if_true(h, klass) {|c,klass| c[klass] && c[klass][:ancestor] }
+      hash = output_ancestors.inject({}) {|h, ancestor_klass|
+        add_klass_config_if_true(h, ancestor_klass) {|c, klass| c[klass] && c[klass][:ancestor] }
       }
-      add_klass_config_if_true(hash, output_class.to_s) {|c,klass| c[klass] }
+      add_klass_config_if_true(hash, output_class.to_s) {|c, klass| c[klass] }
     end
 
     def add_klass_config_if_true(hash, klass)
