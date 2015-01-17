@@ -302,6 +302,7 @@ class Helpers::Table
     max_fields.each {|k,max| @field_lengths[k] = max if @field_lengths[k].to_i > max }
   end
 
+  undef :max_fields
   def max_fields
     @max_fields ||= (@options[:max_fields] ||= {}).each {|k,v|
       @options[:max_fields][k] = (actual_width * v.to_f.abs).floor if v.to_f.abs < 1
@@ -312,6 +313,7 @@ class Helpers::Table
     @actual_width ||= self.width - (@fields.size * BORDER_LENGTH + 1)
   end
 
+  undef :width
   def width
     @width ||= @options[:max_width] || View.width
   end

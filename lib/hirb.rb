@@ -55,6 +55,7 @@ module Hirb
 
     # Array of config files which are merged sequentially to produce config.
     # Defaults to config/hirb.yml and ~/.hirb_yml
+    undef :config_files
     def config_files
       @config_files ||= default_config_files
     end
@@ -69,6 +70,7 @@ module Hirb
       File.exists?(file) ? YAML::load_file(file) : {}
     end
 
+    undef :config
     def config(reload=false)
       if (@config.nil? || reload)
         @config = config_files.inject({}) {|acc,e|

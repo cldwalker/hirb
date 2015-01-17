@@ -89,7 +89,7 @@ module Hirb
     def choose_from_menu
       return unasked_choice if @output.size == 1 && !@options[:ask]
 
-      if (helper_class = Util.any_const_get(@options[:helper_class]))
+      if (Util.any_const_get(@options[:helper_class]))
         View.render_output(@output, :class=>@options[:helper_class], :options=>@options.merge(:number=>true))
       else
         @output.each_with_index {|e,i| puts "#{i+1}: #{e}" }

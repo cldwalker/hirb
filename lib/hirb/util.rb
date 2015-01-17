@@ -13,7 +13,7 @@ module Hirb
         }
         klass
       rescue
-         nil
+        nil
       end
     end
 
