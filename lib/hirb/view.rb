@@ -75,7 +75,7 @@ module Hirb
       # Examples:
       #   Hirb.enable
       #   Hirb.enable :formatter=>false
-      def enable(options={}, &block)
+      def enable(options={})
         Array(options.delete(:config_file)).each {|e|
           @new_config_file = true
           Hirb.config_files << e
