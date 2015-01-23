@@ -190,7 +190,8 @@ Table code from http://gist.github.com/72234 and {my console app's needs}[http:/
 * Chrononaut for vertical table helper.
 * janlelis for unicode table helper.
 * technogeeky and FND for markdown table helper.
-* hsume2, crafterm, spastorino, xaviershay, bogdan, asanghi, vwall, maxmeyer, jimjh, ddoherty03 and joshua for patches.
+* hsume2, crafterm, spastorino, xaviershay, bogdan, asanghi, vwall, maxmeyer, jimjh, ddoherty03,
+  rochefort and joshua for patches.
 
 == Bugs/Issues
 Please report them {on github}[http://github.com/cldwalker/hirb/issues].

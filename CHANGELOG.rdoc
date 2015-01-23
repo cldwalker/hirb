@@ -1,3 +1,6 @@
+== 0.7.3
+* Remove warnings
+
 == 0.7.2
 * Allow full paths on $PAGER
 * Fix AR tables with no id column
