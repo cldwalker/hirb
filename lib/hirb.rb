@@ -63,11 +63,11 @@ module Hirb
     #:stopdoc:
     def default_config_files
       [File.join(Util.find_home, ".hirb.yml")] +
-        (File.exists?('config/hirb.yml') ? ['config/hirb.yml'] : [])
+        (File.exist?('config/hirb.yml') ? ['config/hirb.yml'] : [])
     end
 
     def read_config_file(file=config_file)
-      File.exists?(file) ? YAML::load_file(file) : {}
+      File.exist?(file) ? YAML.load_file(file) : {}
     end
 
     undef :config

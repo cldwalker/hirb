@@ -53,7 +53,7 @@ module Hirb
 
     # Determines if a shell command exists by searching for it in ENV['PATH'].
     def command_exists?(command)
-      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exist? File.join(d, command) }
     end
 
     # Returns [width, height] of terminal when detected, nil if not detected.

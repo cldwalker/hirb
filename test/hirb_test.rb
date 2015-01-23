@@ -6,17 +6,17 @@ describe "Hirb" do
 
   it "config converts yaml when config file exists" do
     yaml_data = {:blah=>'blah'}
-    File.stubs('exists?').returns(true)
+    File.stubs('exist?').returns(true)
     Hirb.config_files = ['ok']
-    YAML::expects(:load_file).returns(yaml_data)
+    YAML.expects(:load_file).returns(yaml_data)
     Hirb.config.should == yaml_data
   end
-  
+
   it "config defaults to hash when no config file" do
-    File.stubs('exists?').returns(false)
+    File.stubs('exist?').returns(false)
     Hirb.config.should == {}
   end
-  
+
   it "config reloads if given explicit reload" do
     Hirb.config
     Hirb.expects(:read_config_file).returns({})
