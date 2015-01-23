@@ -34,8 +34,8 @@ module Hirb
     attr_accessor :config_files, :config
 
     # Enables view functionality. See Hirb::View.enable for details.
-    def enable(options={}, &block)
-      View.enable(options, &block)
+    def enable(options={})
+      View.enable(options)
     end
 
     # Disables view functionality. See Hirb::View.disable for details.
@@ -44,8 +44,8 @@ module Hirb
     end
 
     # Adds views. See Hirb::View.add for details.
-    def add_view(view, options, &block)
-      View.add(view, options, &block)
+    def add_view(view, options)
+      View.add(view, options)
     end
 
     # Adds views. See Hirb::DynamicView.add for details.
