@@ -16,8 +16,11 @@ class Hirb::Helpers::AutoTable < Hirb::Helpers::Table
   def self.render(output, options={})
     output = Array(output)
     (defaults = dynamic_options(output[0])) && (options = defaults.merge(options))
+    first_object = output.find do |element|
+      !element.nil?
+    end
     klass = options.delete(:table_class) || (
-      !(output[0].is_a?(Hash) || output[0].is_a?(Array)) ?
+      !(first_object.is_a?(Hash) || first_object.is_a?(Array)) ?
       Hirb::Helpers::ObjectTable : Hirb::Helpers::Table)
     klass.render(output, options)
   end
