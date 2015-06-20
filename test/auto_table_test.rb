@@ -30,4 +30,24 @@ describe "auto table" do
     TABLE
     Helpers::AutoTable.render({:a=>12345}).should == expected_table
   end
+
+  it "renders nil objects" do
+    expected_table = <<-TABLE.unindent
+    +---+---+
+    | a | b |
+    +---+---+
+    |   |   |
+    |   |   |
+    | 1 | 7 |
+    |   |   |
+    | 2 | 3 |
+    |   |   |
+    +---+---+
+    6 rows in set
+    TABLE
+
+    Helpers::AutoTable.render([
+      nil, nil, {:a => 1, :b => 7}, nil, {:a => 2, :b => 3}, nil
+    ]).should == expected_table
+  end
 end

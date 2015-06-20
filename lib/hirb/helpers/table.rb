@@ -163,8 +163,7 @@ class Helpers::Table
   #:stopdoc:
   attr_accessor :width, :max_fields, :field_lengths, :fields
   def initialize(rows, options={})
-    raise ArgumentError, "Table must be an array of hashes or array of arrays" unless rows.is_a?(Array) &&
-      (rows[0].is_a?(Hash) or rows[0].is_a?(Array) or rows.empty?)
+    @leading_row = find_leading_row(rows)
     @options = {:description=>true, :filters=>{}, :change_fields=>{}, :escape_special_chars=>true,
       :filter_any=>Helpers::Table.filter_any, :resize=>true}.merge(options)
     @fields = set_fields(rows)
@@ -178,15 +177,27 @@ class Helpers::Table
     Helpers::Table.last_table = self
   end
 
+  def find_leading_row(rows)
+    if rows.is_a?(Array)
+      first_object = rows.find do |row|
+        !row.nil?
+      end
+      if first_object.nil? || first_object.is_a?(Hash) || first_object.is_a?(Array)
+        return first_object
+      end
+    end
+    raise ArgumentError, "Table must be an array of hashes or array of arrays"
+  end
+
   def set_fields(rows)
     @options[:change_fields] = array_to_indices_hash(@options[:change_fields]) if @options[:change_fields].is_a?(Array)
     return @options[:fields].dup if @options[:fields]
 
-    fields = if rows[0].is_a?(Hash)
-      keys = @options[:all_fields] ? rows.map {|e| e.keys}.flatten.uniq : rows[0].keys
+    fields = if @leading_row.is_a?(Hash)
+      keys = @options[:all_fields] ? rows.map {|e| e.keys}.flatten.uniq : @leading_row.keys
       keys.sort {|a,b| a.to_s <=> b.to_s}
     else
-      rows[0].is_a?(Array) ? (0..rows[0].length - 1).to_a : []
+      @leading_row.is_a?(Array) ? (0..@leading_row.length - 1).to_a : []
     end
 
     @options[:change_fields].each do |oldf, newf|
@@ -197,7 +208,7 @@ class Helpers::Table
 
   def set_rows(rows)
     rows = Array(rows)
-    if rows[0].is_a?(Array)
+    if @leading_row.is_a?(Array)
       rows = rows.inject([]) {|new_rows, row|
         new_rows << array_to_indices_hash(row)
       }
@@ -264,7 +275,7 @@ class Helpers::Table
   end
 
   def format_values(values)
-    @fields.map {|field| format_cell(values[field], @field_lengths[field]) }
+    @fields.map {|field| format_cell(values ? values[field] : '', @field_lengths[field]) }
   end
 
   def format_cell(value, cell_width)
@@ -324,7 +335,7 @@ class Helpers::Table
       @fields.inject({}) {|h,e| h[e] = 1; h }
     @rows.each do |row|
       @fields.each do |field|
-        len = String.size(row[field])
+        len = String.size(row ? row[field] : '')
         field_lengths[field] = len if len > field_lengths[field].to_i
       end
     end
@@ -334,7 +345,7 @@ class Helpers::Table
   def set_filter_defaults(rows)
     @filter_classes.each do |klass, filter|
       @fields.each {|field|
-        if rows.all? {|r| r[field].class == klass }
+        if rows.all? {|r| !r || r[field].class == klass }
           @options[:filters][field] ||= filter
         end
       }
@@ -345,11 +356,13 @@ class Helpers::Table
     @filter_classes = Helpers::Table.filter_classes.merge @options[:filter_classes] || {}
     set_filter_defaults(rows) unless @options[:filter_any]
     rows.map {|row|
-      @fields.inject({}) {|new_row,f|
-        (filter = @options[:filters][f]) || (@options[:filter_any] && (filter = @filter_classes[row[f].class]))
-        new_row[f] = filter ? call_filter(filter, row[f]) : row[f]
-        new_row
-      }
+      if row
+        @fields.inject({}) {|new_row,f|
+          (filter = @options[:filters][f]) || (@options[:filter_any] && (filter = @filter_classes[row[f].class]))
+          new_row[f] = filter ? call_filter(filter, row[f]) : row[f]
+          new_row
+        }
+      end
     }
   end
 
@@ -360,10 +373,12 @@ class Helpers::Table
 
   def validate_values(rows)
     rows.each {|row|
-      @fields.each {|f|
-        row[f] = row[f].to_s || ''
-        row[f] = row[f].gsub(/(\t|\r|\n)/) {|e| e.dump.gsub('"','') } if @options[:escape_special_chars]
-      }
+      if row
+        @fields.each {|f|
+          row[f] = row[f].to_s || ''
+          row[f] = row[f].gsub(/(\t|\r|\n)/) {|e| e.dump.gsub('"','') } if @options[:escape_special_chars]
+        }
+      end
     }
   end
 
