@@ -67,12 +67,15 @@ module Hirb
         call_output_method(options[:output_method], output) ) : output
       args = [output]
       args << options[:options] if options[:options] && !options[:options].empty?
-      if options[:method]
-        send(options[:method],*args)
-      elsif options[:class] && (helper_class = Helpers.helper_class(options[:class]))
-        helper_class.render(*args, &block)
-      elsif options[:output_method]
-        output
+      begin
+        if options[:method]
+          send(options[:method],*args)
+        elsif options[:class] && (helper_class = Helpers.helper_class(options[:class]))
+          helper_class.render(*args, &block)
+        elsif options[:output_method]
+          output
+        end
+      rescue NameError
       end
     end
 
