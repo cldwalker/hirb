@@ -76,9 +76,11 @@ describe "Formatter" do
       class Array2 < Array; end
       @formatter.determine_output_class(Array2.new(%w{ok dude})).should == String
     end
-
-    it "#determine_output_class works for BasicObject" do
-      @formatter.determine_output_class(BasicObject.new).should == BasicObject
+    
+    if Object.const_defined? "BasicObject"
+      it "#determine_output_class works for BasicObject" do
+        @formatter.determine_output_class(BasicObject.new).should == BasicObject
+      end
     end
   end
 
