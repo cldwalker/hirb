@@ -84,8 +84,15 @@ module Hirb
     end
 
     def determine_output_class(output)
-      output.respond_to?(:to_a) && to_a_classes.any? {|e| output.is_a?(e) } ?
-        Array(output)[0].class : output.class
+      output_klass = begin
+        class << output
+          self
+        end
+      rescue TypeError # Fixnum, Symbol, Float, etc which don't have a singleton class
+        output.class
+      end
+      output_klass.instance_methods.map{|m| m.to_s}.include?('to_a') && to_a_classes.any? { |e| output.is_a?(e) } ?
+          Array(output)[0].class : determine_class(output, output_klass)
     end
 
     def call_output_method(output_method, output)
@@ -120,6 +127,15 @@ module Hirb
 
     def reset_klass_config
       @klass_config = {}
+    end
+
+    private
+    def determine_class(output, output_klass)
+      begin
+        output.class
+      rescue NoMethodError
+        output_klass.superclass
+      end
     end
     #:startdoc:
   end
