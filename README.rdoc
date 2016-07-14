@@ -42,8 +42,6 @@ Add the gem to the Gemfile like:
 Let's load and enable the view framework:
   $ rails console
   Loading local environment (Rails 3.0.3)
-  >> require 'hirb'
-  => true
   >> Hirb.enable
   => nil
 
