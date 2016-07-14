@@ -36,12 +36,12 @@ fields from an array of arrays. See
 {here}[http://tagaholic.me/2009/10/15/boson-and-hirb-interactions.html#hirbs_handy_tables] for examples.
 
 == Rails Example
+Add the gem to the Gemfile like:
+    gem 'hirb'
 
 Let's load and enable the view framework:
   $ rails console
   Loading local environment (Rails 3.0.3)
-  >> require 'hirb'
-  => true
   >> Hirb.enable
   => nil
 
@@ -97,7 +97,7 @@ At any time you can disable Hirb if you really like irb's lovely echo mode:
 == Views: Anytime, Anywhere
 While preconfigured tables are great for database records, sometimes you just want to create
 tables/views for any output object:
-  
+
   #These examples don't need to have Hirb::View enabled.
   >> Hirb.disable
   => nil
