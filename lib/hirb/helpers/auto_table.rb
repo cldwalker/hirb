@@ -2,8 +2,7 @@
 # providing default helper options via Hirb::DynamicView. Using these default options, this
 # helper supports views for the following modules/classes:
 # ActiveRecord::Base, CouchFoo::Base, CouchPotato::Persistence, CouchRest::ExtendedDocument,
-# DBI::Row, DataMapper::Resource, Friendly::Document, MongoMapper::Document, MongoMapper::EmbeddedDocument,
-# Mongoid::Document, Ripple::Document, Sequel::Model.
+# DBI::Row, DataMapper::Resource, Friendly::Document, Ripple::Document, Sequel::Model.
 class Hirb::Helpers::AutoTable < Hirb::Helpers::Table
   extend Hirb::DynamicView
 
