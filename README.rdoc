@@ -35,9 +35,12 @@ Hirb will intelligently pick up on field names from an array of hashes and creat
 fields from an array of arrays. See
 {here}[http://tagaholic.me/2009/10/15/boson-and-hirb-interactions.html#hirbs_handy_tables] for examples.
 
-If you don't like the auto-ordering of fields:
+If you don't like the auto-ordering of fields, you can pass your own order:
 
-  puts Hirb::Helpers::Table.render(ARRAY_OF_OBJECTS)
+  puts Hirb::Helpers::AutoTable.render(
+    [{ id: 1, name: "Terminator I" }, { id: 2, name: "Terminator II" }],
+    fields: [:name, :id]
+  )
 
 == Rails Example
 
