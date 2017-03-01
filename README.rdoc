@@ -35,6 +35,10 @@ Hirb will intelligently pick up on field names from an array of hashes and creat
 fields from an array of arrays. See
 {here}[http://tagaholic.me/2009/10/15/boson-and-hirb-interactions.html#hirbs_handy_tables] for examples.
 
+If you don't like the auto-ordering of fields:
+
+  puts Hirb::Helpers::Table.render(ARRAY_OF_OBJECTS)
+
 == Rails Example
 
 Let's load and enable the view framework:
