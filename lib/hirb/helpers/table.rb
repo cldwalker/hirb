@@ -251,7 +251,7 @@ class Helpers::Table
 
   def render_table_header
     title_row = chars[:top][:vertical][:outside] + ' ' +
-      format_values(@headers).join(' ' + chars[:top][:vertical][:inside] +' ') +
+      format_values(@headers).join(' ' + chars[:top][:vertical][:inside] + ' ') +
       ' ' + chars[:top][:vertical][:outside]
     [render_border(:top), title_row, render_border(:middle)]
   end
