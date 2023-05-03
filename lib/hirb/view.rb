@@ -183,7 +183,7 @@ module Hirb
           @output_method = true
           ::IRB::Irb.class_eval do
             alias_method :non_hirb_view_output, :output_value
-            def output_value #:nodoc:
+            def output_value(omit = false) #:nodoc:
               Hirb::View.view_or_page_output(@context.last_value) || non_hirb_view_output
             end
           end

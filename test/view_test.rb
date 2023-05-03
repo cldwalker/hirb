@@ -39,6 +39,13 @@ describe "View" do
       ::IRB::Irb.new(context_stub).output_value
     end
 
+    it "output_value accept omit argument from IRB" do
+      View.expects(:render_output).once
+      Hirb.enable
+      context_stub = stub(:last_value=>'')
+      ::IRB::Irb.new(context_stub).output_value(true)
+    end
+
     it "is enabled?" do
       Hirb.enable
       View.enabled?.should == true
