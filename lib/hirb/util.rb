@@ -22,7 +22,7 @@ module Hirb
       hash1.merge(hash2) {|k,o,n| (o.is_a?(Hash)) ? recursive_hash_merge(o,n) : n}
     end
 
-    # From Rails ActiveSupport, converting undescored lowercase to camel uppercase.
+    # From Rails ActiveSupport, converting underscored lowercase to camel uppercase.
     def camelize(string)
       string.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
     end
